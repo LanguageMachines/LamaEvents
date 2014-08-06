@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}DBCON!{% endblock %}
+
+{% block primary %}
+
+
+<h1><a href="/">DataBase Connection Test</a>;</h2>
+
+{% if latest_event_list %}
+
+    <ul>
+    {% for event in latest_event_list %}
+		<ul>
+        {%for tweet in event.tweets %}
+			<li>{{ tweet.date }}</li>
+		{% endfor %}
+		</ul>
+    {% endfor %}
+    </ul>
+
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a href="/dbcon?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="/dbcon?page={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+
+{% else %}
+    <p>Connection Error</p>
+{% endif %}
+
+
+
+
+    		     
+{% endblock %}
+
