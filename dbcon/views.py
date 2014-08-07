@@ -12,7 +12,7 @@ class DbconView(generic.ListView):
 	paginate_by = 10
 
 	def get_queryset(self):
-		return Events.objects.order_by('-id')[:50]
+		return Events.objects.order_by('-_id')[:50] #'-' before '_id' is reversing the order
 
 class TweetsView(generic.DetailView):
 	model = Events
