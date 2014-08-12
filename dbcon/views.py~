@@ -26,7 +26,7 @@ class DbconView(generic.ListView):
 #	template_name = 'tweets.html'
 
 
-def eventDetail(request, id):
+def eventdetail(request, id):
 	event = Events.objects.get(pk=id)
 	return render(request, 'tweets.html', {
 				'event': event,

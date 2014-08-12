@@ -9,7 +9,8 @@ class Tweets(EmbeddedDocument):
 	id = StringField()
 	text = StringField() 
 	date = StringField()
-
+	def __str__(self):
+		return self.id
 
 class Events(Document):
 	meta = {'collection' : 'lecl'}

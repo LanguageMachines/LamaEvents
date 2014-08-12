@@ -76,7 +76,7 @@ SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
 AUTH_USER_MODEL = 'mongo_auth.MongoUser'
 MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
-connect('XXX', host='XXX')
+connect('lamaevents', host='mongodb://ebasar:ebasar1password@ds055689.mongolab.com:55689/lamaevents')
 
 #_MONGODB_USER = 'XXX'
 #_MONGODB_PASSWD = 'XXX'

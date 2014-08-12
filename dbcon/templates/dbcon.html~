@@ -40,7 +40,7 @@
     {% endif %}
 
 {% else %}
-    <p>No Events Found</p>
+    <p>No Tweets Found</p>
 {% endif %}
 
 
