@@ -17,11 +17,17 @@ print("Connected to DB")
 
 ep = event_pairs.Event_pairs()
 
-payload = {'SEARCH': 'echtalles', 'DATE': '2014080714-2014080714', 'DOWNLOAD':True, 'SHOWTWEETS':True}
+payload = {'SEARCH': 'echtalles', 'DATE': '2014081214-2014081214', 'DOWNLOAD':True, 'SHOWTWEETS':True}
+
+def RequestTweets():
+#Add an automatic cookie finder here (requests.Session())
+	output1st = requests.get("http://145.100.57.182/cgi-bin/twitter", params=payload, cookies={'cookie':'XXX'})
+	return output1st
+
 
 while True:
-	time.sleep(300)
-	#Time Calculations
+	time.sleep(10)
+	#Time Calculations;
 	nowDate = datetime.datetime.now()
 	nowDate_earlier = nowDate - datetime.timedelta(hours=1)
 	tweethour = nowDate_earlier.strftime("%H:00 %d-%m-20%y")
@@ -35,14 +41,26 @@ while True:
 		payload['DATE'] = pDate
 		print("Tweet hour : " + tweethour)
 		#Request to Twiqs;
-		output = requests.get("http://145.100.57.182/cgi-bin/twitter", params=payload, cookies={'cookie':'XXX'})
-	#Add an automatic cookie finder here (requests.Session())
+		output = RequestTweets()
 		print("Request Completed")
+		#Check the cookie;
+		withoutcookie = '#user_id\t#tweet_id\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
+		if output.text[:70] == withoutcookie:
+			print("Cookie is wrong. I'll skip tweets at " + tweethour + "But you have to change your cookie!")
+			continue
+		else:
+			print("Cookie is Fine.")
 		#Check the result of request;
 		dumpoutput = '#user_id\t#tweet_id\t#date\t#time\t#reply_to_tweet_id\t#retweet_to_tweet_id\t#user_name\t#tweet\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
 		if output.text[:1000] == dumpoutput:
-			print("No Tweet Found! It'll skip tweets at " + tweethour)
-			continue
+			print("No tweet found at the first time! I'll try again")
+			time.sleep(300)
+			output = RequestTweets()
+			if output.text[:1000] == dumpoutput:
+				print("Still there is no tweet! I'll skip tweets at " + tweethour)
+				continue
+			else:
+				print("Tweets came at the second time")
 		else:
 			print("Tweets are O.K.")
 		#Event Detection;
