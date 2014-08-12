@@ -26,14 +26,15 @@ def RequestTweets():
 
 
 while True:
-	time.sleep(10)
+	time.sleep(300)
 	#Time Calculations;
 	nowDate = datetime.datetime.now()
 	nowDate_earlier = nowDate - datetime.timedelta(hours=1)
 	tweethour = nowDate_earlier.strftime("%H:00 %d-%m-20%y")
 	nes = nowDate_earlier.strftime("20%y%m%d%H")
 	pDate = nes+'-'+nes
-	b = nowDate.strftime("%H%M")
+	b = nowDate.strftime("%H:%M")
+	#Check if we are still in the same hour:
 	if payload['DATE'] == pDate:
 		print(b)
 		continue
