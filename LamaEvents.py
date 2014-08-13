@@ -16,6 +16,7 @@ lecl = ledb.lecl
 print("Connected to DB")
 
 ep = event_pairs.Event_pairs()
+print("Event Detection Initialised")
 
 payload = {'SEARCH': 'echtalles', 'DATE': '2014081214-2014081214', 'DOWNLOAD':True, 'SHOWTWEETS':True}
 
@@ -26,7 +27,7 @@ def RequestTweets():
 
 
 while True:
-	time.sleep(300)
+	time.sleep(600)
 	#Time Calculations;
 	nowDate = datetime.datetime.now()
 	nowDate_earlier = nowDate - datetime.timedelta(hours=1)

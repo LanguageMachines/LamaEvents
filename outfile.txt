@@ -1,1 +1,0 @@
-#user_id	#tweet_id	#date	#time	#reply_to_tweet_id	#retweet_to_tweet_id	#user_name	#tweet	#DATE=2014080713-2014080713	#SEARCHTOKEN=echtalles

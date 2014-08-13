@@ -9,21 +9,17 @@ from dbcon.models import *
 class DbconView(generic.ListView):
 	template_name = 'dbcon.html'
 	context_object_name = 'latest_event_list'
-	paginate_by = 5
+	paginate_by = 10
 
 	def get_queryset(self):
-		return Events.objects.order_by('date')[:50] #'-' before 'id' is reversing the order
+		return Events.objects.order_by('date')[:500] #'-' before 'id' is reversing the order
 
-#def dbconview(request):
-#	latest_event_list = Events.objects.order_by('date')[:50]	
+
+#def dbconView(request):
+#	latest_event_list = Events.objects.order_by('-date')[:50]
 #	return render(request, 'dbcon.html', {
 #				'latest_event_list': latest_event_list,
 #			})
-
-
-#class TweetsView(generic.DetailView):
-#	model = Events
-#	template_name = 'tweets.html'
 
 
 def eventDetail(request, id):
@@ -31,3 +27,20 @@ def eventDetail(request, id):
 	return render(request, 'tweets.html', {
 				'event': event,
 			})
+
+def eventofDate(request, d):
+	events_date_list = Events.objects(date=d)
+	return render(request, 'date.html', {
+				'events_date_list': events_date_list,
+			})
+
+
+
+
+
+
+
+
+
+
+

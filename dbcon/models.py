@@ -8,13 +8,22 @@ class Tweets(EmbeddedDocument):
 	user = StringField()
 	id = StringField()
 	text = StringField() 
-	date = StringField()
+	date = DateTimeField()
 
 
 class Events(Document):
 	meta = {'collection' : 'lecl'}
 	keyterms = ListField()
 	tweets = ListField(EmbeddedDocumentField(Tweets))
-	date = StringField()
+	date = DateTimeField()
 	score = FloatField()
+	def datestr(self):
+		ds = self.date.strftime("%d%m20%y")#to string format
+		return ds
+	def keylist(self):
+		keylist = []
+		for k in self.keyterms:
+			kt = k[0].title() #capitalization
+			keylist.append(kt)
+		return keylist
 

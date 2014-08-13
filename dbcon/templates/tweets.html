@@ -6,9 +6,18 @@
 {% block primary %}
 
 
-<h1><a href="/">DataBase Connection Test</a>;</h2>
+<h1><a href="/dbcon">DataBase Connection Test</a>;</h2>
 
-Tweets for {{ event.keyterms }}
+
+Tweets for :<br>
+{%for keys in event.keylist %}
+		{{ keys }}
+{% endfor %}
+
+<br><br>
+Estimation for this event;<br>
+{{ event.datestr }}
+
 
 <ul>
   {%for tweet in event.tweets %}

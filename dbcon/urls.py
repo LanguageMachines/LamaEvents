@@ -9,10 +9,12 @@ urlpatterns = patterns('',
 
 	url(r'^$', views.DbconView.as_view(), name='dbcon'),
 	
-	#url(r'^$', views.dbconview, name='tweets'),
+	#url(r'^$', views.dbconView, name='dbcon'),
 
 	#url(r'^(?P<id>\w+)/tweets$', views.TweetsView.as_view(), name='tweets'),
 
 	url(r'^(?P<id>\w+)/tweets$', views.eventDetail, name='tweets'),
+
+	url(r'^(?P<d>\w+)/dates$', views.eventofDate, name='date'),
 
 )
