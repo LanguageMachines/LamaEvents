@@ -1,25 +1,47 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
+from datetime import date, datetime, time, timedelta
+
 import mongoengine
 
 from dbcon.models import *
 
 
-class DbconView(generic.ListView):
-	template_name = 'dbcon.html'
-	context_object_name = 'latest_event_list'
-	paginate_by = 10
+def callendar(request):
 
-	def get_queryset(self):
-		return Events.objects.order_by('date')[:500] #'-' before 'id' is reversing the order
+	now_date = datetime.now()
+	monthLater = now_date + timedelta(days=30)
+
+	def daterange(now_date, monthLater):
+		for n in range(int ((monthLater - now_date).days)):
+			yield now_date + timedelta(n)
+
+	datelist = []
+	for single_date in daterange(now_date, monthLater):
+		datelist.append(single_date.strftime("%d-%m-20%y"))
+
+	eventObjlist = []
+	for i in datelist:
+		eventX = Events.objects(date=i)
+		eventObjlist.append(eventX)
 
 
-#def dbconView(request):
-#	latest_event_list = Events.objects.order_by('-date')[:50]
-#	return render(request, 'dbcon.html', {
-#				'latest_event_list': latest_event_list,
-#			})
+	totallist = [{'datelist': t[0], 'eventObjlist': t[1]} for t in zip(datelist, eventObjlist)]
+
+	return render(request, 'dbcon.html', {
+				'totallist': totallist,
+				'datelist': datelist,
+				'eventObjlist': eventObjlist,
+			})
+
+
+def eventsofDate(request, dt):
+	events_date_list = Events.objects(date=dt)
+	return render(request, 'events.html', {
+				'events_date_list': events_date_list,
+				'dt': dt,
+			})
 
 
 def eventDetail(request, id):
@@ -28,11 +50,9 @@ def eventDetail(request, id):
 				'event': event,
 			})
 
-def eventofDate(request, d):
-	events_date_list = Events.objects(date=d)
-	return render(request, 'date.html', {
-				'events_date_list': events_date_list,
-			})
+
+
+
 
 
 

@@ -18,7 +18,7 @@ class Events(Document):
 	date = DateTimeField()
 	score = FloatField()
 	def datestr(self):
-		ds = self.date.strftime("%d%m20%y")#to string format
+		ds = self.date.strftime("%d %B 20%y %A")#to string format
 		return ds
 	def keylist(self):
 		keylist = []

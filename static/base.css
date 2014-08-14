@@ -12,7 +12,7 @@ body {
 }
 
 
-a:link, a:visited { 
+a:link, a:visited{ 
 	color: #0414b7;
 	text-decoration: none;
 	cursor: pointer;
@@ -24,19 +24,12 @@ a:hover {
 }
 
 ul{
-	text-align: left;
+	text-align: center;
 	line-height: 1.6em;
 	padding: 0;
+	list-style-type: none;
 }
 
-#previnp{
-	text-align: center;
-	list-style: none;
-}
-
-#lefter{
-	text-align: left;
-}
 
 img {
    width: 100%; 
@@ -49,34 +42,59 @@ h1{
 	color: #0414b7;
 }
 
-button{
-	background-color: #680000;
-	color: #FFF;
-}
-
-input{
-	width: 300px;	
-}
 
 table{
-
 	margin-left: auto;
 	margin-right: auto;
 }
 
-#home, #admin{
+td{
+	width: 150px;
+	height: 150px;
+	border: 1px solid black;
+	text-align: center;
+	padding: 5px;
+}
+
+#outnoeve, #outeve{
+	font-size: 25px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+#outnoeve{
+	background-color: #fafafd;
+}
+
+#outeve{
+	background-color: #0414b7;
+}
+
+#outeve:hover{
+	background-color: #fafafd;	
+}
+
+#innertd{
+	background-color: #e2e5fd;	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+
+#event{
+	color: #FFF;	
+}
+
+#event:hover{
+	color: #0414b7;
+}
+
+#home {
 	width: 20px;
 	height: 20px;
 	position: absolute;
-}
-
-#admin{
-	margin-left: 25px;
-}
-
-#tweet {
-	color: #b52d2d;
-	font-weight: bold;
 }
 
 

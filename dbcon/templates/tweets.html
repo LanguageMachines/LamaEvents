@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block title %}DBCON!{% endblock %}
+{% block title %}Tweets{% endblock %}
 
 {% block primary %}
 
 
-<h1><a href="/dbcon">DataBase Connection Test</a>;</h2>
+<h1><a href="/">Tweets of the Event</a></h2>
 
 
-Tweets for :<br>
+Keyterms for this event ;<br>
 {%for keys in event.keylist %}
 		{{ keys }}
 {% endfor %}
 
 <br><br>
-Estimation for this event;<br>
+Estimation for this event ;<br>
 {{ event.datestr }}
 
 

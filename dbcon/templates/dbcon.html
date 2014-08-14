@@ -1,46 +1,46 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block title %}DBCON!{% endblock %}
+{% block title %}LaMa Events{% endblock %}
 
 {% block primary %}
 
 
-<h1><a href="/dbcon">DataBase Connection Test</a>;</h2>
+<h1><a href="/">LaMa Events</a></h2>
 
-{{ event_dates_list.date }}
+Choose a date to see the events at that time;
 
-{% if latest_event_list %}
+<br><br>
 
-    <ul>
-    {% for event in latest_event_list %}
-		<h2><a href="/dbcon/{{ event.datestr }}/dates">{{ event.datestr }}</a></h2>
-		<li><a href="/dbcon/{{ event.id }}/tweets">
-										{%for keys in event.keylist %}
-												{{ keys }}
-										{% endfor %}</a></li>
-    {% endfor %}
-    </ul>
+<table >
+	{% for x in totallist %}
+		{% if forloop.counter0|divisibleby:5 %}<tr>{% endif %}
+			{% if not x.eventObjlist %}
+				<td id="outnoeve">
+					<table>
+						<tr><a id ="noevent">{{ x.datelist }}</a></tr>
+						<td id="innertd"> </td>
+					</table>
+				</td>
+			{% else %}
+				<td id="outeve"><a href="/{{ x.datelist }}/events" id="event">
+					<table>
+						<tr>{{ x.datelist }}</tr>
+						<td id="innertd"><ul>
+								{% for aba in x.eventObjlist %}
+									{% for keys in aba.keylist %}
+										</li>{{ keys }}</li>
+									{% endfor %}
+								{% endfor %}
+						</td></ul>
+					</table></a>
+				</td>
+			{% endif %}
+		{% if forloop.counter|divisibleby:5 %}<tr>{% endif %}
+	{% endfor %}
+</table>
 
-    {% if is_paginated %}
-        <div class="pagination">
-            <span class="page-links">
-                {% if page_obj.has_previous %}
-                    <a href="/dbcon?page={{ page_obj.previous_page_number }}">Previous</a>
-                {% endif %}
-                <span class="page-current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-                {% if page_obj.has_next %}
-                    <a href="/dbcon?page={{ page_obj.next_page_number }}">Next</a>
-                {% endif %}
-            </span>
-        </div>
-    {% endif %}
-
-{% else %}
-    <p>No Events Found</p>
-{% endif %}
+<br><br>
 
 
     		     

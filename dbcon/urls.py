@@ -5,16 +5,20 @@ from dbcon import views
 
 urlpatterns = patterns('',
 
-	#url(r'^$', TemplateView.as_view(template_name="dbcon.html"), name='dbcon'),
+	###url(r'^$', TemplateView.as_view(template_name="dbcon.html")),
 
-	url(r'^$', views.DbconView.as_view(), name='dbcon'),
-	
-	#url(r'^$', views.dbconView, name='dbcon'),
+	###url(r'^$', views.DbconView.as_view()),
 
-	#url(r'^(?P<id>\w+)/tweets$', views.TweetsView.as_view(), name='tweets'),
+	###url(r'^(?P<id>\w+)/tweets$', views.TweetsView.as_view()),	
 
-	url(r'^(?P<id>\w+)/tweets$', views.eventDetail, name='tweets'),
+	#url(r'^$', views.callendar),
 
-	url(r'^(?P<d>\w+)/dates$', views.eventofDate, name='date'),
+	#url(r'^(?P<id>\w+)/tweets$', views.eventDetail),
+
+	#url(r'^(?P<d>\S+|\S*[^\w\s]\S*)/events$', views.eventsofDate),
+
+	# All urls are working on LamaEvents.urls now.
+	#If you want to use these again,
+	#You have to add '/dbcon/' before the links in templates
 
 )
