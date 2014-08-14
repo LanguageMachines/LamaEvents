@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Events{% endblock %}
+
+{% block primary %}
+
+
+<h1><a href="/">Events of {{ dt }}</a></h2>
+
+
+{% if events_date_list %}
+<ul>
+	{%for event in events_date_list %}
+		<li><a href="/{{ event.id }}/tweets">
+					{%for keys in event.keylist %}
+							{{ keys }}
+					{% endfor %}</a></li>
+	{% endfor %}
+</ul>
+{% else %}
+    <p>No Events Found</p>
+{% endif %}
+
+
+
+    		     
+{% endblock %}
+
