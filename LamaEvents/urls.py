@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
 	#url(r'^$', TemplateView.as_view(template_name="home.html")),
 
-	url(r'^$', views.callendar), #include('dbcon.urls')), #Connected to dbcon directly
+	url(r'^$', views.calendar), #include('dbcon.urls')), #Connected to dbcon directly
 
 	url(r'^(?P<id>\w+)/tweets$', views.eventDetail),
 

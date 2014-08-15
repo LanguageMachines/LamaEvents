@@ -11,7 +11,7 @@ urlpatterns = patterns('',
 
 	###url(r'^(?P<id>\w+)/tweets$', views.TweetsView.as_view()),	
 
-	#url(r'^$', views.callendar),
+	#url(r'^$', views.calendar),
 
 	#url(r'^(?P<id>\w+)/tweets$', views.eventDetail),
 

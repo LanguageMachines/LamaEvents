@@ -3,14 +3,18 @@
 
 {% block title %}LaMa Events{% endblock %}
 
+{% block header %}
+
+<img id="logo" src="{% static "baseimages/lama-logo.png" %}" alt="Lama-Logo">
+
+<h1>LaMa Events</h1>
+
+{% endblock %}
+
 {% block primary %}
 
+<p>Choose a date to see the events at that time;</p>
 
-<h1><a href="/">LaMa Events</a></h2>
-
-Choose a date to see the events at that time;
-
-<br><br>
 
 <table >
 	{% for x in totallist %}
@@ -26,13 +30,15 @@ Choose a date to see the events at that time;
 				<td id="outeve"><a href="/{{ x.datelist }}/events" id="event">
 					<table>
 						<tr>{{ x.datelist }}</tr>
-						<td id="innertd"><ul>
+						<td id="innertd">
+							<ul id="inbox">
 								{% for aba in x.eventObjlist %}
 									{% for keys in aba.keylist %}
 										</li>{{ keys }}</li>
 									{% endfor %}
 								{% endfor %}
-						</td></ul>
+							</ul>
+						</td>
 					</table></a>
 				</td>
 			{% endif %}

@@ -8,7 +8,7 @@ import mongoengine
 from dbcon.models import *
 
 
-def callendar(request):
+def calendar(request):
 
 	now_date = datetime.now()
 	monthLater = now_date + timedelta(days=30)

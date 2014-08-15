@@ -18,10 +18,12 @@ Keyterms for this event ;<br>
 Estimation for this event ;<br>
 {{ event.datestr }}
 
+<br><br>
+If you click the texts, you can see the original tweet in twitter.com.
 
 <ul>
   {%for tweet in event.tweets %}
-		<li>{{ tweet.text }}</li>
+		<li><a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}">{{ tweet.text }}</a></li>
   {% endfor %}
 </ul>
 
