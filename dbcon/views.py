@@ -9,27 +9,49 @@ from dbcon.models import *
 
 
 def calendar(request):
+	if request.method == 'GET':
+		now_date = datetime.now()
+		monthLater = now_date + timedelta(days=30)
 
-	now_date = datetime.now()
-	monthLater = now_date + timedelta(days=30)
+		def daterange(now_date, monthLater):
+			for n in range(int ((monthLater - now_date).days)):
+				yield now_date + timedelta(n)
 
-	def daterange(now_date, monthLater):
-		for n in range(int ((monthLater - now_date).days)):
-			yield now_date + timedelta(n)
+		datelist = []
+		for single_date in daterange(now_date, monthLater):
+			datelist.append(single_date.strftime("%d-%m-20%y"))
 
-	datelist = []
-	for single_date in daterange(now_date, monthLater):
-		datelist.append(single_date.strftime("%d-%m-20%y"))
+		eventObjlist = []
+		for i in datelist:
+			eventX = Events.objects(date=i)
+			eventObjlist.append(eventX)
 
-	eventObjlist = []
-	for i in datelist:
-		eventX = Events.objects(date=i)
-		eventObjlist.append(eventX)
+		totallist = [{'datelist': t[0], 'eventObjlist': t[1]} for t in zip(datelist, eventObjlist)]
+		return render(request, 'dbcon.html', {
+				'totallist': totallist,
+				'datelist': datelist,
+				'eventObjlist': eventObjlist,
+			})
 
+	elif request.method == 'POST':
+		start_date = datetime.strptime(str(request.POST['start_date']), '%d-%m-20%y')
+		end_date = datetime.strptime(str(request.POST['end_date']), '%d-%m-20%y')
 
-	totallist = [{'datelist': t[0], 'eventObjlist': t[1]} for t in zip(datelist, eventObjlist)]
+		def daterange(start_date, end_date):
+			for n in range(int ((end_date - start_date).days)):
+				yield start_date + timedelta(n)
 
-	return render(request, 'dbcon.html', {
+		datelist = []
+		for single_date in daterange(start_date, end_date):
+			datelist.append(single_date.strftime("%d-%m-20%y"))
+
+		eventObjlist = []
+		for i in datelist:
+			eventX = Events.objects(date=i)
+			eventObjlist.append(eventX)
+
+		totallist = [{'datelist': t[0], 'eventObjlist': t[1]} for t in zip(datelist, eventObjlist)]
+		return render(request, 'dbcon.html', {
 				'totallist': totallist,
 				'datelist': datelist,
 				'eventObjlist': eventObjlist,

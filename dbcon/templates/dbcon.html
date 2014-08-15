@@ -16,6 +16,14 @@
 <p>Choose a date to see the events at that time;</p>
 
 
+<form method="post">                                                             
+	{% csrf_token %}
+	<input type="text" name="start_date"  required/> 
+	<input type="text" name="end_date"  required/><br>
+	<button type="submit">Submit</button>
+</form>
+
+
 <table >
 	{% for x in totallist %}
 		{% if forloop.counter0|divisibleby:5 %}<tr>{% endif %}
