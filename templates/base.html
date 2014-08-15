@@ -9,6 +9,16 @@
 <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}" />
 
 
+<script>
+function goBack() {
+    window.history.back()
+}
+
+function goForward() {
+    window.history.forward()
+}
+</script>
+
 </head>
 
 <body>
@@ -19,27 +29,30 @@
   <div id="wrapper_inner">
 	  <div id="middle_top"></div>
 	     <div id="middle">
-	 
-		  <div id="home"><a href="/" >
-		  <img id="front" src="{% static "baseimages/home.png" %}" alt="My image"></a>
-		  </div>
 
-		  <!--div id="admin"><a href="/admin" >
-		  <img id="front" src="{% static "baseimages/admin.png" %}" alt="My image"></a>
-		  </div-->
+			<div id="lilbtn">
+			<img src="{% static "baseimages/forwbtn.png" %}" onclick="goForward()">
+			</div>
 
+			<div id="lilbtn"><a href="/" >
+			<img src="{% static "baseimages/homebtn.png" %}" alt="homebtn"></a>
+			</div>
 
-		  <div id="header">
+			<div id="lilbtn">
+			<img src="{% static "baseimages/backbtn.png" %}" onclick="goBack()">
+			</div>
+
+			<div id="header">
     		   
-		  {% block header %}{% endblock %}
+			{% block header %}{% endblock %}
   
-		  </div>
+			</div>
 		
-		  <div id="primary">
+			<div id="primary">
 
-		  {% block primary %}{% endblock %}
+			{% block primary %}{% endblock %}
 
-		  </div>
+			</div>
 				
 			  
         </div>

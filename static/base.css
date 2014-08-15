@@ -67,11 +67,19 @@ td{
 }
 
 #outeve{
-	background-color: #0414b7;
+	background-color: #000;
 }
 
 #outeve:hover{
 	background-color: #fafafd;	
+}
+
+#event{
+	color: #FFF;	
+}
+
+#event:hover{
+	color: #0414b7;
 }
 
 #innertd{
@@ -84,27 +92,25 @@ td{
 
 #inbox{
 	height: 160px;
-	overflow: auto;
+	overflow-x: auto;
 	margin: 0;
+	font-size: 14px;
 }
 
-#event{
-	color: #FFF;	
-}
 
-#event:hover{
-	color: #0414b7;
-}
 
-#home {
+#lilbtn {
 	width: 20px;
 	height: 20px;
-	position: absolute;
+	margin-right: 5px;
+	float: right;
+	cursor: pointer;
+	z-index: 1;
 }
 
 
 #header, #primary  {
-	margin: 0 30px 20px 30px;
+	margin: 20px 30px 20px 30px;
 	position: relative;
 	text-align: center;
 }

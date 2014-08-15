@@ -3,11 +3,15 @@
 
 {% block title %}Events{% endblock %}
 
-{% block primary %}
+{% block header %}
 
 
 <h1><a href="/">Events of {{ dt }}</a></h2>
 
+
+{% endblock %}
+
+{% block primary %}
 
 {% if events_date_list %}
 <ul>

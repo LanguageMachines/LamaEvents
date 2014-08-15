@@ -3,11 +3,14 @@
 
 {% block title %}Tweets{% endblock %}
 
-{% block primary %}
+{% block header %}
 
 
 <h1><a href="/">Tweets of the Event</a></h2>
 
+{% endblock %}
+
+{% block primary %}
 
 Keyterms for this event ;<br>
 {%for keys in event.keylist %}
