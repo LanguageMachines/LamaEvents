@@ -18,10 +18,9 @@ print("Connected to DB")
 ep = event_pairs.Event_pairs()
 print("Event Detection Initialised")
 
-payload = {'SEARCH': 'echtalles', 'DATE': '2014081214-2014081214', 'DOWNLOAD':True, 'SHOWTWEETS':True}
+payload = {'SEARCH': 'echtalles', 'DATE': 'yymmddhh-yymmddhh', 'DOWNLOAD':True, 'SHOWTWEETS':True}
 
 def RequestTweets():
-#Add an automatic cookie finder here (requests.Session())
 	output1st = requests.get("http://145.100.57.182/cgi-bin/twitter", params=payload, cookies={'cookie':'XXX'})
 	return output1st
 
@@ -59,7 +58,7 @@ while True:
 			time.sleep(300)
 			output = RequestTweets()
 			if output.text[:1000] == dumpoutput:
-				print("Still there is no tweet! I'll skip tweets at " + tweethour)
+				print("Still there is not any tweet! I'll skip tweets at " + tweethour)
 				continue
 			else:
 				print("Tweets came at the second time")
@@ -75,7 +74,6 @@ while True:
 				i['date'] = datetime.datetime.combine(i['date'], datetime.datetime.min.time())
 			lecl.insert(v) #Writing to Database
 		print("Written to Database")
-	#Add here some break for  too long processes
 		continue
 
 

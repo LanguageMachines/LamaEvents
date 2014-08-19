@@ -3,30 +3,35 @@
 
 {% block title %}Events{% endblock %}
 
+
+
 {% block header %}
 
-
-<h1><a href="/">Events of {{ dt }}</a></h2>
-
+<h1>Events of {{ eventDate }}</h2>
 
 {% endblock %}
 
+
+
 {% block primary %}
 
+
 {% if events_date_list %}
+
 <ul>
 	{%for event in events_date_list %}
-		<li><a href="/{{ event.id }}/tweets">
+		<li><a href="/{{ event.id }}/eventDetail">
 					{%for keys in event.keylist %}
 							{{ keys }}
 					{% endfor %}</a></li>
 	{% endfor %}
 </ul>
+
 {% else %}
-    <p>No Events Found</p>
+
+    <p>Events Not Found</p>
+
 {% endif %}
-
-
 
     		     
 {% endblock %}

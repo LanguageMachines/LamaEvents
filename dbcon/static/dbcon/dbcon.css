@@ -1,0 +1,55 @@
+
+
+.ui-datepicker {
+    border: 3px solid #000;
+}
+
+#outnoevetd, #innertd, #outevetd{
+	width: 150px;
+	height: 170px;
+	border: 1px solid black;
+	text-align: center;
+	padding: 5px;
+}
+
+#outnoevetd, #outevetd{
+	font-size: 25px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+#outnoevetd{
+	background-color: #aba7a7;
+}
+
+#outevetd{
+	background-color: #000;
+}
+
+#outevetd:hover{
+	background-color: #000099;	
+}
+
+#innertd{
+	background-color: #e2e5fd;
+	margin: 0;	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#event{
+	color: #FFF;	
+}
+
+
+
+#inbox{
+	height: 160px;
+	overflow-x: auto;
+	margin: 0;
+	font-size: 14px;
+}
+
+

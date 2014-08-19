@@ -3,13 +3,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="shortcut icon" href="{% static 'baseimages/logo.png' %}" />
+<link rel="shortcut icon" href="{% static 'base/images/logo.png' %}" />
 <title>{% block title %}{% endblock %}</title>
 
-<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}" />
+{% block head %}{% endblock %}
 
+<link rel="stylesheet" type="text/css" href="{% static 'base/base.css' %}" />
 
 <script>
+
+{% block script %}{% endblock %}
+
 function goBack() {
     window.history.back()
 }
@@ -17,6 +21,7 @@ function goBack() {
 function goForward() {
     window.history.forward()
 }
+
 </script>
 
 </head>
@@ -31,15 +36,15 @@ function goForward() {
 	     <div id="middle">
 
 			<div id="lilbtn">
-			<img src="{% static "baseimages/forwbtn.png" %}" onclick="goForward()">
+			<img src="{% static 'base/images/forwbtn.png' %}" onclick="goForward()">
 			</div>
 
 			<div id="lilbtn"><a href="/" >
-			<img src="{% static "baseimages/homebtn.png" %}" alt="homebtn"></a>
+			<img src="{% static 'base/images/homebtn.png' %}" alt="homebtn"></a>
 			</div>
 
 			<div id="lilbtn">
-			<img src="{% static "baseimages/backbtn.png" %}" onclick="goBack()">
+			<img src="{% static 'base/images/backbtn.png' %}" onclick="goBack()">
 			</div>
 
 			<div id="header">
@@ -60,7 +65,7 @@ function goForward() {
   <div id="middle_bottom"></div>
 </div>
 
-<!--div class="footer">Mustafa Erkan Başar</div-->
+<div class="footer"><a href="https://github.com/ErkanBasar/LamaEvents">GitHub : ErkanBasar/LamaEvents</a></div>
 
 
 <div id="bottom_of_page"></div>

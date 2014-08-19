@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Tweets{% endblock %}
+
+
+
+{% block header %}
+
+<h1>Event Detail</h2>
+
+{% endblock %}
+
+
+
+{% block primary %}
+
+
+<h3>Keyterms for this event ;</h3>
+{%for keys in event.keylist %}
+		{{ keys }}
+{% endfor %}
+
+
+<h3>Estimation for this Event ;</h3>
+{{ event.datestr }}
+
+
+<h3>Tweets of the Event;</h3>
+
+<p>If you click the texts, you can see the original tweet in 'twitter.com'</p>
+
+<ul>
+  {%for tweet in event.tweets %}
+		<li><a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}">{{ tweet.text }}</a></li>
+  {% endfor %}
+</ul>
+
+    		     
+{% endblock %}
+

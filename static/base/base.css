@@ -1,0 +1,103 @@
+
+
+body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	line-height: 1.3em; 
+	font-family: Genoma, sans-serif;
+	font-size: 18px;
+	color: #000;
+	background: url(images/main_pattern.png); 
+}
+
+
+a:link, a:visited{ 
+	color: #000099;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+a:hover { 
+	color: #000; 
+}
+
+ul{
+	text-align: center;
+	line-height: 1.6em;
+	padding: 0;
+	list-style-type: none;
+}
+
+
+img {
+   width: 100%; 
+}
+
+
+h1{
+	font-size: 40px;
+	font-weight: bold;	
+}
+
+
+table{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+#lilbtn {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+	float: right;
+	cursor: pointer;
+	z-index: 1;
+}
+
+
+#header, #primary  {
+	margin: 20px 30px 20px 30px;
+	position: relative;
+	text-align: center;
+}
+
+
+#middle_top { 
+   width: 970px; 
+   height: 10px; 
+   margin: 0 auto; 
+   background: url(images/middle_top.png) no-repeat; 
+}
+
+#middle_bottom { 
+   width: 970px; 
+   height: 10px; 
+   margin: 0 auto; 
+   background: url(images/middle_bottom.png) no-repeat; 
+}
+
+#middle {
+	width: 920px;
+	padding: 10px 25px;
+	margin: 0 auto;
+	background: url(images/middle_middle.png) repeat-y;
+}
+
+
+.footer { 
+	height: 50px;
+	color:#666;  
+	font-size: 15px;
+	text-align:center; 
+	clear:both;
+	padding-top: 5px;
+}
+
+#bottom_of_page {
+	width: 100%;
+	height: 45px;
+   margin-top: 0px;
+}
+

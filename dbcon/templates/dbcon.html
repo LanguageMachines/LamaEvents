@@ -3,60 +3,104 @@
 
 {% block title %}LaMa Events{% endblock %}
 
+
+
+{% block head %}
+
+<script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
+
+<link rel="stylesheet" type="text/css" href="{% static 'dbcon/dbcon.css' %}" />
+
+{% endblock %}
+
+
+
+{% block script %}
+
+$(function() {
+	var pickerOpts = {
+		dateFormat: 'dd-mm-yy',
+		changeMonth: true,
+		changeYear: true,
+		showAnim: 'drop',
+	};  
+	$( "#datepicker" ).datepicker(pickerOpts);
+    $( "#datepicker2" ).datepicker(pickerOpts);
+});
+
+{% endblock %}
+
+
+
 {% block header %}
 
-<img id="logo" src="{% static "baseimages/lama-logo.png" %}" alt="Lama-Logo">
+<img id="logo" src="{% static 'dbcon/images/lama-logo.png' %}" alt="Lama-Logo">
 
 <h1>LaMa Events</h1>
 
 {% endblock %}
 
+
+
 {% block primary %}
 
-<p>Choose a date to see the events at that time;</p>
-
+<p>Choose dates;</p>
 
 <form method="post">                                                             
 	{% csrf_token %}
-	<input type="text" name="start_date"  required/> 
-	<input type="text" name="end_date"  required/><br>
+	Date Range : 
+	<input type="text" name="start_date" id="datepicker" value="Start Date" required/> 
+	and 
+	<input type="text" name="end_date" id="datepicker2" value="End Date" required/>
 	<button type="submit">Submit</button>
 </form>
 
 
-<table >
-	{% for x in totallist %}
-		{% if forloop.counter0|divisibleby:5 %}<tr>{% endif %}
-			{% if not x.eventObjlist %}
-				<td id="outnoeve">
-					<table>
-						<tr><a id ="noevent">{{ x.datelist }}</a></tr>
-						<td id="innertd"> </td>
-					</table>
-				</td>
-			{% else %}
-				<td id="outeve"><a href="/{{ x.datelist }}/events" id="event">
-					<table>
-						<tr>{{ x.datelist }}</tr>
-						<td id="innertd">
-							<ul id="inbox">
-								{% for aba in x.eventObjlist %}
-									{% for keys in aba.keylist %}
-										</li>{{ keys }}<br></li>
+{% if totallist%}
+
+	<h3>{{ next30 }}</h3>
+	<h3>{{ dateRange }} {{ start_date }} {{ andand }} {{ end_date }}<h3>
+
+	<table >
+		{% for x in totallist %}
+			{% if forloop.counter0|divisibleby:5 %}<tr>{% endif %}
+				{% if not x.eventObjlist %}
+					{{ x.eventObjectlist }}
+					<td id="outnoevetd">
+						<table>
+							<tr><a id ="noevent">{{ x.datelist }}</a></tr>
+							<td id="innertd">  </td>
+						</table>
+					</td>
+				{% else %}
+					<td id="outevetd"><a href="/{{ x.datelist }}/events" id="event">
+						<table>
+							<tr>{{ x.datelist }}</tr>
+							<td id="innertd">
+								<ul id="inbox">
+									{% for aba in x.eventObjlist %}
+										{% for keys in aba.keylist %}
+											</li>{{ keys }}<br></li>
+										{% endfor %}
 									{% endfor %}
-								{% endfor %}
-							</ul>
-						</td>
-					</table></a>
-				</td>
+								</ul>
+							</td>
+						</table></a>
+					</td>
 			{% endif %}
-		{% if forloop.counter|divisibleby:5 %}<tr>{% endif %}
-	{% endfor %}
-</table>
+			{% if forloop.counter|divisibleby:5 %}<tr>{% endif %}
+		{% endfor %}
+	</table>
 
-<br><br>
+{% else %}
+
+    <h3>Dates not found between {{ start_date }} {{ andand }} {{ end_date }}. </h3>
+
+{% endif %}
 
 
-    		     
 {% endblock %}
 
