@@ -2,15 +2,14 @@ import requests
 import random
 
 import time
-import datetime as datetime
+from datetime import date, datetime, timedelta
 
 import pymongo
-from pymongo import MongoClient
 
 import DEvents.event_pairs as event_pairs
 
 #MongoLab Connection;
-connection = MongoClient("XXX", XXX)
+connection = pymongo.MongoClient("XXX", XXX)
 ledb = connection["XXX"]
 ledb.authenticate("XXX", "XXX")
 lecl = ledb.lecl
@@ -31,8 +30,8 @@ DeleteTweetDetails = 'True'
 while True:
 	time.sleep(600)
 	#Time Calculations;
-	nowDate = datetime.datetime.now()
-	nowDate_earlier = nowDate - datetime.timedelta(hours=1)
+	nowDate = datetime.now()
+	nowDate_earlier = nowDate - timedelta(hours=1)
 	tweethour = nowDate_earlier.strftime("%H:00 %d-%m-20%y")
 	nes = nowDate_earlier.strftime("20%y%m%d%H")
 	pDate = nes+'-'+nes
@@ -72,15 +71,15 @@ while True:
 		print("Event Detection Completed")
 		for k,v in EventDic.items():
 			#TimeToEventEstimation Calculations;
-			createDate = datetime.datetime.now()
+			createDate = datetime.now()
 			randomTTE = random.uniform(0.0, 193.0) #random number for estimation (for now)
 			hh, premm = divmod(randomTTE, 1)
 			mm = (60*premm)*0.1
 			v['getRandomTTE'] = randomTTE
 			v['createDate'] = createDate
-			v['Estimation'] = createDate + datetime.timedelta(hours=int(hh), minutes=int(mm))
+			v['Estimation'] = createDate + timedelta(hours=int(hh), minutes=int(mm))
 			#Dates to Datetime;
-			v['date'] = datetime.datetime.combine(v['date'], datetime.datetime.min.time())
+			v['date'] = datetime.combine(v['date'], datetime.min.time())
 			if DeleteTweetDetails == 'True':
 				#Deleting the tweet details;
 				for i in v['tweets']:
@@ -88,7 +87,7 @@ while True:
 			else:
 				#Tweet dates to datetime;
 				for i in v['tweets']:
-					i['date'] = datetime.datetime.combine(i['date'], datetime.datetime.min.time())
+					i['date'] = datetime.combine(i['date'], datetime.min.time())
 			#Write to Database;
 			lecl.insert(v) 
 		print("Written to Database")
