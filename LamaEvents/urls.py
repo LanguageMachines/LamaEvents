@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 
 	url(r'^$', views.calendar), #include('dbcon.urls')), #Connected to dbcon directly
 
-	url(r'^(?P<id>\w+)/tweets$', views.eventDetail),
+	url(r'^(?P<id>\w+)/eventDetail$', views.eventDetail),
 
 	url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', views.eventsofDate),
 

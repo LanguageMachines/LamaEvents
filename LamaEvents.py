@@ -1,10 +1,11 @@
 import requests
-
-import pymongo
-from pymongo import MongoClient
+import random
 
 import time
 import datetime as datetime
+
+import pymongo
+from pymongo import MongoClient
 
 import DEvents.event_pairs as event_pairs
 
@@ -24,6 +25,8 @@ def RequestTweets():
 	output1st = requests.get("http://145.100.57.182/cgi-bin/twitter", params=payload, cookies={'cookie':'XXX'})
 	return output1st
 
+#To run this, make sure you wrote 'True';
+DeleteTweetDetails = 'True'
 
 while True:
 	time.sleep(600)
@@ -67,14 +70,28 @@ while True:
 		#Event Detection;
 		EventDic = ep.detect_events(output.text[:-1]) # [:-1] = ignoring the last '\n' at the bottom of the file.
 		print("Event Detection Completed")
-		#Date to Datetime;
 		for k,v in EventDic.items():
+			#TimeToEventEstimation Calculations;
+			createDate = datetime.datetime.now()
+			randomTTE = random.uniform(0.0, 193.0) #random number for estimation (for now)
+			hh, premm = divmod(randomTTE, 1)
+			mm = (60*premm)*0.1
+			v['getRandomTTE'] = randomTTE
+			v['createDate'] = createDate
+			v['Estimation'] = createDate + datetime.timedelta(hours=int(hh), minutes=int(mm))
+			#Dates to Datetime;
 			v['date'] = datetime.datetime.combine(v['date'], datetime.datetime.min.time())
-			for i in v['tweets']:
-				i['date'] = datetime.datetime.combine(i['date'], datetime.datetime.min.time())
-			lecl.insert(v) #Writing to Database
+			if DeleteTweetDetails == 'True':
+				#Deleting the tweet details;
+				for i in v['tweets']:
+					del i['date'], i['date references'], i['text'], i['entities']
+			else:
+				#Tweet dates to datetime;
+				for i in v['tweets']:
+					i['date'] = datetime.datetime.combine(i['date'], datetime.datetime.min.time())
+			#Write to Database;
+			lecl.insert(v) 
 		print("Written to Database")
 		continue
-
 
 

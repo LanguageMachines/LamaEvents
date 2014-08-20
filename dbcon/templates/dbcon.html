@@ -62,7 +62,7 @@ $(function() {
 {% if totallist%}
 
 	<h3>{{ next30 }}</h3>
-	<h3>{{ dateRange }} {{ start_date }} {{ andand }} {{ end_date }}<h3>
+	<h3>{{ dateRangetext }}<h3>
 
 	<table >
 		{% for x in totallist %}
@@ -81,10 +81,13 @@ $(function() {
 							<tr>{{ x.datelist }}</tr>
 							<td id="innertd">
 								<ul id="inbox">
-									{% for aba in x.eventObjlist %}
-										{% for keys in aba.keylist %}
-											</li>{{ keys }}<br></li>
-										{% endfor %}
+									&#x25BF &nbsp EVENTS &nbsp &#x25BF
+									{% for eventObj in x.eventObjlist %}
+										<div id="keylistbox">
+											{% for keys in eventObj.keylist %}
+													{{ keys }}
+											{% endfor %}
+										</div>
 									{% endfor %}
 								</ul>
 							</td>
@@ -97,7 +100,7 @@ $(function() {
 
 {% else %}
 
-    <h3>Dates not found between {{ start_date }} {{ andand }} {{ end_date }}. </h3>
+    <h3>Dates not found between {{ start_date }} and {{ end_date }}. </h3>
 
 {% endif %}
 

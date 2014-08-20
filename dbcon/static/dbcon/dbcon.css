@@ -43,13 +43,19 @@
 	color: #FFF;	
 }
 
-
-
 #inbox{
 	height: 160px;
 	overflow-x: auto;
 	margin: 0;
 	font-size: 14px;
 }
+
+#keylistbox{
+	padding: 5px;
+	border-top: 1px dashed #000;
+}
+
+
+
 
 

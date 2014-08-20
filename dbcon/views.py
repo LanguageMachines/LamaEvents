@@ -41,7 +41,7 @@ def calendar(request):
 	
 		totallist = call_dates(now_date, monthLater)		
 		
-		#These are the text when the page is opened for the first time;
+		#These are the texts when the page is opened for the first time;
 		next30 = "Next 30 days from today;"
 	
 		return render(request, 'dbcon.html', {
@@ -61,15 +61,13 @@ def calendar(request):
 		totallist = call_dates(startDate, endDate)
 
 		#These are the texts that apper when the dates chosen;
-		dateRange = "The days between"
-		andand = "and"
+		dateRangetext = "The days between " + start_date + " and " + end_date + ";"
 
 		return render(request, 'dbcon.html', {
 				'totallist': totallist,
 				'start_date': start_date,
 				'end_date': end_date,
-				'dateRange': dateRange,
-				'andand': andand,
+				'dateRangetext': dateRangetext,
 			})
 
 

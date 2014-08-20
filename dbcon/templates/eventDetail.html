@@ -28,11 +28,11 @@
 
 <h3>Tweets of the Event;</h3>
 
-<p>If you click the texts, you can see the original tweet in 'twitter.com'</p>
+<p>Click a text to see the original tweet in 'twitter.com';</p>
 
 <ul>
   {%for tweet in event.tweets %}
-		<li><a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}">{{ tweet.text }}</a></li>
+		<li><a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}">{{ tweet.user }} - {{ tweet.id }}</a></li>
   {% endfor %}
 </ul>
 
