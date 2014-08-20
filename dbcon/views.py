@@ -48,25 +48,47 @@ def calendar(request):
 				'next30': next30,
 			})
 
+
 	elif request.method == 'POST':
-		#This is working, if someone writes dates in input boxes.
-		start_date = str(request.POST['start_date'])
-		end_date = str(request.POST['end_date'])
+		if "date_picker" in request.POST:
+			#This is working, if someone writes dates in input boxes.
+			start_date = str(request.POST['start_date'])
+			end_date = str(request.POST['end_date'])
 
-		#Convert the strings to datetime;		
-		startDate = datetime.strptime(start_date, '%d-%m-20%y')
-		endDate = datetime.strptime(end_date, '%d-%m-20%y')
+			#Convert the strings to datetime;		
+			startDate = datetime.strptime(start_date, '%d-%m-20%y')
+			endDate = datetime.strptime(end_date, '%d-%m-20%y')
 
-		totallist = call_dates(startDate, endDate)
+			totallist = call_dates(startDate, endDate)
+	
+			#These are the texts that apper when the dates chosen;
+			dateRangetext = "The days between " + start_date + " and " + end_date + ";"
 
-		#These are the texts that apper when the dates chosen;
-		dateRangetext = "The days between " + start_date + " and " + end_date + ";"
+			return render(request, 'dbcon.html', {
+					'totallist': totallist,
+					'start_date': start_date,
+					'end_date': end_date,
+					'dateRangetext': dateRangetext,
+			})
 
-		return render(request, 'dbcon.html', {
-				'totallist': totallist,
-				'start_date': start_date,
-				'end_date': end_date,
-				'dateRangetext': dateRangetext,
+
+		elif "ttee" in request.POST:
+			#This is working, if someone writes hour and range in input box.
+			search_hour = request.POST['search_hour']
+			hour_range = request.POST['hour_range']
+
+			start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))
+			end_hour = datetime.now() + timedelta(hours=(int(search_hour)+int(hour_range)))
+
+			startHour = start_hour.strftime("%d %B 20%y %H:00")
+			endHour = end_hour.strftime("%d %B 20%y %H:00")
+
+			event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour))
+
+			return render(request, 'dbcon.html', {
+					'event_list': event_list, 
+					'startHour': startHour,
+					'endHour': endHour,
 			})
 
 

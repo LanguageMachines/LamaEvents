@@ -47,16 +47,26 @@ $(function() {
 
 {% block primary %}
 
-<p>Choose dates;</p>
-
+<br>
 <form method="post">                                                             
 	{% csrf_token %}
 	Date Range : 
 	<input type="text" name="start_date" id="datepicker" value="Start Date" required/> 
 	and 
 	<input type="text" name="end_date" id="datepicker2" value="End Date" required/>
-	<button type="submit">Submit</button>
+	<button type="submit" name="date_picker">Submit</button>
 </form>
+
+
+<form method="post">                                                             
+	{% csrf_token %}
+	Hour :
+	<input type="text" name="search_hour"  required/> 
+	Range : 
+	<input type="text" name="hour_range"  required/> 
+	<button type="submit" name="ttee">Submit</button>
+</form>
+
 
 
 {% if totallist%}
@@ -98,9 +108,26 @@ $(function() {
 		{% endfor %}
 	</table>
 
+
+
+{% elif event_list %}
+
+	<br>
+	<h3>The events between {{ startHour }} and {{ endHour }} ;</h3>
+
+	<ul>
+		{%for event in event_list %}
+			<li><a href="/{{ event.id }}/eventDetail">
+						{%for keys in event.keylist %}
+								{{ keys }}
+						{% endfor %}</a> - {{ event.timeLeft }} hours left</li>
+		{% endfor %}
+	</ul>
+
+
 {% else %}
 
-    <h3>Dates not found between {{ start_date }} and {{ end_date }}. </h3>
+    <h3>Nothing Found</h3>
 
 {% endif %}
 
