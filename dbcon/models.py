@@ -22,20 +22,34 @@ class Events(Document):
 	getRandomTTE = FloatField()
 	Estimation = DateTimeField()
 	createDate = DateTimeField()
+
+	def datestr(self):
+		ds = self.date.strftime("%d %B 20%y %A")#to string format
+		return ds
+
+	def Estimationstr(self):
+		es = self.Estimation.strftime("%d %B 20%y - %H:%M")#to string format
+		return es
+
+	def timeLeft(self):
+		hl = self.Estimation - datetime.now()
+		return hl
+
 	def keylist(self):
 		keylist = []
 		for k in self.keyterms:
 			kt = k[0].title() #capitalization
 			keylist.append(kt)
 		return keylist
-	def datestr(self):
-		ds = self.date.strftime("%d %B 20%y %A")#to string format
-		return ds
-	def Estimationstr(self):
-		es = self.Estimation.strftime("%d %B 20%y - %H:%M")#to string format
-		return es
-	def timeLeft(self):
-		hl = self.Estimation - datetime.now()
-		return hl
+
+	def keylistwc(self):
+		keylistwc = []
+		for k in self.keyterms:
+			kt = k[0].title() #capitalization
+			keylistwc.append(kt)
+		keylistwc2 = ", ".join(keylistwc)
+		return keylistwc2
+
+
 
 

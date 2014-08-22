@@ -46,35 +46,42 @@ $(function() {
 
 
 {% block primary %}
-
 <br>
-<form method="post">                                                             
-	{% csrf_token %}
-	Date Range : 
-	<input type="text" name="start_date" id="datepicker" value="Start Date" required/> 
-	and 
-	<input type="text" name="end_date" id="datepicker2" value="End Date" required/>
-	<button type="submit" name="date_picker">Submit</button>
-</form>
+
+<table>
+
+	<tr>
+		<form method="post" action="/">                                                             
+			{% csrf_token %}
+			<td> Search by Date :	</td>
+			<td> <input type="text" name="start_date" id="datepicker" placeholder="Start Date (dd-mm-yy)" required/>	</td>
+			<td> <input type="text" name="end_date" id="datepicker2" placeholder="End Date (dd-mm-yy)" required/>	</td>
+			<td> <button type="submit" name="date_picker">Submit</button>	</td>
+		</form>
+	</tr>
+
+	<tr>
+		<form method="post" action="/">                                                             
+			{% csrf_token %}
+			<td> Search by Hour :	</td>
+			<td> <input type="number" name="search_hour" placeholder="Hour" required/>	</td>
+			<td> <input type="number" name="hour_range" placeholder="Range" required/>	</td>
+			<td> <button type="submit" name="ttee">Submit</button>	</td>
+		</form>
+	</tr>
+
+</table>
+
+{% block monthseeker %}{% endblock %}
 
 
-<form method="post">                                                             
-	{% csrf_token %}
-	Hour :
-	<input type="text" name="search_hour"  required/> 
-	Range : 
-	<input type="text" name="hour_range"  required/> 
-	<button type="submit" name="ttee">Submit</button>
-</form>
-
+{% block ttee %}{% endblock %}
 
 
 {% if totallist%}
 
-	<h3>{{ next30 }}</h3>
-	<h3>{{ dateRangetext }}<h3>
-
-	<table >
+	
+	<table>
 		{% for x in totallist %}
 			{% if forloop.counter0|divisibleby:5 %}<tr>{% endif %}
 				{% if not x.eventObjlist %}
@@ -93,15 +100,16 @@ $(function() {
 								<ul id="inbox">
 									&#x25BF &nbsp EVENTS &nbsp &#x25BF
 									{% for eventObj in x.eventObjlist %}
-										<div id="keylistbox">
-											{% for keys in eventObj.keylist %}
-													{{ keys }}
-											{% endfor %}
-										</div>
+										<a href="/{{ eventObj.id }}/eventDetail">
+											<div id="keylistbox">
+												{% for keys in eventObj.keylist %}
+														{{ keys }}
+												{% endfor %}
+											</div></a>
 									{% endfor %}
 								</ul>
 							</td>
-						</table></a>
+						</table>
 					</td>
 			{% endif %}
 			{% if forloop.counter|divisibleby:5 %}<tr>{% endif %}
@@ -109,25 +117,9 @@ $(function() {
 	</table>
 
 
-
-{% elif event_list %}
-
-	<br>
-	<h3>The events between {{ startHour }} and {{ endHour }} ;</h3>
-
-	<ul>
-		{%for event in event_list %}
-			<li><a href="/{{ event.id }}/eventDetail">
-						{%for keys in event.keylist %}
-								{{ keys }}
-						{% endfor %}</a> - {{ event.timeLeft }} hours left</li>
-		{% endfor %}
-	</ul>
-
-
 {% else %}
 
-    <h3>Nothing Found</h3>
+    <h3>'End Date' must be after then 'Start Date'</h3>
 
 {% endif %}
 

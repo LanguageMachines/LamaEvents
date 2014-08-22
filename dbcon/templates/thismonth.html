@@ -1,0 +1,26 @@
+{% extends 'dbcon.html' %}
+{% load staticfiles %}
+
+
+{% block monthseeker %}
+
+<h3>
+
+	<div id="prevbtn">
+	<a href="/monthseek/from:{{ prevMonth }}to:{{ currMonth }}">
+	<img src="{% static 'base/images/backbtn.png' %}" >
+	</a>
+	</div>
+
+	Next 30 days from today;
+
+	<div id="nextbtn">
+	<a href="/monthseek/from:{{ nextMonth }}to:{{ nextnextMonth }}">
+	<img src="{% static 'base/images/forwbtn.png' %}" >
+	</a>
+	</div>
+
+</h3>
+
+
+{% endblock %}

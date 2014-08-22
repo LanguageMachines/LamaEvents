@@ -1,0 +1,30 @@
+{% extends 'dbcon.html' %}
+{% load staticfiles %}
+
+
+{% block ttee %}
+
+
+{% if event_list %}
+
+	<br>
+	<h3>The events between {{ startHour }} and {{ endHour }} ;</h3>
+
+	<ul>
+		{%for event in event_list %}
+			<li><a href="/{{ event.id }}/eventDetail">
+						{%for keys in event.keylist %}
+								{{ keys }}
+						{% endfor %}</a> - {{ event.timeLeft }} hours left</li>
+		{% endfor %}
+	</ul>
+
+
+{% else %}
+
+    <h3>Events Not Found</h3>
+
+{% endif %}
+
+
+{% endblock %}

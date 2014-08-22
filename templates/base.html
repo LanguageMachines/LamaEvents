@@ -1,26 +1,22 @@
 {% load staticfiles %}
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="{% static 'base/images/logo.png' %}" />
 <title>{% block title %}{% endblock %}</title>
 
+<!--meta name="twitter:widgets:link-color" content="#000099"-->
+
 {% block head %}{% endblock %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'base/base.css' %}" />
 
+
 <script>
 
 {% block script %}{% endblock %}
-
-function goBack() {
-    window.history.back()
-}
-
-function goForward() {
-    window.history.forward()
-}
 
 </script>
 
@@ -35,17 +31,11 @@ function goForward() {
 	  <div id="middle_top"></div>
 	     <div id="middle">
 
-			<div id="lilbtn">
-			<img src="{% static 'base/images/forwbtn.png' %}" onclick="goForward()">
-			</div>
 
 			<div id="lilbtn"><a href="/" >
 			<img src="{% static 'base/images/homebtn.png' %}" alt="homebtn"></a>
 			</div>
 
-			<div id="lilbtn">
-			<img src="{% static 'base/images/backbtn.png' %}" onclick="goBack()">
-			</div>
 
 			<div id="header">
     		   

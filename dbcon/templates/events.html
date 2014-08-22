@@ -7,7 +7,8 @@
 
 {% block header %}
 
-<h1>Events of {{ eventDate }}</h2>
+<img id="logo" src="{% static 'dbcon/images/lama-logo.png' %}" alt="Lama-Logo">
+
 
 {% endblock %}
 
@@ -15,6 +16,23 @@
 
 {% block primary %}
 
+<h1>
+
+	<div id="prevbtn">
+	<a href="/{{ prevDay }}/events" >
+	<img src="{% static 'base/images/backbtn.png' %}" >
+	</a>
+	</div>
+
+	Events of {{ eventDate }}
+
+	<div id="nextbtn">
+	<a href="/{{ nextDay }}/events">
+	<img src="{% static 'base/images/forwbtn.png' %}" >
+	</a>
+	</div>
+
+</h1>
 
 {% if events_date_list %}
 
@@ -23,15 +41,14 @@
 <ul>
 	{%for event in events_date_list %}
 		<li><a href="/{{ event.id }}/eventDetail">
-					{%for keys in event.keylist %}
-							{{ keys }}
-					{% endfor %}</a></li>
+					{{ event.keylistwc }}
+</a></li>
 	{% endfor %}
 </ul>
 
 {% else %}
 
-    <p>Events Not Found</p>
+    <p>There is no event on this day.</p>
 
 {% endif %}
 

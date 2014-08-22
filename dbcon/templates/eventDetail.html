@@ -4,8 +4,16 @@
 {% block title %}Tweets{% endblock %}
 
 
+{% block head %}
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+{% endblock %}
+
 
 {% block header %}
+
+<img id="logo" src="{% static 'dbcon/images/lama-logo.png' %}" alt="Lama-Logo">
 
 <h1>Event Detail</h2>
 
@@ -17,10 +25,7 @@
 
 
 <h3>Keyterms for this event ;</h3>
-{%for keys in event.keylist %}
-		{{ keys }}
-{% endfor %}
-
+{{ event.keylistwc }}
 
 <h3>Estimation for this Event ;</h3>
 {{ event.datestr }}
@@ -32,13 +37,10 @@
 
 <h3>Tweets of the Event;</h3>
 
-<p>Click a text to see the original tweet in 'twitter.com';</p>
 
-<ul>
-  {%for tweet in event.tweets %}
-		<li><a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}">{{ tweet.user }} - {{ tweet.id }}</a></li>
-  {% endfor %}
-</ul>
+{%for tweet in event.tweets %}
+	<blockquote class="twitter-tweet tw-align-center" lang="en"><a href="https://twitter.com/{{ tweet.user }}D/statuses/{{ tweet.id }}"></a></blockquote>
+{% endfor %}
 
     		     
 {% endblock %}

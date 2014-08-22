@@ -4,16 +4,19 @@
     border: 3px solid #000;
 }
 
+input{
+	width: 200px;	
+}
+
 #outnoevetd, #innertd, #outevetd{
 	width: 150px;
 	height: 170px;
-	border: 1px solid black;
 	text-align: center;
 	padding: 5px;
 }
 
 #outnoevetd, #outevetd{
-	font-size: 25px;
+
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
@@ -45,7 +48,7 @@
 
 #inbox{
 	height: 160px;
-	overflow-x: auto;
+	overflow-x: hidden;
 	margin: 0;
 	font-size: 14px;
 }
@@ -53,7 +56,25 @@
 #keylistbox{
 	padding: 5px;
 	border-top: 1px dashed #000;
+	color: #000;
 }
+
+#keylistbox:hover{
+	color: #FFF;
+	background-color: #000099;	
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

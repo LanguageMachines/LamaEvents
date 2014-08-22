@@ -5,7 +5,7 @@ from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 
 from dbcon import views
-
+from dbcon.views import *
 
 urlpatterns = patterns('',
 
@@ -13,10 +13,12 @@ urlpatterns = patterns('',
 
 	#url(r'^$', TemplateView.as_view(template_name="home.html")),
 
-	url(r'^$', views.calendar), #include('dbcon.urls')), #Connected to dbcon directly
+	url(r'^$', Calendar.as_view()), #include('dbcon.urls')), #Connected to dbcon directly
 
-	url(r'^(?P<id>\w+)/eventDetail$', views.eventDetail),
+	url(r'^monthseek/from:(?P<fst>\S+|\S*[^\w\s]\S*)to:(?P<snd>\S+|\S*[^\w\s]\S*)', MonthSeek.as_view()),
 
-	url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', views.eventsofDate),
+	url(r'^(?P<id>\w+)/eventDetail$', EventDetail.as_view()),
+
+	url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()),
 
 )
