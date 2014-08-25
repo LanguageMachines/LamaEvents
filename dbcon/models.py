@@ -5,23 +5,17 @@ from datetime import datetime, timedelta
 from mongoengine import *
 
 class Tweets(EmbeddedDocument):
-	#date_references = StringField()
-	#entities = StringField()
 	user = StringField()
 	id = StringField()
-	#text = StringField() 
-	#date = DateTimeField()
 
 
 class Events(Document):
 	meta = {'collection' : 'lecl'}
-	keyterms = ListField()
 	tweets = ListField(EmbeddedDocumentField(Tweets))
 	date = DateTimeField()
 	score = FloatField()
-	getRandomTTE = FloatField()
 	Estimation = DateTimeField()
-	createDate = DateTimeField()
+	keylist = ListField(StringField())	
 
 	def datestr(self):
 		ds = self.date.strftime("%d %B 20%y %A")#to string format
@@ -32,23 +26,19 @@ class Events(Document):
 		return es
 
 	def timeLeft(self):
-		hl = self.Estimation - datetime.now()
+		if self.Estimation > datetime.now():
+			hl = self.Estimation - datetime.now()
+		else:
+			hl = "Event is in the past"
 		return hl
-
-	def keylist(self):
-		keylist = []
-		for k in self.keyterms:
-			kt = k[0].title() #capitalization
-			keylist.append(kt)
-		return keylist
 
 	def keylistwc(self):
 		keylistwc = []
-		for k in self.keyterms:
-			kt = k[0].title() #capitalization
-			keylistwc.append(kt)
-		keylistwc2 = ", ".join(keylistwc)
-		return keylistwc2
+		keylistwc = ", ".join(self.keylist) #adding coma
+		return keylistwc
+
+
+
 
 
 

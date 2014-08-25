@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+
 {% block title %}LaMa Events{% endblock %}
 
 
-
-{% block head %}
+{% block inhead %}
 
 <script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
 <script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
@@ -35,50 +35,56 @@ $(function() {
 
 
 
-{% block header %}
+{% block search %}
 
-<img id="logo" src="{% static 'dbcon/images/lama-logo.png' %}" alt="Lama-Logo">
+<br>
 
-<h1>LaMa Events</h1>
+<table id="search_table">
+
+	<tr>
+		<form method="post" action="/">                                                             
+			{% csrf_token %}
+			<td> Search by Date : &nbsp	</td>
+			<td> <input type="text" name="start_date" id="datepicker" placeholder="Start Date (dd-mm-yy)" required/>	</td>
+			<td> <input type="text" name="end_date" id="datepicker2" placeholder="End Date (dd-mm-yy)" required/>	</td>
+			<td> <button type="submit" name="date_picker">Search</button>	</td>
+		</form>
+	</tr>
+
+	<tr>
+		<form method="post" action="/">                                                             
+			{% csrf_token %}
+			<td> Search by Hour : &nbsp	</td>
+			<td> <input type="number" name="search_hour" placeholder="Hour" required/>	</td>
+			<td> <input type="number" name="hour_range" placeholder="Range" required/>	</td>
+			<td> <button type="submit" name="ttee">Search</button>	</td>
+		</form>
+	</tr>
+
+	<tr>
+		<form method="post" action="/">                                                             
+			{% csrf_token %}
+			<td> Search by Keyterm : &nbsp	</td>
+			<td> <input type="text" name="fst_key" placeholder="First Search Term" required/>	</td>
+			<td> <input type="text" name="snd_key" placeholder="Second Search Term" />	</td>
+			<td> <button type="submit" name="event_search">Search</button>	</td>
+		</form>
+	</tr>
+
+</table>
+
 
 {% endblock %}
 
 
 
 {% block primary %}
-<br>
-
-<table>
-
-	<tr>
-		<form method="post" action="/">                                                             
-			{% csrf_token %}
-			<td> Search by Date :	</td>
-			<td> <input type="text" name="start_date" id="datepicker" placeholder="Start Date (dd-mm-yy)" required/>	</td>
-			<td> <input type="text" name="end_date" id="datepicker2" placeholder="End Date (dd-mm-yy)" required/>	</td>
-			<td> <button type="submit" name="date_picker">Submit</button>	</td>
-		</form>
-	</tr>
-
-	<tr>
-		<form method="post" action="/">                                                             
-			{% csrf_token %}
-			<td> Search by Hour :	</td>
-			<td> <input type="number" name="search_hour" placeholder="Hour" required/>	</td>
-			<td> <input type="number" name="hour_range" placeholder="Range" required/>	</td>
-			<td> <button type="submit" name="ttee">Submit</button>	</td>
-		</form>
-	</tr>
-
-</table>
-
-{% block monthseeker %}{% endblock %}
-
-
-{% block ttee %}{% endblock %}
 
 
 {% if totallist%}
+
+
+{% block monthseeker %}{% endblock %}
 
 	
 	<table>
@@ -93,9 +99,10 @@ $(function() {
 						</table>
 					</td>
 				{% else %}
-					<td id="outevetd"><a href="/{{ x.datelist }}/events" id="event">
+					<td id="outevetd">
 						<table>
-							<tr>{{ x.datelist }}</tr>
+							<a href="/{{ x.datelist }}/events" id="event">
+							<tr>{{ x.datelist }}</tr></a>
 							<td id="innertd">
 								<ul id="inbox">
 									&#x25BF &nbsp EVENTS &nbsp &#x25BF
@@ -116,10 +123,10 @@ $(function() {
 		{% endfor %}
 	</table>
 
-
 {% else %}
 
-    <h3>'End Date' must be after then 'Start Date'</h3>
+	<h3>There is no date;</h3>
+	<h4>'End Date' must comes after 'Start Date'</h4>
 
 {% endif %}
 

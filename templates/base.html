@@ -9,7 +9,7 @@
 
 <!--meta name="twitter:widgets:link-color" content="#000099"-->
 
-{% block head %}{% endblock %}
+{% block inhead %}{% endblock %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'base/base.css' %}" />
 
@@ -38,8 +38,10 @@
 
 
 			<div id="header">
-    		   
-			{% block header %}{% endblock %}
+
+			<img id="logo" src="{% static 'dbcon/images/lama-logo.png' %}" alt="Lama-Logo">
+
+			{% block search %}{% endblock %}
   
 			</div>
 		

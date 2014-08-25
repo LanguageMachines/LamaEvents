@@ -1,17 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'dbcon.html' %}
 {% load staticfiles %}
 
-{% block title %}Events{% endblock %}
 
-
-
-{% block header %}
-
-<img id="logo" src="{% static 'dbcon/images/lama-logo.png' %}" alt="Lama-Logo">
-
-
-{% endblock %}
-
+{% block title %}Events of {{ eventDate }}{% endblock %}
 
 
 {% block primary %}

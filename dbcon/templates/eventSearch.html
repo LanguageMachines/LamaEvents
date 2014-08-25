@@ -2,25 +2,25 @@
 {% load staticfiles %}
 
 
-{% block title %}Time To Event Estimation{% endblock %}
+{% block title %}Events for '{{ fst_key }} {{ snd_key }}'{% endblock %}
 
 
 {% block primary %}
 
 
-{% if event_list %}
+{% if events_bykey_list %}
 
-	<h3>The events between {{ startHour }} and {{ endHour }} ;</h3>
+	<h1>Events for '{{ fst_key }} {{ snd_key }}';</h1>
 
 	<table>
 			<tr>
 				<th id="eventKeys">Keyterms  </th>
 				<th id="timeLeft">Remaining Time </th>	
 			</tr>
-		{%for event in event_list %}
+		{%for event in events_bykey_list %}
 			<tr>
 				<td id="eventKeys"><a href="/{{ event.id }}/eventDetail">{{ event.keylistwc }}</a>  </td>
-				<td id="timeLeft"> {{ event.timeLeft }} </td>		
+				<td id="timeLeft"> {{ event.timeLeft }} </td>	
 			</tr>
 		{% endfor %}
 
@@ -29,7 +29,7 @@
 
 {% else %}
 
-    <h3>No events found between {{ startHour }} and {{ endHour }}</h3>
+    <h3>There is not any event for terms '{{ fst_key }} {{ snd_key }}'</h3>
 
 {% endif %}
 

@@ -75,13 +75,19 @@ while True:
 			randomTTE = random.uniform(0.0, 193.0) #random number for estimation (for now)
 			hh, premm = divmod(randomTTE, 1)
 			mm = (60*premm)*0.1
-			v['getRandomTTE'] = randomTTE
-			v['createDate'] = createDate
+			#v['getRandomTTE'] = randomTTE
+			#v['createDate'] = createDate
 			v['Estimation'] = createDate + timedelta(hours=int(hh), minutes=int(mm))
 			#Dates to Datetime;
 			v['date'] = datetime.combine(v['date'], datetime.min.time())
+			#Writing keyterms in a list without scores;
+			v['keylist'] = []
+			for m in v['keyterms']:
+				mt = m[0].title() #capitalization
+				v['keylist'].append(mt)
 			if DeleteTweetDetails == 'True':
 				#Deleting the tweet details;
+				del v['keyterms']
 				for i in v['tweets']:
 					del i['date'], i['date references'], i['text'], i['entities']
 			else:

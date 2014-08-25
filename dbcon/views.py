@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 from datetime import datetime, timedelta
 
 import mongoengine
 
 from dbcon.models import *
+
+
+#!!! All date searches are now monthly !!!
+#If you want to search weekly; change all 'days=29' with 'days=6' (and 'days=-29' with 'days=-6') 
 
 
 def call_dates(first_date, second_date):
@@ -73,7 +78,7 @@ class Calendar(View):
 			prev3Month = (startDate + timedelta(days=-29)).strftime("%d-%m-20%y")
 
 			totallist = call_dates(startDate, endDate)
-	
+
 
 			return render(request, 'datepicker.html', {
 					'totallist': totallist,
@@ -90,19 +95,39 @@ class Calendar(View):
 			search_hour = request.POST['search_hour']
 			hour_range = request.POST['hour_range']
 
-			start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))
+			#For not to see the events in the past;
+			if int(search_hour) > int(hour_range):
+				start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))
+			else:
+				start_hour = datetime.now()
+
 			end_hour = datetime.now() + timedelta(hours=(int(search_hour)+int(hour_range)))
 
 			startHour = start_hour.strftime("%d %B 20%y %H:00")
 			endHour = end_hour.strftime("%d %B 20%y %H:00")
 
-			#Find events which fits 'end_hour > event.Estimation > start_hour'0
+			#Find events which fits 'end_hour > event.Estimation > start_hour'
 			event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
 
 			return render(request, 'ttee.html', {
 					'event_list': event_list, 
 					'startHour': startHour,
 					'endHour': endHour,
+			})
+
+
+		elif "event_search" in request.POST:
+			#This is working, if someone writes keyterms in the search by keyterms input box.
+			fst_key = request.POST['fst_key']
+			snd_key = request.POST['snd_key']
+
+			#Find events which have first or second keyterm. iexact = case insensitive.
+			events_bykey_list = Events.objects(Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))
+
+			return render(request, 'eventSearch.html', {
+					'events_bykey_list': events_bykey_list,
+					'fst_key': fst_key,
+					'snd_key': snd_key,
 			})
 
 
@@ -126,6 +151,7 @@ class MonthSeek(View):
 				'nextnext2Month': nextnext2Month,
 				'prev2Month': prev2Month,
 		})
+
 
 
 class EventsofDate(View):
@@ -154,17 +180,6 @@ class EventDetail(View):
 		return render(request, 'eventDetail.html', {
 				'event': event,
 		})
-
-
-
-
-
-
-
-
-
-
-
 
 
 

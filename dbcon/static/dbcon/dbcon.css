@@ -4,9 +4,28 @@
     border: 3px solid #000;
 }
 
+button{
+	color: #FFF;
+	background-color: #000;	
+	border-color: #FFF;
+}
+
 input{
 	width: 200px;	
+	border: 1px solid #000;
+	padding: 2px;
+	margin: 0;
 }
+
+#eventKeys, #timeLeft{
+	width: 50%;
+	padding: 5px;	
+}
+
+#timeLeft{
+	text-align: left;
+}
+
 
 #outnoevetd, #innertd, #outevetd{
 	width: 150px;
@@ -16,7 +35,6 @@ input{
 }
 
 #outnoevetd, #outevetd{
-
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
@@ -58,6 +76,7 @@ input{
 	border-top: 1px dashed #000;
 	color: #000;
 }
+
 
 #keylistbox:hover{
 	color: #FFF;
