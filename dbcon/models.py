@@ -34,7 +34,7 @@ class Events(Document):
 
 	def keylistwc(self):
 		keylistwc = []
-		keylistwc = ", ".join(self.keylist) #adding coma
+		keylistwc = ", ".join(self.keylist) #adding comma
 		return keylistwc
 
 

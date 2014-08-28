@@ -4,18 +4,7 @@
     border: 3px solid #000;
 }
 
-button{
-	color: #FFF;
-	background-color: #000;	
-	border-color: #FFF;
-}
-
-input{
-	width: 200px;	
-	border: 1px solid #000;
-	padding: 2px;
-	margin: 0;
-}
+/* ------------- lists in the 'eventSearch' and 'ttee'; ------------- */
 
 #eventKeys, #timeLeft{
 	width: 50%;
@@ -27,30 +16,23 @@ input{
 }
 
 
-#outnoevetd, #innertd, #outevetd{
-	width: 150px;
-	height: 170px;
+/* ---------------------------- Calendar (dbcon); ---------------------------- */
+
+
+#eventd, #noeventd, #innertd{
+	width: 300px;
+	height: 350px;
 	text-align: center;
 	padding: 5px;
 }
 
-#outnoevetd, #outevetd{
+
+#eventd, #noeventd{
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 }
 
-#outnoevetd{
-	background-color: #aba7a7;
-}
-
-#outevetd{
-	background-color: #000;
-}
-
-#outevetd:hover{
-	background-color: #000099;	
-}
 
 #innertd{
 	background-color: #e2e5fd;
@@ -60,41 +42,62 @@ input{
 	border-radius: 5px;
 }
 
-#event{
+
+#noeventd{
+	background-color: #aba7a7;
+}
+
+
+#eventd{
+	background-color: #000;
+}
+
+
+#eventd:hover{
+	background-color: #000099;	
+}
+
+
+#eventd a{
 	color: #FFF;	
 }
 
-#inbox{
-	height: 160px;
+
+#eventd ul{
+	height: 100%;
 	overflow-x: hidden;
 	margin: 0;
 	font-size: 14px;
 }
 
-#keylistbox{
-	padding: 5px;
-	border-top: 1px dashed #000;
-	color: #000;
+
+#eventd ul li{
+	padding: 10px;
 }
 
 
-#keylistbox:hover{
+#eventd ul li a{
+	color: #000;	
+}
+
+
+#eventd ul li:hover a{
+	color: #FFF;	
+}
+
+
+#eventd ul li:nth-child(2n){
+	background-color: #c9cfff;	
+}
+
+
+#eventd ul li:hover, #eventd ul li:nth-child(2n):hover{
 	color: #FFF;
 	background-color: #000099;	
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
+/* ----------------------------------------------------------------- */
 
 
 

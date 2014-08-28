@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="shortcut icon" href="{% static 'base/images/logo.png' %}" />
+<link rel="shortcut icon" href="{% static 'base/images/just-lama.png' %}" />
 <title>{% block title %}{% endblock %}</title>
 
 <!--meta name="twitter:widgets:link-color" content="#000099"-->
@@ -20,47 +20,63 @@
 
 </script>
 
+
 </head>
+
 
 <body>
 
 
-<div id="wrapper_outer">
-<div id="bottom_of_page"></div>
-  <div id="wrapper_inner">
-	  <div id="middle_top"></div>
-	     <div id="middle">
+<div id="blanker"></div>
 
 
-			<div id="lilbtn"><a href="/" >
-			<img src="{% static 'base/images/homebtn.png' %}" alt="homebtn"></a>
-			</div>
+
+<div id="wrapper">
+
+	<div id="github">
+
+		<a href="https://github.com/ErkanBasar/LamaEvents">
+			<img  src="{% static 'base/images/github.png' %}"></a>
+
+	</div>
 
 
-			<div id="header">
+	<div id="header">
 
-			<img id="logo" src="{% static 'dbcon/images/lama-logo.png' %}" alt="Lama-Logo">
-
-			{% block search %}{% endblock %}
+		<a href="/"><img src="{% static 'base/images/lama-events.png' %}"/></a>
   
-			</div>
+	</div>
 		
-			<div id="primary">
 
-			{% block primary %}{% endblock %}
+	<div id="primary">
 
-			</div>
-				
-			  
-        </div>
-  </div>
-  <div id="middle_bottom"></div>
+		<div id="pri_content">
+			{% block pri_content %}{% endblock %}
+		</div>
+
+		<div id="pri_sidebar">
+			{% block pri_sidebar %}{% endblock %}
+		</div>
+
+		<div id="cleaner"></div>
+
+	</div>
+
+
+	<div id="bar">
+
+		<img src="{% static 'base/images/lama-logo.png' %}"/>
+
+		<a href="http://project-infiniti.nl/">
+			<img src="{% static 'base/images/infiniti.png' %}"/></a>
+
+	</div>
+
+
 </div>
 
-<div class="footer"><a href="https://github.com/ErkanBasar/LamaEvents">GitHub : ErkanBasar/LamaEvents</a></div>
-
-
-<div id="bottom_of_page"></div>
+	
+<div id="blanker"></div>
 
 </body>
 </html>

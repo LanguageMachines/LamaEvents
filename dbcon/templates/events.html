@@ -5,23 +5,15 @@
 {% block title %}Events of {{ eventDate }}{% endblock %}
 
 
-{% block primary %}
+{% block pri_content %}
 
 <h1>
 
-	<div id="prevbtn">
-	<a href="/{{ prevDay }}/events" >
-	<img src="{% static 'base/images/backbtn.png' %}" >
-	</a>
-	</div>
+	<a href="/{{ prevDay }}/events" ><div id="prevbtn"></div></a>
 
 	Events of {{ eventDate }}
-
-	<div id="nextbtn">
-	<a href="/{{ nextDay }}/events">
-	<img src="{% static 'base/images/forwbtn.png' %}" >
-	</a>
-	</div>
+	
+	<a href="/{{ nextDay }}/events"><div id="nextbtn"></div></a>
 
 </h1>
 

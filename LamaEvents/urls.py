@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 
 	url(r'^$', Calendar.as_view()), #include('dbcon.urls')), #Connected to dbcon directly
 
-	url(r'^monthseek/from:(?P<fst>\S+|\S*[^\w\s]\S*)to:(?P<snd>\S+|\S*[^\w\s]\S*)', MonthSeek.as_view()),
+	url(r'^intervalseek/from:(?P<fst>\S+|\S*[^\w\s]\S*)to:(?P<snd>\S+|\S*[^\w\s]\S*)', IntervalSeek.as_view()),
 
 	url(r'^(?P<id>\w+)/eventDetail$', EventDetail.as_view()),
 

@@ -2,23 +2,15 @@
 {% load staticfiles %}
 
 
-{% block monthseeker %}
+{% block intervalseeker %}
 
 <h3>
 
-	<div id="prevbtn">
-	<a href="/monthseek/from:{{ prev3Month }}to:{{ start_date }}">
-	<img src="{% static 'base/images/backbtn.png' %}" >
-	</a>
-	</div>
+	<a href="/intervalseek/from:{{ prev3Date }}to:{{ start_date }}"><div id="prevbtn"></div></a>
 
-	The days between {{ start_date }} and {{ end_date }} ;
+	The events between {{ start_date }} and {{ end_date }} ;
 
-	<div id="nextbtn">
-	<a href="/monthseek/from:{{ end_date }}to:{{ nextnext3Month }}">
-	<img src="{% static 'base/images/forwbtn.png' %}" >
-	</a>
-	</div>
+	<a href="/intervalseek/from:{{ end_date }}to:{{ nextnext3Date }}"><div id="nextbtn"></div></a>
 	
 </h3>
 

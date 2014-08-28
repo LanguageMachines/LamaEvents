@@ -31,43 +31,54 @@ $(function() {
     $( "#datepicker2" ).datepicker(pickerOpts);
 });
 
+
+var $logo = $('#logo-scroll');
+$(document).scroll(function() {
+    $logo.css({display: $(this).scrollTop() > 100? "block":"none"});
+});
+
 {% endblock %}
 
 
 
-{% block search %}
+{% block pri_sidebar %}
 
-<br>
 
-<table id="search_table">
+<div id="logo_scroll"><img src="{% static 'base/images/lama-events.png' %}" /></div>
+
+<table>
 
 	<tr>
 		<form method="post" action="/">                                                             
 			{% csrf_token %}
-			<td> Search by Date : &nbsp	</td>
-			<td> <input type="text" name="start_date" id="datepicker" placeholder="Start Date (dd-mm-yy)" required/>	</td>
-			<td> <input type="text" name="end_date" id="datepicker2" placeholder="End Date (dd-mm-yy)" required/>	</td>
-			<td> <button type="submit" name="date_picker">Search</button>	</td>
+			<tr> <h3>Search by Date : </h3>	</tr>
+			<tr> <input type="text" name="start_date" id="datepicker" placeholder="Start Date (dd-mm-yy)" required/>	</tr>
+			<tr> <input type="text" name="end_date" id="datepicker2" placeholder="End Date (dd-mm-yy)" required/>	</tr>
+			<tr> <button type="submit" name="date_picker">Search</button>	</tr>
 		</form>
 	</tr>
 
-	<tr>
-		<form method="post" action="/">                                                             
-			{% csrf_token %}
-			<td> Search by Hour : &nbsp	</td>
-			<td> <input type="number" name="search_hour" placeholder="Hour" required/>	</td>
-			<td> <input type="number" name="hour_range" placeholder="Range" required/>	</td>
-			<td> <button type="submit" name="ttee">Search</button>	</td>
-		</form>
-	</tr>
+<br><br>
 
 	<tr>
 		<form method="post" action="/">                                                             
 			{% csrf_token %}
-			<td> Search by Keyterm : &nbsp	</td>
-			<td> <input type="text" name="fst_key" placeholder="First Search Term" required/>	</td>
-			<td> <input type="text" name="snd_key" placeholder="Second Search Term" />	</td>
-			<td> <button type="submit" name="event_search">Search</button>	</td>
+			<tr> <h3>Search by Hour : </h3>	</tr>
+			<tr> <input type="number" name="search_hour" placeholder="Hour" required/>	</tr>
+			<tr> <input type="number" name="hour_range" placeholder="Range" required/>	</tr>
+			<tr> <button type="submit" name="ttee">Search</button>	</tr>
+		</form>
+	</tr>
+
+<br><br>
+
+	<tr>
+		<form method="post" action="/">                                                             
+			{% csrf_token %}
+			<tr> <h3>Search by Keyterm : </h3>	</tr>
+			<tr> <input type="text" name="fst_key" placeholder="First Search Term" />	</tr>
+			<tr> <input type="text" name="snd_key" placeholder="Second Search Term" />	</tr>
+			<tr> <button type="submit" name="event_search">Search</button>	</tr>
 		</form>
 	</tr>
 
@@ -78,55 +89,62 @@ $(function() {
 
 
 
-{% block primary %}
+{% block pri_content %}
 
 
 {% if totallist%}
 
 
-{% block monthseeker %}{% endblock %}
+{% block intervalseeker %}{% endblock %}
 
-	
+
+<br>
 	<table>
 		{% for x in totallist %}
-			{% if forloop.counter0|divisibleby:5 %}<tr>{% endif %}
+			{% if forloop.counter0|divisibleby:3 %}
+				<tr>
+			{% endif %}
 				{% if not x.eventObjlist %}
-					{{ x.eventObjectlist }}
-					<td id="outnoevetd">
+					<td id="noeventd">
 						<table>
-							<tr><a id ="noevent">{{ x.datelist }}</a></tr>
-							<td id="innertd">  </td>
+							<tr>
+								{{ x.dateliststr }}
+								<td id="innertd">  </td>
+							</tr>
 						</table>
 					</td>
 				{% else %}
-					<td id="outevetd">
+					<td id="eventd">
 						<table>
-							<a href="/{{ x.datelist }}/events" id="event">
-							<tr>{{ x.datelist }}</tr></a>
-							<td id="innertd">
-								<ul id="inbox">
-									&#x25BF &nbsp EVENTS &nbsp &#x25BF
-									{% for eventObj in x.eventObjlist %}
-										<a href="/{{ eventObj.id }}/eventDetail">
-											<div id="keylistbox">
-												{% for keys in eventObj.keylist %}
-														{{ keys }}
-												{% endfor %}
-											</div></a>
-									{% endfor %}
-								</ul>
-							</td>
+							<tr>
+								<a href="/{{ x.datelist }}/events">{{ x.dateliststr }}</a>
+								<td id="innertd">
+									<ul>
+										{% for eventObj in x.eventObjlist %}
+											<li>
+												<a href="/{{ eventObj.id }}/eventDetail">
+													{% for keys in eventObj.keylist %}
+														{{ keys }}{% if forloop.last %}{% else %},{% endif %}
+													{% endfor %}
+												</a>
+											</li>
+										{% endfor %}
+									</ul>
+								</td>
+							</tr>
 						</table>
 					</td>
 			{% endif %}
-			{% if forloop.counter|divisibleby:5 %}<tr>{% endif %}
+			{% if forloop.counter|divisibleby:3 %}
+				</tr>
+			{% endif %}
 		{% endfor %}
 	</table>
 
 {% else %}
 
-	<h3>There is no date;</h3>
-	<h4>'End Date' must comes after 'Start Date'</h4>
+	<h3>There is no date!</h3>
+	<h4>Reminder : 'End Date' must comes after 'Start Date'</h4>
 
 {% endif %}
 

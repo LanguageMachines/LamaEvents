@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
-from django.core.paginator import Paginator
 
 from datetime import datetime, timedelta
 
@@ -10,8 +9,11 @@ import mongoengine
 from dbcon.models import *
 
 
-#!!! All date searches are now monthly !!!
-#If you want to search weekly; change all 'days=29' with 'days=6' (and 'days=-29' with 'days=-6') 
+#!HINT! : To change the time interval in calendar change 'timeIntstr' (ex: week => "timeIntstr = 7")
+timeIntstr = 3
+time_interval = timeIntstr - 1 #to show it on template (nextint.html)
+
+#!IDEA! : you can ask the 'timeIntstr' value to user, for example with a dropdown menu.
 
 
 def call_dates(first_date, second_date):
@@ -21,21 +23,23 @@ def call_dates(first_date, second_date):
 		for n in range((int((second_date - first_date).days))+1):
 			yield first_date + timedelta(n)
 
-	#Put the dates in a list as strings;
+	#Put the dates in lists as strings;
 	datelist = []
+	dateliststr = []
 	for single_date in daterange(first_date, second_date):
 		datelist.append(single_date.strftime("%d-%m-20%y"))
-	#This string format is important for passing the data with url
-	#It is the 'dt' argument in the eventsofDate() method below.
+		dateliststr.append(single_date.strftime("%d %b 20%y %a"))
+	#!INFO! : "datelist" string format is important for passing the data with url and finding the events. It is the 'dt' argument in the EventsofDate view below.
+	#!HINT! : To change how the dates are shown on the calendar change it's strftime. (ex: 30 Aug 2014 Sat = "%d %b 20%y %a")
 
-	#Find the events of that dates and put them in a list
+	#Find the events of that dates and put them in a list;
 	eventObjlist = []
 	for i in datelist:
 		eventX = Events.objects(date=i)
 		eventObjlist.append(eventX)
 
 	#Combination of this lists helps to find the exact events of the exact date for calendar. 
-	totallist1st = [{'datelist': t[0], 'eventObjlist': t[1]} for t in zip(datelist, eventObjlist)]
+	totallist1st = [{'datelist': t[0], 'dateliststr': t[1], 'eventObjlist': t[2]} for t in zip(datelist, dateliststr, eventObjlist)]
 	return totallist1st
 
 
@@ -44,21 +48,22 @@ class Calendar(View):
 	def get(self, request):
 		#This is working, when you open the page for the first time.
 		now_date = datetime.now()
-		monthLater = now_date + timedelta(days=29)
+		dateLater = now_date + timedelta(days=time_interval)
 		
-		nextMonth = monthLater.strftime("%d-%m-20%y")
-		nextnextMonth = (monthLater + timedelta(days=29)).strftime("%d-%m-20%y")
-		prevMonth = (now_date + timedelta(days=-29)).strftime("%d-%m-20%y")
-		currMonth = now_date.strftime("%d-%m-20%y")
+		nextDate = dateLater.strftime("%d-%m-20%y")
+		nextnextDate = (dateLater + timedelta(days=time_interval)).strftime("%d-%m-20%y")
+		prevDate = (now_date + timedelta(days=-time_interval)).strftime("%d-%m-20%y")
+		currDate = now_date.strftime("%d-%m-20%y")
 	
-		totallist = call_dates(now_date, monthLater)		
+		totallist = call_dates(now_date, dateLater)		
 	
-		return render(request, 'thismonth.html', {
+		return render(request, 'nextint.html', {
 				'totallist': totallist,
-				'nextMonth': nextMonth,
-				'nextnextMonth': nextnextMonth,
-				'prevMonth': prevMonth,
-				'currMonth': currMonth,
+				'nextDate': nextDate,
+				'nextnextDate': nextnextDate,
+				'prevDate': prevDate,
+				'currDate': currDate,
+				'timeIntstr' : timeIntstr,
 		})
 
 
@@ -74,18 +79,17 @@ class Calendar(View):
 			startDate = datetime.strptime(start_date, '%d-%m-20%y')
 			endDate = datetime.strptime(end_date, '%d-%m-20%y')
 
-			nextnext3Month = (endDate + timedelta(days=29)).strftime("%d-%m-20%y")
-			prev3Month = (startDate + timedelta(days=-29)).strftime("%d-%m-20%y")
+			nextnext3Date = (endDate + timedelta(days=time_interval)).strftime("%d-%m-20%y")
+			prev3Date = (startDate + timedelta(days=-time_interval)).strftime("%d-%m-20%y")
 
 			totallist = call_dates(startDate, endDate)
-
 
 			return render(request, 'datepicker.html', {
 					'totallist': totallist,
 					'start_date': start_date,
 					'end_date': end_date,
-					'nextnext3Month': nextnext3Month,
-					'prev3Month': prev3Month,
+					'nextnext3Date': nextnext3Date,
+					'prev3Date': prev3Date,
 			})
 
 
@@ -116,13 +120,14 @@ class Calendar(View):
 			})
 
 
+
 		elif "event_search" in request.POST:
 			#This is working, if someone writes keyterms in the search by keyterms input box.
 			fst_key = request.POST['fst_key']
 			snd_key = request.POST['snd_key']
 
-			#Find events which have first or second keyterm. iexact = case insensitive.
-			events_bykey_list = Events.objects(Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))
+			#Find events which have first or second keyterm and not in the past. iexact = case insensitive.
+			events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
 
 			return render(request, 'eventSearch.html', {
 					'events_bykey_list': events_bykey_list,
@@ -132,24 +137,24 @@ class Calendar(View):
 
 
 
-class MonthSeek(View):
+class IntervalSeek(View):
 
 	def get(self, request, fst, snd):
 		'''fst: first day, snd: last day of the month'''
-		currMonth2 = datetime.strptime(fst, '%d-%m-20%y')
-		monthLater2 = currMonth2 + timedelta(days=29)
+		currDate2 = datetime.strptime(fst, '%d-%m-20%y')
+		dateLater2 = currDate2 + timedelta(days=time_interval)
 
-		nextnext2Month = (monthLater2 + timedelta(days=29)).strftime("%d-%m-20%y")
-		prev2Month = (currMonth2 + timedelta(days=-29)).strftime("%d-%m-20%y")
+		nextnext2Date = (dateLater2 + timedelta(days=time_interval)).strftime("%d-%m-20%y")
+		prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime("%d-%m-20%y")
 	
-		totallist = call_dates(currMonth2, monthLater2)		
+		totallist = call_dates(currDate2, dateLater2)		
 
-		return render(request, 'monthseek.html', {
+		return render(request, 'intervalseek.html', {
 				'totallist': totallist,
 				'fst': fst,
 				'snd': snd, 
-				'nextnext2Month': nextnext2Month,
-				'prev2Month': prev2Month,
+				'nextnext2Date': nextnext2Date,
+				'prev2Date': prev2Date,
 		})
 
 
