@@ -48,6 +48,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'LamaEvents.middleware.MobileTemplatesMiddleware',
 )
 
 ROOT_URLCONF = 'LamaEvents.urls'
@@ -111,19 +112,23 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
     '/media/Data/Projects/Django/LamaEvents/static/',
-	#'/media/Data/Projects/Django/LamaEvents/dbcon/static/',
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, "template"),
+    os.path.join(BASE_DIR, "templates"),
     '/media/Data/Projects/Django/LamaEvents/templates/',
-	#'/media/Data/Projects/Django/LamaEvents/dbcon/templates/',
 )
 
 
+MOBILE_TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates', 'mobile'),
+    '/media/Data/Projects/Django/LamaEvents/templates/mobile/',
+)
 
-
-
+DESKTOP_TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates', 'desktop'),
+    '/media/Data/Projects/Django/LamaEvents/templates/desktop/',
+)
 
 
 

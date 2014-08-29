@@ -5,14 +5,12 @@
 {% block title %}LaMa Events{% endblock %}
 
 
-{% block inhead %}
+{% block ex_head %}
 
 <script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
 <script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
 
 <link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
-
-<link rel="stylesheet" type="text/css" href="{% static 'dbcon/dbcon.css' %}" />
 
 {% endblock %}
 
@@ -32,19 +30,12 @@ $(function() {
 });
 
 
-var $logo = $('#logo-scroll');
-$(document).scroll(function() {
-    $logo.css({display: $(this).scrollTop() > 100? "block":"none"});
-});
-
 {% endblock %}
 
 
 
 {% block pri_sidebar %}
 
-
-<div id="logo_scroll"><img src="{% static 'base/images/lama-events.png' %}" /></div>
 
 <table>
 
@@ -145,6 +136,7 @@ $(document).scroll(function() {
 
 	<h3>There is no date!</h3>
 	<h4>Reminder : 'End Date' must comes after 'Start Date'</h4>
+
 
 {% endif %}
 

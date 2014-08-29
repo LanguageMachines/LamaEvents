@@ -1,0 +1,314 @@
+
+
+body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	line-height: 1.3em; 
+	font-family: Genoma, sans-serif;
+	font-size: 18px;
+	color: #000;
+	background: url(images/main_pattern.png); 
+}
+
+
+a:link, a:visited{ 
+	color: #53a8e4;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+
+a:hover { 
+	color: #000; 
+}
+
+
+h1{
+	font-size: 40px;
+	font-weight: bold;	
+}
+
+
+table{
+	margin-left: auto;
+	margin-right: auto;
+	color: #000;
+	text-align: right;
+}
+
+
+ul{
+	text-align: center;
+	line-height: 1.6em;
+	padding: 0;
+	list-style-type: none;
+}
+
+
+button{
+	color: #FFF;
+	background-color: #53a8e4;	
+	border-color: #FFF;
+	cursor:	pointer;
+	width: 205px;
+}
+
+
+button:hover{
+	background-color: #000099;
+}
+
+
+input{
+	width: 200px;	
+	border: 1px solid #000;
+	padding: 2px;
+	margin: 0;
+}
+
+
+/* -------------------------- Extras; ------------------------------ */
+
+
+#nextbtn, #prevbtn, #homebtn{
+	width: 25px;
+	height: 25px;
+	margin: 0 23px;
+	cursor: pointer;
+	z-index: 1;
+}
+
+#homebtn {
+	background: url(images/homebtn.png) no-repeat; 
+}
+
+#homebtn:hover{
+	background: url(images/homebtnhov.png) no-repeat; 	
+}
+
+#nextbtn{
+	float: right;
+	background: url(images/forwbtn.png) no-repeat; 
+}
+
+#nextbtn:hover{
+	background: url(images/forwbtnhov.png) no-repeat; 
+}
+
+
+#prevbtn{
+	background: url(images/backbtn.png) no-repeat;
+	float: left;
+}
+
+#prevbtn:hover{
+	background: url(images/backbtnhov.png) no-repeat;
+}
+
+#github{
+	position: absolute;
+	top: 45px;
+	margin: 0 auto;	
+	z-index: 1;
+}
+
+#github img{
+	height: 100px;
+	margin-left : 1029px;
+}
+
+
+/* ------------------------ Base Divs; ------------------------- */
+
+
+#header, #primary {
+	margin: 30px;
+	position: relative;
+	text-align: center;
+}
+
+
+#pri_content{
+	width: 750px;	
+	float: left;
+	padding-right: 25px;
+	border-right: 1px solid #000;
+}
+
+
+#pri_sidebar{
+	width: 230px;
+	float: right;	
+	text-align: left;
+}
+
+
+
+#header img{
+	width: 700px;	
+	margin: 25px 0;
+}
+
+
+#bar{
+	margin: 30px 30px 15px 30px;
+	height: 60px;
+}
+
+
+#bar img{
+	height: 60px;	
+	padding-right: 50px;
+	float: left;
+}
+
+
+#cleaner{
+	clear: both;
+	width: 100%;
+	height: 0;	
+}
+
+
+/* ------------------------ General Divs; ------------------------- */
+
+
+#wrapper {
+	width: 1100px;
+	padding: 20px 25px 10px 25px;
+	margin: 0 auto;
+	background: #53a8e4;
+	border: 3px solid #000;
+}
+
+
+.footer { 
+	height: 50px;
+	color:#666;  
+	font-size: 15px;
+	text-align:center; 
+	clear:both;
+	padding-top: 5px;
+}
+
+
+#blanker {
+	width: 100%;
+	height: 45px;
+   margin-top: 0;
+}
+
+
+
+
+
+
+
+
+
+
+/* ------------ !!!!!!!!!!!!!! DBCON CSS; !!!!!!!!!!!!!!! ----------------- */
+
+
+
+
+
+
+.ui-datepicker {
+    border: 3px solid #000;
+}
+
+/* ------------- lists in the 'eventSearch' and 'ttee'; ------------- */
+
+#eventKeys, #timeLeft{
+	width: 50%;
+	padding: 5px;	
+}
+
+#timeLeft{
+	text-align: left;
+}
+
+
+/* ---------------------------- Calendar (dbcon); ---------------------------- */
+
+
+#eventd, #noeventd, #innertd{
+	width: 300px;
+	height: 350px;
+	text-align: center;
+	padding: 5px;
+}
+
+
+#eventd, #noeventd{
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+
+#innertd{
+	background-color: #e2e5fd;
+	margin: 0;	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+
+#noeventd{
+	background-color: #aba7a7;
+}
+
+
+#eventd{
+	background-color: #000;
+}
+
+
+#eventd:hover{
+	background-color: #000099;	
+}
+
+
+#eventd a{
+	color: #FFF;	
+}
+
+
+#eventd ul{
+	height: 100%;
+	overflow-x: hidden;
+	margin: 0;
+	font-size: 14px;
+}
+
+
+#eventd ul li{
+	padding: 10px;
+}
+
+
+#eventd ul li a{
+	color: #000;	
+}
+
+
+#eventd ul li:hover a{
+	color: #FFF;	
+}
+
+
+#eventd ul li:nth-child(2n){
+	background-color: #c9cfff;	
+}
+
+
+#eventd ul li:hover, #eventd ul li:nth-child(2n):hover{
+	color: #FFF;
+	background-color: #000099;	
+}
+
+
