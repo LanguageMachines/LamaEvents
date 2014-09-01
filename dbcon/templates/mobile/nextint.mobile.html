@@ -1,0 +1,18 @@
+{% extends 'mobile/dbcon.mobile.html' %}
+{% load staticfiles %}
+
+
+{% block intervalseeker %}
+
+<h3>
+
+	<a href="/intervalseek/from:{{ prevDate }}to:{{ currDate }}"><div id="prevbtn"></div></a>
+
+	De events voor de komende {{ timeIntstr }} dagen;
+
+	<a href="/intervalseek/from:{{ nextDate }}to:{{ nextnextDate }}"><div id="nextbtn"></div></a>
+
+</h3>
+
+
+{% endblock %}

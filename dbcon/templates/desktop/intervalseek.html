@@ -1,0 +1,21 @@
+{% extends 'desktop/dbcon.html' %}
+{% load staticfiles %}
+
+
+{% block intervalseeker %}
+
+<h3>
+
+	<a href="/intervalseek/from:{{ prev2Date }}to:{{ fst }}"><div id="prevbtn"></div></a>
+
+	De events tussen {{ fst }} en {{ snd }} ;
+
+	<a href="/intervalseek/from:{{ snd }}to:{{ nextnext2Date }}"><div id="nextbtn"></div></a>
+
+</h3>
+
+
+{% endblock %}
+
+
+

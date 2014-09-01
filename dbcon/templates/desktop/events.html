@@ -1,0 +1,42 @@
+{% extends 'desktop/dbcon.html' %}
+{% load staticfiles %}
+
+
+{% block title %}Events op {{ eventDate }}{% endblock %}
+
+
+{% block pri_content %}
+
+<h1>
+
+	<a href="/{{ prevDay }}/events" ><div id="prevbtn"></div></a>
+
+	Events op {{ eventDate }}
+	
+	<a href="/{{ nextDay }}/events"><div id="nextbtn"></div></a>
+
+</h1>
+
+{% if events_date_list %}
+
+<p>Klik op de sleutelwoorden om informatie over het event te zien;</p>
+
+<ul>
+	{%for event in events_date_list %}
+		<li><a href="/{{ event.id }}/eventDetail">
+					{{ event.keylistwc }}
+</a></li>
+	{% endfor %}
+</ul>
+
+{% else %}
+
+    <p>Er is geen event gevonden op deze dag.</p>
+
+
+
+{% endif %}
+
+    		     
+{% endblock %}
+

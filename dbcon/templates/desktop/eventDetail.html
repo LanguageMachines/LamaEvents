@@ -1,0 +1,44 @@
+{% extends 'desktop/dbcon.html' %}
+{% load staticfiles %}
+
+
+{% block title %}Event Informatie{% endblock %}
+
+
+{% block pri_content %}
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<h1>Event Informatie</h1>
+
+
+<h3>Sleutelwoorden voor dit event;</h3>
+{{ event.keylistwc }}
+
+
+<h3>Geschatte datum voor dit event;</h3>
+{{ event.datestr }}
+
+
+<h3>Geschatte tijd tot de aanvang van het event;</h3>
+{{ event.Estimationstr }}
+<br>
+{{ event.timeLeft }}
+
+
+<h3>Tweets over het event;</h3>
+
+
+<table>
+	{%for tweet in event.tweets %}
+		{% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
+			<td style="width: 400px;">
+				<blockquote class="twitter-tweet tw-align-center" data-conversation="none" data-cards="hidden" lang="en">
+					<a href="https://twitter.com/{{ tweet.user }}D/statuses/{{ tweet.id }}"></a></blockquote>
+			</td>
+		{% if forloop.counter|divisibleby:2 %}<tr>{% endif %}
+	{% endfor %}
+</table>
+    		     
+{% endblock %}
+

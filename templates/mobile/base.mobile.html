@@ -8,7 +8,7 @@
 <title>{% block title %}{% endblock %}</title>
 
 
-<link rel="stylesheet" type="text/css" href="{% static 'base/desktop.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'base/mobile.css' %}" />
 
 
 {% block ex_head %}{% endblock %}
@@ -27,16 +27,12 @@
 <body>
 
 
-<div id="blanker"></div>
-
-
-
 <div id="wrapper">
 
 	<div id="github">
 
-		<a href="https://github.com/ErkanBasar/LamaEvents">
-			<img  src="{% static 'base/images/github.png' %}"></a>
+		<a href="https://github.com/ErkanBasar/LamaEvents" >
+			<img  src="{% static 'base/images/github_left.png' %}"></a>
 
 	</div>
 
@@ -50,12 +46,14 @@
 
 	<div id="primary">
 
-		<div id="pri_content">
-			{% block pri_content %}{% endblock %}
-		</div>
-
 		<div id="pri_sidebar">
 			{% block pri_sidebar %}{% endblock %}
+		</div>
+
+		<div id="cleaner"></div>
+
+		<div id="pri_content">
+			{% block pri_content %}{% endblock %}
 		</div>
 
 		<div id="cleaner"></div>
@@ -76,13 +74,12 @@
 		<a href="http://ru.nl/">
 			<img src="{% static 'base/images/radboud.png' %}"/></a>
 
+
+
 	</div>
 
 
 </div>
-
-	
-<div id="blanker"></div>
 
 </body>
 </html>

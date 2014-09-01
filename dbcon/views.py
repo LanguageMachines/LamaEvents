@@ -10,8 +10,11 @@ from dbcon.models import *
 
 
 #!HINT! : To change the time interval in calendar change 'timeIntstr' (ex: week => "timeIntstr = 7")
-timeIntstr = 3
-time_interval = timeIntstr - 1 #to show it on template (nextint.html)
+timeIntstr_d = 3
+time_interval_d = timeIntstr_d - 1 #to show it on template (nextint.html)
+#sate thing for mobile version:
+timeIntstr_m = 2
+time_interval_m = timeIntstr_m - 1
 
 #!IDEA! : you can ask the 'timeIntstr' value to user, for example with a dropdown menu.
 
@@ -47,6 +50,15 @@ class Calendar(View):
 
 	def get(self, request):
 		#This is working, when you open the page for the first time.
+		if request.is_mobile:
+			timeIntstr = timeIntstr_m
+			time_interval = time_interval_m
+			template = 'mobile/nextint.mobile.html'
+		else:
+			timeIntstr = timeIntstr_d
+			time_interval = time_interval_d
+			template = 'desktop/nextint.html'
+
 		now_date = datetime.now()
 		dateLater = now_date + timedelta(days=time_interval)
 		
@@ -56,8 +68,8 @@ class Calendar(View):
 		currDate = now_date.strftime("%d-%m-20%y")
 	
 		totallist = call_dates(now_date, dateLater)		
-	
-		return render(request, 'nextint.html', {
+
+		return render(request, template, {
 				'totallist': totallist,
 				'nextDate': nextDate,
 				'nextnextDate': nextnextDate,
@@ -75,6 +87,15 @@ class Calendar(View):
 			start_date = request.POST['start_date']
 			end_date = request.POST['end_date']
 
+			if request.is_mobile:
+				timeIntstr = timeIntstr_m
+				time_interval = time_interval_m
+				template = 'mobile/datepicker.mobile.html'
+			else:
+				timeIntstr = timeIntstr_d
+				time_interval = time_interval_d
+				template = 'desktop/datepicker.html'
+
 			#Convert the strings to datetime;		
 			startDate = datetime.strptime(start_date, '%d-%m-20%y')
 			endDate = datetime.strptime(end_date, '%d-%m-20%y')
@@ -84,7 +105,7 @@ class Calendar(View):
 
 			totallist = call_dates(startDate, endDate)
 
-			return render(request, 'datepicker.html', {
+			return render(request, template, {
 					'totallist': totallist,
 					'start_date': start_date,
 					'end_date': end_date,
@@ -98,6 +119,11 @@ class Calendar(View):
 			#This is working, if someone writes hour and range in input box.
 			search_hour = request.POST['search_hour']
 			hour_range = request.POST['hour_range']
+
+			if request.is_mobile:
+				template = 'mobile/ttee.mobile.html'
+			else:
+				template = 'desktop/ttee.html'
 
 			#For not to see the events in the past;
 			if int(search_hour) > int(hour_range):
@@ -113,7 +139,7 @@ class Calendar(View):
 			#Find events which fits 'end_hour > event.Estimation > start_hour'
 			event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
 
-			return render(request, 'ttee.html', {
+			return render(request, template, {
 					'event_list': event_list, 
 					'startHour': startHour,
 					'endHour': endHour,
@@ -126,10 +152,15 @@ class Calendar(View):
 			fst_key = request.POST['fst_key']
 			snd_key = request.POST['snd_key']
 
+			if request.is_mobile:
+				template = 'mobile/eventSearch.mobile.html'
+			else:
+				template = 'desktop/eventSearch.html'
+
 			#Find events which have first or second keyterm and not in the past. iexact = case insensitive.
 			events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
 
-			return render(request, 'eventSearch.html', {
+			return render(request, template, {
 					'events_bykey_list': events_bykey_list,
 					'fst_key': fst_key,
 					'snd_key': snd_key,
@@ -141,6 +172,16 @@ class IntervalSeek(View):
 
 	def get(self, request, fst, snd):
 		'''fst: first day, snd: last day of the month'''
+
+		if request.is_mobile:
+			timeIntstr = timeIntstr_m
+			time_interval = time_interval_m
+			template = 'mobile/intervalseek.mobile.html'
+		else:
+			timeIntstr = timeIntstr_d
+			time_interval = time_interval_d
+			template = 'desktop/intervalseek.html'
+
 		currDate2 = datetime.strptime(fst, '%d-%m-20%y')
 		dateLater2 = currDate2 + timedelta(days=time_interval)
 
@@ -149,7 +190,7 @@ class IntervalSeek(View):
 	
 		totallist = call_dates(currDate2, dateLater2)		
 
-		return render(request, 'intervalseek.html', {
+		return render(request, template, {
 				'totallist': totallist,
 				'fst': fst,
 				'snd': snd, 
@@ -167,9 +208,13 @@ class EventsofDate(View):
 		
 		nextDay = (datetime.strptime(dt, '%d-%m-20%y') + timedelta(days=1)).strftime("%d-%m-20%y")
 		prevDay = (datetime.strptime(dt, '%d-%m-20%y') + timedelta(days=-1)).strftime("%d-%m-20%y")
+	
+		if request.is_mobile:
+			template = 'mobile/events.mobile.html'
+		else:
+			template = 'desktop/events.html'
 
-		
-		return render(request, 'events.html', {
+		return render(request, template, {
 				'events_date_list': events_date_list,
 				'eventDate': dt,
 				'nextDay': nextDay,
@@ -182,7 +227,13 @@ class EventDetail(View):
 	def get(self, request, id):
 		'''Finds the exact event via id.'''
 		event = Events.objects.get(pk=id)
-		return render(request, 'eventDetail.html', {
+
+		if request.is_mobile:
+			template = 'mobile/eventDetail.mobile.html'
+		else:
+			template = 'desktop/eventDetail.html'
+
+		return render(request, template, {
 				'event': event,
 		})
 

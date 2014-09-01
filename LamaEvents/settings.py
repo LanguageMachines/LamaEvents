@@ -48,7 +48,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'LamaEvents.middleware.MobileTemplatesMiddleware',
+    'LamaEvents.middleware.MobileDetectionMiddleware',
 )
 
 ROOT_URLCONF = 'LamaEvents.urls'
@@ -119,16 +119,6 @@ TEMPLATE_DIRS = (
     '/media/Data/Projects/Django/LamaEvents/templates/',
 )
 
-
-MOBILE_TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates', 'mobile'),
-    '/media/Data/Projects/Django/LamaEvents/templates/mobile/',
-)
-
-DESKTOP_TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates', 'desktop'),
-    '/media/Data/Projects/Django/LamaEvents/templates/desktop/',
-)
 
 
 

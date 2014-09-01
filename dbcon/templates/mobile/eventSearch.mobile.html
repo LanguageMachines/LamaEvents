@@ -1,0 +1,38 @@
+{% extends 'mobile/dbcon.mobile.html' %}
+{% load staticfiles %}
+
+
+{% block title %}Events voor '{{ fst_key }} {{ snd_key }}'{% endblock %}
+
+
+{% block pri_content %}
+
+
+{% if events_bykey_list %}
+
+	<h1>Events voor '{{ fst_key }} {{ snd_key }}';</h1>
+
+	<table>
+			<tr>
+				<th id="eventKeys">Sleutelwoorden  </th>
+				<th id="timeLeft">Aantal dagen tot het event </th>
+			</tr>
+		{%for event in events_bykey_list %}
+			<tr>
+				<td id="eventKeys"><a href="/{{ event.id }}/eventDetail">{{ event.keylistwc }}</a>  </td>
+				<td id="timeLeft"> {{ event.timeLeft }} </td>	
+			</tr>
+		{% endfor %}
+
+	</table>
+
+
+{% else %}
+
+    <h3>Er is geen event met de sleutelwoorden '{{ fst_key }} {{ snd_key }}'</h3>
+
+
+{% endif %}
+
+
+{% endblock %}
