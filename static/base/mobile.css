@@ -170,20 +170,12 @@ input{
 /* -------------------------- Extras; ------------------------------ */
 
 
-#nextbtn, #prevbtn, #homebtn{
+#nextbtn, #prevbtn{
 	width: 25px;
 	height: 25px;
 	float: right;
 	cursor: pointer;
 	z-index: 1;
-}
-
-#homebtn {
-	background: url(images/homebtn.png) no-repeat; 
-}
-
-#homebtn:hover{
-	background: url(images/homebtnhov.png) no-repeat; 	
 }
 
 #nextbtn{

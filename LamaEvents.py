@@ -1,3 +1,5 @@
+import configparser
+
 import requests
 import random
 
@@ -8,27 +10,44 @@ import pymongo
 
 import DEvents.event_pairs as event_pairs
 
+#Get all the private configurations;
+config = configparser.ConfigParser()
+config.read('/media/Data/oauth.ini')
+
+client_host = config.get('LE_script_db', 'client_host')
+client_port = int(config.get('LE_script_db', 'client_port'))
+db_name = config.get('LE_script_db', 'db_name')
+user_name = config.get('LE_script_db', 'user_name')
+passwd = config.get('LE_script_db', 'passwd')
+
+user_name2 = config.get('LE_script_twiqs', 'user_name')
+passwd2 = config.get('LE_script_twiqs', 'passwd')
+
 #MongoLab Connection;
-connection = pymongo.MongoClient("XXX", XXX)
-ledb = connection["XXX"]
-ledb.authenticate("XXX", "XXX")
+connection = pymongo.MongoClient(client_host, client_port)
+ledb = connection[db_name]
+ledb.authenticate(user_name, passwd)
 lecl = ledb.lecl
 print("Connected to DB")
 
-ep = event_pairs.Event_pairs()
+ep = event_pairs.Event_pairs("all","coco_out/","tmp/")
 print("Event Detection Initialised")
+
+#Get the cookie;
+s = requests.Session()
+r = s.post("http://145.100.57.182/cgi-bin/twitter", data={"NAME":user_name2, "PASSWD":passwd2})
 
 payload = {'SEARCH': 'echtalles', 'DATE': 'yymmddhh-yymmddhh', 'DOWNLOAD':True, 'SHOWTWEETS':True}
 
 def RequestTweets():
-	output1st = requests.get("http://145.100.57.182/cgi-bin/twitter", params=payload, cookies={'cookie':'XXX'})
+	output1st = requests.get("http://145.100.57.182/cgi-bin/twitter", params=payload, cookies=s.cookies)
 	return output1st
 
 #To run this, make sure you wrote 'True';
 DeleteTweetDetails = 'True'
 
 while True:
-	time.sleep(600)
+	time.sleep(60)
 	#Time Calculations;
 	nowDate = datetime.now()
 	nowDate_earlier = nowDate - timedelta(hours=1)

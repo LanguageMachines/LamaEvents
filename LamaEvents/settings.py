@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+import configparser
+
 from mongoengine import *
 
 # Quick-start development settings - unsuitable for production
@@ -77,17 +79,14 @@ SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
 AUTH_USER_MODEL = 'mongo_auth.MongoUser'
 MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
-connect('XXX', host='XXX')
 
-#_MONGODB_USER = 'XXX'
-#_MONGODB_PASSWD = 'XXX'
-#_MONGODB_HOST = 'XXX'
-#_MONGODB_NAME = 'XXX'
-#_MONGODB_DATABASE_HOST = \
-#    'mongodb://%s:%s@%s/%s' \
-#    % (_MONGODB_USER, _MONGODB_PASSWD, _MONGODB_HOST, _MONGODB_NAME)
+config = configparser.ConfigParser()
+config.read('/media/Data/oauth.ini')
 
-#connect(_MONGODB_NAME, host=_MONGODB_DATABASE_HOST)
+db_name = config.get('LE_settings', 'db_name')
+db_host = config.get('LE_settings', 'db_host')
+
+connect(db_name, host=db_host)
 
 
 # Internationalization
