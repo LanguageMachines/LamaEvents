@@ -244,7 +244,7 @@ input{
 
 
 #bar{
-	margin: 0 auto;
+	margin: 35px;
 	height: 60px;
 }
 
@@ -252,7 +252,6 @@ input{
 #bar img{
 	height: 60px;	
 	padding-right: 50px;
-	float: left;
 }
 
 

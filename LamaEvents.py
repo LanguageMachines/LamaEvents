@@ -47,7 +47,7 @@ def RequestTweets():
 DeleteTweetDetails = 'True'
 
 while True:
-	time.sleep(60)
+	time.sleep(600)
 	#Time Calculations;
 	nowDate = datetime.now()
 	nowDate_earlier = nowDate - timedelta(hours=1)

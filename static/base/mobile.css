@@ -46,12 +46,13 @@ ul{
 
 
 button{
-	color: #FFF;
-	background-color: #000;	
-	border-color: #FFF;
-	cursor:	pointer;
 	width: 80%;
-	padding: 5px;
+	height: 30px; 
+	color: #FFF;
+	background-color: #000;
+	border: 0;
+	cursor:	pointer;
+	padding: 0;
 }
 
 
@@ -61,7 +62,8 @@ button:hover{
 
 
 input{
-	width: 80%;	
+	width: 80%;
+	height: 30px; 	
 	border: 1px solid #000;
 	padding: 2px;
 	margin: 5px;
@@ -167,33 +169,32 @@ input{
 }
 
 
-/* -------------------------- Extras; ------------------------------ */
+/* -------------------------- Extra buttons; ------------------------------ */
 
 
 #nextbtn, #prevbtn{
-	width: 25px;
-	height: 25px;
+	width: 40px;
+	height: 40px;
 	float: right;
-	cursor: pointer;
 	z-index: 1;
 }
 
 #nextbtn{
 	float: right;
-	background: url(images/forwbtn.png) no-repeat; 
+	background: url(images/forwbtn_m.png) no-repeat; 
 }
 
 #nextbtn:hover{
-	background: url(images/forwbtnhov.png) no-repeat; 
+	background: url(images/forwbtnhov_m.png) no-repeat; 
 }
 
 #prevbtn{
-	background: url(images/backbtn.png) no-repeat;
+	background: url(images/backbtn_m.png) no-repeat;
 	float: left;
 }
 
 #prevbtn:hover{
-	background: url(images/backbtnhov.png) no-repeat;
+	background: url(images/backbtnhov_m.png) no-repeat;
 }
 
 #github{
