@@ -81,7 +81,7 @@ MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 
 config = configparser.ConfigParser()
-config.read('/media/Data/oauth.ini')
+config.read('/home/ebasar/oauth.ini')
 
 db_name = config.get('LE_settings', 'db_name')
 db_host = config.get('LE_settings', 'db_host')

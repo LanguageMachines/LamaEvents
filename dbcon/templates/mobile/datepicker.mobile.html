@@ -4,15 +4,12 @@
 
 {% block intervalseeker %}
 
-<h3>
 
-	<a href="/intervalseek/from:{{ prev3Date }}to:{{ start_date }}"><div id="prevbtn"></div></a>
+<h3>De events tussen {{ start_date }} en {{ end_date }} ;</h3>
 
-	De events tussen {{ start_date }} en {{ end_date }} ;
+<a href="/intervalseek/from:{{ prev3Date }}to:{{ start_date }}"><div id="prevbtn"></div></a>
 
-	<a href="/intervalseek/from:{{ end_date }}to:{{ nextnext3Date }}"><div id="nextbtn"></div></a>
-	
-</h3>
+<a href="/intervalseek/from:{{ end_date }}to:{{ nextnext3Date }}"><div id="nextbtn"></div></a>
 
 
 {% endblock %}
