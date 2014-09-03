@@ -18,6 +18,7 @@ import mongoengine
 
 from dbcon.models import *
 
+from django.conf import settings
 
 #!HINT! : To change the time interval in calendar change 'timeIntstr' (ex: week => "timeIntstr = 7")
 timeIntstr_d = 3
@@ -51,7 +52,7 @@ def call_dates(first_date, second_date):
 		eventX = Events.objects(date=i)
 		eventObjlist.append(eventX)
 
-	#Combination of this lists helps to find the exact events of the exact date for calendar. 
+	#Combination of this lists helps to find the exact events of the exact date for calendar.
 	totallist1st = [{'datelist': t[0], 'dateliststr': t[1], 'eventObjlist': t[2]} for t in zip(datelist, dateliststr, eventObjlist)]
 	return totallist1st
 
@@ -110,6 +111,7 @@ class Calendar(View):
 			startDate = datetime.strptime(start_date, '%d-%m-%Y')
 			endDate = datetime.strptime(end_date, '%d-%m-%Y')
 
+
 			nextnext3Date = (endDate + timedelta(days=time_interval)).strftime("%d-%m-%Y")
 			prev3Date = (startDate + timedelta(days=-time_interval)).strftime("%d-%m-%Y")
 
@@ -121,6 +123,7 @@ class Calendar(View):
 					'end_date': end_date,
 					'nextnext3Date': nextnext3Date,
 					'prev3Date': prev3Date,
+					'urlprefix': settings.URLPREFIX,
 			})
 
 
@@ -150,9 +153,10 @@ class Calendar(View):
 			event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
 
 			return render(request, template, {
-					'event_list': event_list, 
+					'event_list': event_list,
 					'startHour': startHour,
 					'endHour': endHour,
+					'urlprefix': settings.URLPREFIX,
 			})
 
 
@@ -174,6 +178,7 @@ class Calendar(View):
 					'events_bykey_list': events_bykey_list,
 					'fst_key': fst_key,
 					'snd_key': snd_key,
+					'urlprefix': settings.URLPREFIX,
 			})
 
 
@@ -195,15 +200,17 @@ class IntervalSeek(View):
 		currDate2 = datetime.strptime(fst, '%d-%m-%Y')
 		dateLater2 = currDate2 + timedelta(days=time_interval)
 
+
 		nextnext2Date = (dateLater2 + timedelta(days=time_interval)).strftime("%d-%m-%Y")
 		prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime("%d-%m-%Y")
 	
 		totallist = call_dates(currDate2, dateLater2)		
 
+
 		return render(request, template, {
 				'totallist': totallist,
 				'fst': fst,
-				'snd': snd, 
+				'snd': snd,
 				'nextnext2Date': nextnext2Date,
 				'prev2Date': prev2Date,
 		})
