@@ -40,7 +40,7 @@ $(function() {
 <table>
 
 	<tr>
-		<form method="post" action="/">                                                             
+		<form method="post" action="{% url 'calendar' %}">                                                             
 			{% csrf_token %}
 			<tr> <h3>Specificeer datums: </h3>	</tr>
 			<tr> <input type="text" name="start_date" id="datepicker" placeholder="Startdatum (dd-mm-yy)" required/>	</tr>
@@ -52,7 +52,7 @@ $(function() {
 <br><br>
 
 	<tr>
-		<form method="post" action="/">                                                             
+		<form method="post" action="{% url 'calendar' %}">                                                             
 			{% csrf_token %}
 			<tr> <h3>Specificeer uren: </h3>	</tr>
 			<tr> <input type="number" name="search_hour" placeholder="Uur" required/>	</tr>
@@ -64,7 +64,7 @@ $(function() {
 <br><br>
 
 	<tr>
-		<form method="post" action="/">                                                             
+		<form method="post" action="{% url 'calendar' %}">                                                             
 			{% csrf_token %}
 			<tr> <h3>Zoek met zoekwoorden: </h3>	</tr>
 			<tr> <input type="text" name="fst_key" placeholder="Eerste Zoekwoord" />	</tr>

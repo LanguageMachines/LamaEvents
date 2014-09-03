@@ -5,6 +5,7 @@ Hey there
    :platform: Linux
    :synopsis: A useful module indeed.
 
+
 """
 
 from django.shortcuts import render
@@ -39,10 +40,10 @@ def call_dates(first_date, second_date):
 	datelist = []
 	dateliststr = []
 	for single_date in daterange(first_date, second_date):
-		datelist.append(single_date.strftime("%d-%m-20%y"))
-		dateliststr.append(single_date.strftime("%d %b 20%y %a"))
+		datelist.append(single_date.strftime("%d-%m-%Y"))
+		dateliststr.append(single_date.strftime("%d %b %Y %a"))
 	#!INFO! : "datelist" string format is important for passing the data with url and finding the events. It is the 'dt' argument in the EventsofDate view below.
-	#!HINT! : To change how the dates are shown on the calendar change it's strftime. (ex: 30 Aug 2014 Sat = "%d %b 20%y %a")
+	#!HINT! : To change how the dates are shown on the calendar change it's strftime. (ex: 30 Aug 2014 Sat = "%d %b %Y %a")
 
 	#Find the events of that dates and put them in a list;
 	eventObjlist = []
@@ -71,10 +72,10 @@ class Calendar(View):
 		now_date = datetime.now()
 		dateLater = now_date + timedelta(days=time_interval)
 		
-		nextDate = dateLater.strftime("%d-%m-20%y")
-		nextnextDate = (dateLater + timedelta(days=time_interval)).strftime("%d-%m-20%y")
-		prevDate = (now_date + timedelta(days=-time_interval)).strftime("%d-%m-20%y")
-		currDate = now_date.strftime("%d-%m-20%y")
+		nextDate = dateLater.strftime("%d-%m-%Y")
+		nextnextDate = (dateLater + timedelta(days=time_interval)).strftime("%d-%m-%Y")
+		prevDate = (now_date + timedelta(days=-time_interval)).strftime("%d-%m-%Y")
+		currDate = now_date.strftime("%d-%m-%Y")
 	
 		totallist = call_dates(now_date, dateLater)		
 
@@ -106,11 +107,11 @@ class Calendar(View):
 				template = 'desktop/datepicker.html'
 
 			#Convert the strings to datetime;		
-			startDate = datetime.strptime(start_date, '%d-%m-20%y')
-			endDate = datetime.strptime(end_date, '%d-%m-20%y')
+			startDate = datetime.strptime(start_date, '%d-%m-%Y')
+			endDate = datetime.strptime(end_date, '%d-%m-%Y')
 
-			nextnext3Date = (endDate + timedelta(days=time_interval)).strftime("%d-%m-20%y")
-			prev3Date = (startDate + timedelta(days=-time_interval)).strftime("%d-%m-20%y")
+			nextnext3Date = (endDate + timedelta(days=time_interval)).strftime("%d-%m-%Y")
+			prev3Date = (startDate + timedelta(days=-time_interval)).strftime("%d-%m-%Y")
 
 			totallist = call_dates(startDate, endDate)
 
@@ -142,8 +143,8 @@ class Calendar(View):
 
 			end_hour = datetime.now() + timedelta(hours=(int(search_hour)+int(hour_range)))
 
-			startHour = start_hour.strftime("%d %B 20%y %H:00")
-			endHour = end_hour.strftime("%d %B 20%y %H:00")
+			startHour = start_hour.strftime("%d %B %Y %H:00")
+			endHour = end_hour.strftime("%d %B %Y %H:00")
 
 			#Find events which fits 'end_hour > event.Estimation > start_hour'
 			event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
@@ -191,11 +192,11 @@ class IntervalSeek(View):
 			time_interval = time_interval_d
 			template = 'desktop/intervalseek.html'
 
-		currDate2 = datetime.strptime(fst, '%d-%m-20%y')
+		currDate2 = datetime.strptime(fst, '%d-%m-%Y')
 		dateLater2 = currDate2 + timedelta(days=time_interval)
 
-		nextnext2Date = (dateLater2 + timedelta(days=time_interval)).strftime("%d-%m-20%y")
-		prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime("%d-%m-20%y")
+		nextnext2Date = (dateLater2 + timedelta(days=time_interval)).strftime("%d-%m-%Y")
+		prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime("%d-%m-%Y")
 	
 		totallist = call_dates(currDate2, dateLater2)		
 
@@ -215,8 +216,8 @@ class EventsofDate(View):
 		"""Finds the events for the selected date. dt comes from the url."""
 		events_date_list = Events.objects(date=dt)
 		
-		nextDay = (datetime.strptime(dt, '%d-%m-20%y') + timedelta(days=1)).strftime("%d-%m-20%y")
-		prevDay = (datetime.strptime(dt, '%d-%m-20%y') + timedelta(days=-1)).strftime("%d-%m-20%y")
+		nextDay = (datetime.strptime(dt, '%d-%m-%Y') + timedelta(days=1)).strftime("%d-%m-%Y")
+		prevDay = (datetime.strptime(dt, '%d-%m-%Y') + timedelta(days=-1)).strftime("%d-%m-%Y")
 	
 		if request.is_mobile:
 			template = 'mobile/events.mobile.html'
