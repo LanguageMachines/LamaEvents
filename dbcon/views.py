@@ -8,6 +8,7 @@ import mongoengine
 
 from dbcon.models import *
 
+from django.conf import settings
 
 #!HINT! : To change the time interval in calendar change 'timeIntstr' (ex: week => "timeIntstr = 7")
 timeIntstr_d = 3
@@ -41,7 +42,7 @@ def call_dates(first_date, second_date):
 		eventX = Events.objects(date=i)
 		eventObjlist.append(eventX)
 
-	#Combination of this lists helps to find the exact events of the exact date for calendar. 
+	#Combination of this lists helps to find the exact events of the exact date for calendar.
 	totallist1st = [{'datelist': t[0], 'dateliststr': t[1], 'eventObjlist': t[2]} for t in zip(datelist, dateliststr, eventObjlist)]
 	return totallist1st
 
@@ -61,13 +62,13 @@ class Calendar(View):
 
 		now_date = datetime.now()
 		dateLater = now_date + timedelta(days=time_interval)
-		
+
 		nextDate = dateLater.strftime("%d-%m-20%y")
 		nextnextDate = (dateLater + timedelta(days=time_interval)).strftime("%d-%m-20%y")
 		prevDate = (now_date + timedelta(days=-time_interval)).strftime("%d-%m-20%y")
 		currDate = now_date.strftime("%d-%m-20%y")
-	
-		totallist = call_dates(now_date, dateLater)		
+
+		totallist = call_dates(now_date, dateLater)
 
 		return render(request, template, {
 				'totallist': totallist,
@@ -96,7 +97,7 @@ class Calendar(View):
 				time_interval = time_interval_d
 				template = 'desktop/datepicker.html'
 
-			#Convert the strings to datetime;		
+			#Convert the strings to datetime;
 			startDate = datetime.strptime(start_date, '%d-%m-20%y')
 			endDate = datetime.strptime(end_date, '%d-%m-20%y')
 
@@ -111,6 +112,7 @@ class Calendar(View):
 					'end_date': end_date,
 					'nextnext3Date': nextnext3Date,
 					'prev3Date': prev3Date,
+                    'urlprefix': settings.URLPREFIX,
 			})
 
 
@@ -140,7 +142,7 @@ class Calendar(View):
 			event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
 
 			return render(request, template, {
-					'event_list': event_list, 
+					'event_list': event_list,
 					'startHour': startHour,
 					'endHour': endHour,
 			})
@@ -187,13 +189,13 @@ class IntervalSeek(View):
 
 		nextnext2Date = (dateLater2 + timedelta(days=time_interval)).strftime("%d-%m-20%y")
 		prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime("%d-%m-20%y")
-	
-		totallist = call_dates(currDate2, dateLater2)		
+
+		totallist = call_dates(currDate2, dateLater2)
 
 		return render(request, template, {
 				'totallist': totallist,
 				'fst': fst,
-				'snd': snd, 
+				'snd': snd,
 				'nextnext2Date': nextnext2Date,
 				'prev2Date': prev2Date,
 		})
@@ -205,10 +207,10 @@ class EventsofDate(View):
 	def get(self, request, dt):
 		'''Finds the events for the selected date. dt comes from the url.'''
 		events_date_list = Events.objects(date=dt)
-		
+
 		nextDay = (datetime.strptime(dt, '%d-%m-20%y') + timedelta(days=1)).strftime("%d-%m-20%y")
 		prevDay = (datetime.strptime(dt, '%d-%m-20%y') + timedelta(days=-1)).strftime("%d-%m-20%y")
-	
+
 		if request.is_mobile:
 			template = 'mobile/events.mobile.html'
 		else:

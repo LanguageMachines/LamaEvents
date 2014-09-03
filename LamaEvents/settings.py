@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+HOSTNAME = os.uname()[1]
+
 import configparser
 
 from mongoengine import *
@@ -81,7 +83,10 @@ MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 
 config = configparser.ConfigParser()
-config.read('/home/ebasar/oauth.ini')
+if HOSTNAME[:9] == "applejack":
+    config.read('/scratch2/www/LamaEvents/oauth.ini')
+else:
+    config.read("/home/ebasar/oauth.ini")
 
 db_name = config.get('LE_settings', 'db_name')
 db_host = config.get('LE_settings', 'db_host')
@@ -106,16 +111,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
+if HOSTNAME[:9] == "applejack":
+    STATIC_URL = '/lamaevents/static/'
+    URLPREFIX = '/lamaevents/'
+else:
+    STATIC_URL = '/static/'
+    URLPREFIX = ''
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
-    '/media/Data/Projects/Django/LamaEvents/static/',
 )
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "templates"),
-    '/media/Data/Projects/Django/LamaEvents/templates/',
 )
 
 

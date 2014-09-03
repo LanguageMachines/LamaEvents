@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
 	#url(r'^$', TemplateView.as_view(template_name="home.html")),
 
-	url(r'^$', Calendar.as_view()), #include('dbcon.urls')), #Connected to dbcon directly
+	url(r'^$', Calendar.as_view(),name='calendar'), #include('dbcon.urls')), #Connected to dbcon directly
 
 	url(r'^intervalseek/from:(?P<fst>\S+|\S*[^\w\s]\S*)to:(?P<snd>\S+|\S*[^\w\s]\S*)', IntervalSeek.as_view()),
 
