@@ -1,5 +1,5 @@
-from django.contrib import admin
-admin.autodiscover()
+#from django.contrib import admin
+#admin.autodiscover()
 
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
@@ -20,5 +20,7 @@ urlpatterns = patterns('',
 	url(r'^(?P<id>\w+)/eventDetail$', EventDetail.as_view()),
 
 	url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()),
+
+	url(r'^about/$', About.as_view()),
 
 )

@@ -1,3 +1,12 @@
+"""
+Hey there
+
+.. module:: dbcon.views
+   :platform: Linux
+   :synopsis: A useful module indeed.
+
+"""
+
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
@@ -21,9 +30,9 @@ time_interval_m = timeIntstr_m - 1
 
 
 def call_dates(first_date, second_date):
-	'''For creating the dates and events in calendar'''
+	"""For creating the dates and events in calendar"""
 	def daterange(first_date, second_date):
-		'''Calculation of the difference between the dates'''
+		"""Calculation of the difference between the dates"""
 		for n in range((int((second_date - first_date).days))+1):
 			yield first_date + timedelta(n)
 
@@ -50,7 +59,7 @@ def call_dates(first_date, second_date):
 class Calendar(View):
 
 	def get(self, request):
-		#This is working, when you open the page for the first time.
+		"""This is working, when you open the page for the first time."""
 		if request.is_mobile:
 			timeIntstr = timeIntstr_m
 			time_interval = time_interval_m
@@ -171,9 +180,9 @@ class Calendar(View):
 
 
 class IntervalSeek(View):
-
+	"""fst: first day, snd: last day of the month"""
 	def get(self, request, fst, snd):
-		'''fst: first day, snd: last day of the month'''
+		"""fst: first day, snd: last day of the month"""
 
 		if request.is_mobile:
 			timeIntstr = timeIntstr_m
@@ -205,7 +214,7 @@ class IntervalSeek(View):
 class EventsofDate(View):
 
 	def get(self, request, dt):
-		'''Finds the events for the selected date. dt comes from the url.'''
+		"""Finds the events for the selected date. dt comes from the url."""
 		events_date_list = Events.objects(date=dt)
 
 		nextDay = (datetime.strptime(dt, '%d-%m-20%y') + timedelta(days=1)).strftime("%d-%m-20%y")
@@ -227,7 +236,7 @@ class EventsofDate(View):
 class EventDetail(View):
 
 	def get(self, request, id):
-		'''Finds the exact event via id.'''
+		"""Finds the exact event via id."""
 		event = Events.objects.get(pk=id)
 
 		if request.is_mobile:
@@ -239,6 +248,19 @@ class EventDetail(View):
 				'event': event,
 		})
 
+
+class About(View):
+
+	def get(self, request):
+		"""About Pages"""
+
+		if request.is_mobile:
+			template = 'mobile/about.mobile.html'
+		else:
+			template = 'desktop/about.html'
+
+		return render(request, template, {
+		})
 
 
 
