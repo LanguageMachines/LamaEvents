@@ -7,9 +7,9 @@
 
 <h3>De events voor de komende {{ timeIntstr }} dagen;</h3>
 
-<a href="/intervalseek/from:{{ prevDate }}to:{{ currDate }}"><div id="prevbtn"></div></a>
+<a href="{{ urlprefix }}/intervalseek/from:{{ prevDate }}to:{{ currDate }}"><div id="prevbtn"></div></a>
 
-<a href="/intervalseek/from:{{ nextDate }}to:{{ nextnextDate }}"><div id="nextbtn"></div></a>
+<a href="{{ urlprefix }}/intervalseek/from:{{ nextDate }}to:{{ nextnextDate }}"><div id="nextbtn"></div></a>
 
 
 {% endblock %}

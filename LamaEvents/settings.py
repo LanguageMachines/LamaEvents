@@ -1,11 +1,5 @@
 """
 Django settings for LamaEvents project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -14,25 +8,34 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 HOSTNAME = os.uname()[1]
 
-import configparser
+import getpass
 
 from mongoengine import *
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+import configparser
+
+config = configparser.ConfigParser() 
+
+
+if getpass.getuser() =='ebasar':	#to work on applejack home
+	config.read("/home/ebasar/oauth.ini")
+	DEBUG = True
+	TEMPLATE_DEBUG = True
+elif HOSTNAME[:9] == "applejack":	#for the server side
+	config.read('/scratch2/www/LamaEvents/oauth.ini')
+	DEBUG = False
+	TEMPLATE_DEBUG = False
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'XXX'
+SECRET_KEY = config.get('LE_settings', 'secret_key')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
 
-# Application definition
+
+# Application definition;
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -60,8 +63,7 @@ ROOT_URLCONF = 'LamaEvents.urls'
 WSGI_APPLICATION = 'LamaEvents.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+# Database;
 
 
 DATABASES = {
@@ -82,22 +84,15 @@ AUTH_USER_MODEL = 'mongo_auth.MongoUser'
 MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 
-config = configparser.ConfigParser()
-if HOSTNAME[:9] == "applejack":
-    config.read('/scratch2/www/LamaEvents/oauth.ini')
-else:
-    config.read("/home/ebasar/oauth.ini")
-
 db_name = config.get('LE_settings', 'db_name')
 db_host = config.get('LE_settings', 'db_host')
 
 connect(db_name, host=db_host)
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
+# Internationalization;
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'nl'
 
 TIME_ZONE = 'Europe/Amsterdam'
 
@@ -108,15 +103,18 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+# Static files;
 
-if HOSTNAME[:9] == "applejack":
-    STATIC_URL = '/lamaevents/static/'
-    URLPREFIX = '/lamaevents/'
-else:
-    STATIC_URL = '/static/'
-    URLPREFIX = ''
+if getpass.getuser() =='ebasar':	#to work on applejack home
+	STATIC_URL = '/static/'
+	URLPREFIX = ''
+elif HOSTNAME[:9] == "applejack":	#for the server side
+	STATIC_URL = '/lamaevents/static/'
+	URLPREFIX = '/lamaevents'
+else:								#to work on local
+	STATIC_URL = '/static/'
+	URLPREFIX = ''
+
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),

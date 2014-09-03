@@ -9,11 +9,11 @@
 
 <h1>
 
-	<a href="/{{ prevDay }}/events" ><div id="prevbtn"></div></a>
+	<a href="{{ urlprefix }}/{{ prevDay }}/events" ><div id="prevbtn"></div></a>
 
 	Events op {{ eventDate }}
 	
-	<a href="/{{ nextDay }}/events"><div id="nextbtn"></div></a>
+	<a href="{{ urlprefix }}/{{ nextDay }}/events"><div id="nextbtn"></div></a>
 
 </h1>
 
@@ -23,7 +23,7 @@
 
 <ul>
 	{%for event in events_date_list %}
-		<li><a href="/{{ event.id }}/eventDetail">
+		<li><a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
 					{{ event.keylistwc }}
 </a></li>
 	{% endfor %}

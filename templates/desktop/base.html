@@ -7,11 +7,13 @@
 <link rel="shortcut icon" href="{% static 'base/images/just-lama.png' %}" />
 <title>{% block title %}{% endblock %}</title>
 
+<script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
+
 
 <link rel="stylesheet" type="text/css" href="{% static 'base/desktop.css' %}" />
-
-
-{% block ex_head %}{% endblock %}
 
 
 <script>
@@ -30,7 +32,6 @@
 <div id="blanker"></div>
 
 
-
 <div id="wrapper">
 
 	<div id="github">
@@ -43,7 +44,7 @@
 
 	<div id="header">
 
-		<a href="/"><img src="{% static 'base/images/lama-events.png' %}"/></a>
+		<a href="{{ urlprefix }}/"><img src="{% static 'base/images/lama-events.png' %}"/></a>
   
 	</div>
 		
@@ -62,7 +63,7 @@
 
 			<div class="sidebar_box">
 				<h3>Over deze pagina</h3>
-				<a href="/about">Lees meer &raquo;</a>	
+				<a href="{{ urlprefix }}/about">Lees meer &raquo;</a>	
 			</div>   
 
 		</div>

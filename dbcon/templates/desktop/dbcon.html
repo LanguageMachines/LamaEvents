@@ -5,17 +5,6 @@
 {% block title %}LaMa Events{% endblock %}
 
 
-{% block ex_head %}
-
-<script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
-<script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
-
-<link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
-
-{% endblock %}
-
-
-
 {% block script %}
 
 $(function() {
@@ -109,12 +98,12 @@ $(function() {
 					<td id="eventd">
 						<table>
 							<tr>
-								<a href="/{{ x.datelist }}/events">{{ x.dateliststr }}</a>
+								<a href="{{ urlprefix }}/{{ x.datelist }}/events">{{ x.dateliststr }}</a>
 								<td id="innertd">
 									<ul>
 										{% for eventObj in x.eventObjlist %}
 											<li>
-												<a href="/{{ eventObj.id }}/eventDetail">
+												<a href="{{ urlprefix }}/{{ eventObj.id }}/eventDetail">
 													{% for keys in eventObj.keylist %}
 														{{ keys }}{% if forloop.last %}{% else %},{% endif %}
 													{% endfor %}

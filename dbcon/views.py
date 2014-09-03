@@ -87,6 +87,7 @@ class Calendar(View):
 				'prevDate': prevDate,
 				'currDate': currDate,
 				'timeIntstr' : timeIntstr,
+				'urlprefix': settings.URLPREFIX,
 		})
 
 
@@ -213,6 +214,7 @@ class IntervalSeek(View):
 				'snd': snd,
 				'nextnext2Date': nextnext2Date,
 				'prev2Date': prev2Date,
+				'urlprefix': settings.URLPREFIX,
 		})
 
 
@@ -236,6 +238,7 @@ class EventsofDate(View):
 				'eventDate': dt,
 				'nextDay': nextDay,
 				'prevDay': prevDay,
+				'urlprefix': settings.URLPREFIX,
 		})
 
 
@@ -252,6 +255,7 @@ class EventDetail(View):
 
 		return render(request, template, {
 				'event': event,
+				'urlprefix': settings.URLPREFIX,
 		})
 
 
@@ -266,6 +270,7 @@ class About(View):
 			template = 'desktop/about.html'
 
 		return render(request, template, {
+			'urlprefix': settings.URLPREFIX,
 		})
 
 

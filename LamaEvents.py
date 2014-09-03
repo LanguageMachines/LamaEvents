@@ -127,7 +127,7 @@ while True:
 		dumpoutput = '#user_id\t#tweet_id\t#date\t#time\t#reply_to_tweet_id\t#retweet_to_tweet_id\t#user_name\t#tweet\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
 		if output.text[:1000] == dumpoutput: #If there isn't any tweet try the request again.
 			print("No tweet found at the first time! I'll try again")
-			time.sleep(300)
+			time.sleep(300) #Wait for the search done at twiqs.nl before the next request
 			output = RequestTweets()
 			if output.text[:1000] == dumpoutput: #If there isn't any tweet again, it will skip this hour.
 				print("Still there is not any tweet! I'll skip tweets at " + tweethour)
