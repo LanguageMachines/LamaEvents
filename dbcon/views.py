@@ -6,9 +6,6 @@
 
 'totallist = call_dates(x, y)' Calling the date-event calculator for the dates x and y and creating the totallist which we will use on the template. 
 
-'%d-%m-%Y' format is important for the links with dates. Links are passing this date format to make queries and queries accept this format.
-
-
 """
 
 from django.shortcuts import render
@@ -30,9 +27,11 @@ time_interval_d = timeIntstr_d - 1 #'-1' is for making it look like time interva
 timeIntstr_m = 2
 time_interval_m = timeIntstr_m - 1
 
-
-
 #!IDEA! : you can ask the 'timeIntstr' value to user, for example with a dropdown menu.
+
+#This format is used in strftimes and it is important to make it "%d-%m-%Y" for the links with dates. Links are passing this date format to make queries and queries accept this format.
+dateformat = "%d-%m-%Y"
+
 
 
 def call_dates(first_date, second_date):
@@ -50,7 +49,7 @@ def call_dates(first_date, second_date):
 	datelist = []
 	dateliststr = []
 	for single_date in daterange(first_date, second_date):
-		datelist.append(single_date.strftime("%d-%m-%Y"))
+		datelist.append(single_date.strftime(dateformat))
 		dateliststr.append(single_date.strftime("%d %b %Y %a"))
 
 	#!WARNING! : "datelist" strftime format is important for passing the data with url and finding the events(due to query format). It is the 'dt' argument in the EventsofDate view below.
@@ -88,10 +87,10 @@ class Calendar(View):
 		dateLater = now_date + timedelta(days=time_interval)
 		
 		#These are for the navigation with next or previous buttons;
-		nextDate = dateLater.strftime("%d-%m-%Y")
-		nextnextDate = (dateLater + timedelta(days=time_interval)).strftime("%d-%m-%Y")
-		prevDate = (now_date + timedelta(days=-time_interval)).strftime("%d-%m-%Y")
-		currDate = now_date.strftime("%d-%m-%Y")
+		nextDate = dateLater.strftime(dateformat)
+		nextnextDate = (dateLater + timedelta(days=time_interval)).strftime(dateformat)
+		prevDate = (now_date + timedelta(days=-time_interval)).strftime(dateformat)
+		currDate = now_date.strftime(dateformat)
 	
 		totallist = call_dates(now_date, dateLater) 
 
@@ -125,12 +124,12 @@ class Calendar(View):
 				template = 'desktop/datepicker.html'
 
 			#Convert the strings to datetime for call_dates function;		
-			startDate = datetime.strptime(start_date, '%d-%m-%Y')
-			endDate = datetime.strptime(end_date, '%d-%m-%Y')
+			startDate = datetime.strptime(start_date, dateformat)
+			endDate = datetime.strptime(end_date, dateformat)
 
 			#These are for the navigation links;
-			nextnext3Date = (endDate + timedelta(days=time_interval)).strftime("%d-%m-%Y")
-			prev3Date = (startDate + timedelta(days=-time_interval)).strftime("%d-%m-%Y")
+			nextnext3Date = (endDate + timedelta(days=time_interval)).strftime(dateformat)
+			prev3Date = (startDate + timedelta(days=-time_interval)).strftime(dateformat)
 
 			totallist = call_dates(startDate, endDate)
 
@@ -227,12 +226,12 @@ class IntervalSeek(View):
 			template = 'desktop/intervalseek.html'
 
 		#These are for using the dates which come from links, in call_dates
-		currDate2 = datetime.strptime(fst, '%d-%m-%Y')
+		currDate2 = datetime.strptime(fst, dateformat)
 		dateLater2 = currDate2 + timedelta(days=time_interval)
 
 		#These are for the new navigation links.
-		nextnext2Date = (dateLater2 + timedelta(days=time_interval)).strftime("%d-%m-%Y")
-		prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime("%d-%m-%Y")
+		nextnext2Date = (dateLater2 + timedelta(days=time_interval)).strftime(dateformat)
+		prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime(dateformat)
 	
 		totallist = call_dates(currDate2, dateLater2)		
 
@@ -254,8 +253,8 @@ class EventsofDate(View):
 		events_date_list = Events.objects(date=dt)
 		
 		#Calculates the next and previous days for the navigation links;
-		nextDay = (datetime.strptime(dt, '%d-%m-%Y') + timedelta(days=1)).strftime("%d-%m-%Y")
-		prevDay = (datetime.strptime(dt, '%d-%m-%Y') + timedelta(days=-1)).strftime("%d-%m-%Y")
+		nextDay = (datetime.strptime(dt, dateformat) + timedelta(days=1)).strftime(dateformat)
+		prevDay = (datetime.strptime(dt, dateformat) + timedelta(days=-1)).strftime(dateformat)
 	
 		if request.is_mobile:
 			template = 'mobile/events.mobile.html'

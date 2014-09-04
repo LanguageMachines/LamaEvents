@@ -13,7 +13,9 @@
 
 
 <h3>Sleutelwoorden voor dit event;</h3>
-{{ event.keylistwc }}
+{% for keys in event.keylist %}
+	{{ keys }}{% if forloop.last %}{% else %},{% endif %}
+{% endfor %}
 
 
 <h3>Geschatte datum voor dit event;</h3>

@@ -19,7 +19,13 @@
 			</tr>
 		{%for event in events_bykey_list %}
 			<tr>
-				<td id="eventKeys"><a href="{{ urlprefix }}/{{ event.id }}/eventDetail">{{ event.keylistwc }}</a>  </td>
+				<td id="eventKeys">
+						<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+									{% for keys in event.keylist %}
+												{{ keys }}{% if forloop.last %}{% else %},{% endif %}
+									{% endfor %}
+						</a>  
+				</td> 
 				<td id="timeLeft"> {{ event.timeLeft }} </td>	
 			</tr>
 		{% endfor %}
