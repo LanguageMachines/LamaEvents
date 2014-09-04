@@ -13,11 +13,13 @@
 
 
 <h3>Sleutelwoorden voor dit event;</h3>
-{{ event.keylistwc }}
+{% for keys in event.keylist %}
+	{{ keys }}{% if forloop.last %}{% else %},{% endif %}
+{% endfor %}
 
 
 <h3>Geschatte datum voor dit event;</h3>
-{{ event.datestr }}
+<a href="{{ urlprefix }}/{{ event.linkDate }}/events">{{ event.datestr }}</a>
 
 
 <h3>Geschatte tijd tot de aanvang van het event;</h3>
@@ -33,9 +35,9 @@
 	{%for tweet in event.tweets %}
 		{% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
 			<td style="width: 400px;">
-				<blockquote class="twitter-tweet tw-align-center" data-conversation="none" data-cards="hidden" lang="en">
+				<blockquote class="twitter-tweet tw-align-center" data-conversation="none" data-cards="hidden" lang="nl">
 					<a href="https://twitter.com/{{ tweet.user }}D/statuses/{{ tweet.id }}"></a></blockquote>
-			</td>
+			</td> <!-- more info: https://dev.twitter.com/docs/embedded-tweets -->
 		{% if forloop.counter|divisibleby:2 %}<tr>{% endif %}
 	{% endfor %}
 </table>

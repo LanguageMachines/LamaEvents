@@ -5,6 +5,16 @@
 {% block title %}LaMa Events{% endblock %}
 
 
+{% block ex_head %}
+
+<script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
+
+{% endblock %}
+
+
 {% block script %}
 
 $(function() {
@@ -53,7 +63,7 @@ $(function() {
 <br><br>
 
 	<tr>                                                         
-		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                             
+		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                          
 			{% csrf_token %}
 			<tr> <h3>Zoek met zoekwoorden: </h3>	</tr>
 			<tr> <input type="text" name="fst_key" placeholder="Eerste Zoekwoord" />	</tr>
@@ -73,7 +83,7 @@ $(function() {
 {% block pri_content %}
 
 
-{% if totallist%}
+{% if totallist %}
 
 
 {% block intervalseeker %}{% endblock %}
@@ -83,6 +93,7 @@ $(function() {
 	<table>
 		{% for x in totallist %}
 			{% if forloop.counter0|divisibleby:3 %}
+			<!-- divisibleby should be same here and at the bottom -->
 				<tr>
 			{% endif %}
 				{% if not x.eventObjlist %}

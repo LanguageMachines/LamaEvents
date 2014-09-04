@@ -14,12 +14,14 @@ from mongoengine import *
 
 import configparser
 
+#The passwords and some private configurations encrypted in a different file.
+#We are calling the informations from that file with using ConfigParser.
 config = configparser.ConfigParser() 
 
-
-if getpass.getuser() =="ebasar":	#to work on applejack home
+#Calls the authentication file;
+if getpass.getuser() == "ebasar":	#to work on applejack home
 	config.read("/home/ebasar/oauth.ini")
-elif HOSTNAME[:9] == "applejack":	#for the server side
+elif HOSTNAME[:9] == "applejack":	#to work on the server
 	config.read('/scratch2/www/LamaEvents/oauth.ini')
 
 
@@ -65,7 +67,8 @@ WSGI_APPLICATION = 'LamaEvents.wsgi.application'
 
 
 # Database;
-
+#We used MongoDB as database instead of sqlite or any other relational database. 
+#So configuration is little bit different;
 
 DATABASES = {
     'default': {
@@ -88,6 +91,8 @@ MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 db_name = config.get('LE_settings', 'db_name')
 db_host = config.get('LE_settings', 'db_host')
 
+
+#This code is connet to MongoDB host. The host now is MongoLab;
 connect(db_name, host=db_host)
 
 
