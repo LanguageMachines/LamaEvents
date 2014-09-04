@@ -155,6 +155,7 @@ while True:
 			v['Estimation'] = createDate + timedelta(hours=int(hh), minutes=int(mm))
 
 			#Convert date formats to datetime format;
+			#To avoid this error : "bson.errors.InvalidDocument: Cannot encode object: datetime.date(2015, 6, 3)"
 			v['date'] = datetime.combine(v['date'], datetime.min.time())
 
 			#Writing keyterms in a list without keyterm scores; (In django using this list is more efficient)

@@ -29,7 +29,8 @@ time_interval_m = timeIntstr_m - 1
 
 #!IDEA! : you can ask the 'timeIntstr' value to user, for example with a dropdown menu.
 
-#This format is used in strftimes and it is important to make it "%d-%m-%Y" for the links with dates. Links are passing this date format to make queries and queries accept this format.
+#This format is used in strftimes and it is important for the links with dates. Links are passing this date format to make queries.
+#if you change it, you will change the urls. Then you may be have to change the reqular expresion in the url.py too.
 dateformat = "%d-%m-%Y"
 
 
@@ -45,24 +46,26 @@ def call_dates(first_date, second_date):
 		for n in range((int((second_date - first_date).days))+1):
 			yield first_date + timedelta(n)
 
-	#Put the dates in lists as strings;
+	#Put the dates in lists with variations;
 	datelist = []
 	dateliststr = []
+	datetimelist=[]
 	for single_date in daterange(first_date, second_date):
-		datelist.append(single_date.strftime(dateformat))
-		dateliststr.append(single_date.strftime("%d %b %Y %a"))
+		datelist.append(single_date.strftime(dateformat)) #These are for the link
+		dateliststr.append(single_date.strftime("%d %b %Y %a")) #These are for showing
+		datetimelist.append(datetime.strptime((single_date.strftime(dateformat)), dateformat)) #These are for query
+		#Change this last code... Write a code to make the hour in datetimes 0.
 
-	#!WARNING! : "datelist" strftime format is important for passing the data with url and finding the events(due to query format). It is the 'dt' argument in the EventsofDate view below.
 	#!HINT! : To change how the dates are shown on the calendar, change strftime of 'dateliststr'.
 
 	#Find the events of those dates and put them in a list;
 	eventObjlist = []
-	for i in datelist:
+	for i in datetimelist:
 		eventX = Events.objects(date=i)
 		eventObjlist.append(eventX)
 
 	#Combination of this lists helps to find the events of the queried period for calendar.
-	totallist1st = [{'datelist': t[0], 'dateliststr': t[1], 'eventObjlist': t[2]} for t in zip(datelist, dateliststr, eventObjlist)]
+	totallist1st = [{'datelist': t[0], 'dateliststr': t[1], 'eventObjlist': t[2], 'datetimelist': t[3]} for t in zip(datelist, dateliststr, eventObjlist, datetimelist)]
 	return totallist1st
 
 
@@ -250,7 +253,8 @@ class EventsofDate(View):
 
 	def get(self, request, dt):
 		"""Finds the events for the selected date. dt comes from the url they click."""
-		events_date_list = Events.objects(date=dt)
+		#Before making the query, change the string(dt) to datetime.
+		events_date_list = Events.objects(date=datetime.strptime(dt, dateformat))
 		
 		#Calculates the next and previous days for the navigation links;
 		nextDay = (datetime.strptime(dt, dateformat) + timedelta(days=1)).strftime(dateformat)
