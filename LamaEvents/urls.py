@@ -21,6 +21,6 @@ urlpatterns = patterns('',
 
 	url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()),
 
-	url(r'^about/$', About.as_view()),
+	url(r'^about/$', About.as_view(), name="about"),
 
 )

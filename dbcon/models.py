@@ -18,11 +18,11 @@ class Events(Document):
 	keylist = ListField(StringField())	
 
 	def datestr(self):
-		ds = self.date.strftime("%d %B 20%y %A")#to string format
+		ds = self.date.strftime("%d %B %Y %A")#to string format
 		return ds
 
 	def Estimationstr(self):
-		es = self.Estimation.strftime("%d %B 20%y - %H:%M")#to string format
+		es = self.Estimation.strftime("%d %B %Y - %H:%M")#to string format
 		return es
 
 	def timeLeft(self):
