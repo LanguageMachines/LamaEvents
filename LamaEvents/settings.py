@@ -17,14 +17,15 @@ import configparser
 config = configparser.ConfigParser() 
 
 
-if getpass.getuser() =='ebasar':	#to work on applejack home
+if getpass.getuser() =="ebasar":	#to work on applejack home
 	config.read("/home/ebasar/oauth.ini")
-	DEBUG = True
-	TEMPLATE_DEBUG = True
 elif HOSTNAME[:9] == "applejack":	#for the server side
 	config.read('/scratch2/www/LamaEvents/oauth.ini')
-	DEBUG = False
-	TEMPLATE_DEBUG = False
+
+
+DEBUG = True
+
+TEMPLATE_DEBUG = True
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
