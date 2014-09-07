@@ -110,7 +110,7 @@
 	<span class="c">#Find the events of those dates and put them in a list;</span>
 	<span class="n">eventObjlist</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">datetimelist</span><span class="p">:</span>
-		<span class="n">eventX</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+		<span class="n">eventX</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;-score&#39;</span><span class="p">)</span>
 		<span class="n">eventObjlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eventX</span><span class="p">)</span>
 
 	<span class="c">#Combination of this lists helps to find the events of the queried period for calendar.</span>
@@ -303,7 +303,7 @@
 	<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Finds the events for the selected date. dt comes from the url which is clicked.&quot;&quot;&quot;</span>
 		<span class="c">#Before making the query, change the string(dt) to datetime.</span>
-		<span class="n">events_date_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">))</span>
+		<span class="n">events_date_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;-score&#39;</span><span class="p">)</span>
 		
 		<span class="c">#Calculates the next and previous days for the navigation links;</span>
 		<span class="n">nextDay</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>

@@ -123,7 +123,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="n">connection</span> <span class="o">=</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">MongoClient</span><span class="p">(</span><span class="n">client_host</span><span class="p">,</span> <span class="n">client_port</span><span class="p">)</span>
 <span class="n">ledb</span> <span class="o">=</span> <span class="n">connection</span><span class="p">[</span><span class="n">db_name</span><span class="p">]</span> <span class="c">#Database</span>
 <span class="n">ledb</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span> <span class="n">passwd</span><span class="p">)</span>
-<span class="n">lecl</span> <span class="o">=</span> <span class="n">ledb</span><span class="o">.</span><span class="n">lecl</span> <span class="c">#Collection</span>
+<span class="n">lecl</span> <span class="o">=</span> <span class="n">ledb</span><span class="o">.</span><span class="n">lecl</span> <span class="c">#lecl: Collection</span>
 <span class="k">print</span><span class="p">(</span><span class="s">&quot;Connected to DB&quot;</span><span class="p">)</span>
 <span class="c">#!IDEA! = Add try-except block for the connection part</span>
 </pre></div>
@@ -134,7 +134,7 @@
 </pre></div>
 </div>
 <p class="rubric">Get the cookie for twiqs.nl;</p>
-<p>Here the cookie is generated automatically:</p>
+<p>Here the cookie is generated automatically. After that we can find cookies with saying &#8216;s.cookies&#8217;:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&quot;http://145.100.57.182/cgi-bin/twitter&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;NAME&quot;</span><span class="p">:</span><span class="n">user_name2</span><span class="p">,</span> <span class="s">&quot;PASSWD&quot;</span><span class="p">:</span><span class="n">passwd2</span><span class="p">})</span>
 </pre></div>
@@ -149,7 +149,7 @@
 <p class="first admonition-title">Note</p>
 <p class="last">DATE = &lt;start,end&gt; &#8211;&gt; start and end should point to the same hour in order to get tweets about an hour and it should be formed like &#8216;yyyymmddhh&#8217;.</p>
 </div>
-<p>The following code fetches the tweets from twiqs.nl:</p>
+<p>When the following method called for the first time, it starts a search at the twiqs.nl according to parameters you give to the link with &#8216;payload&#8217;. When the search is done you can call it again and fetch the tweets as result:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">RequestTweets</span><span class="p">():</span>
         <span class="n">output1st</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://145.100.57.182/cgi-bin/twitter&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output1st</span>
@@ -207,7 +207,7 @@ It&#8217;ll assign the pDate to payload[&#8216;DATE&#8217;], so the new request 
 </pre></div>
 </div>
 <p class="rubric">Request to Twiqs.nl</p>
-<p>Since we are in the new hour, time to request for the new tweets:</p>
+<p>Since we are in the new hour, time to request for the new tweets. This is first request and starts the search for the new tweets in twiqs.nl:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">output</span> <span class="o">=</span> <span class="n">RequestTweets</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="s">&quot;Request Completed&quot;</span><span class="p">)</span>
 </pre></div>
@@ -227,7 +227,7 @@ It&#8217;ll assign the pDate to payload[&#8216;DATE&#8217;], so the new request 
 <p class="first admonition-title">Note</p>
 <p class="last">&#8216;withoutcookie&#8217; contains the first 70 characters of the string which we will have without the right cookie.</p>
 </div>
-<p>Then we have to check if the cookie has access right to download the tweets but still there is no tweet.:</p>
+<p>Mostly the search at the twiqs.nl doesn&#8217;t complete immediatelly after the  first request, therefore there will not be any tweet as result. Here we check the result of the first request and if it is empty, we call a second request for the same subject after waiting 300 second (5 minutes). Then we check the results again, still if there isn&#8217;t any tweet we skip this hour to protect the previous data in the database:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">dumpoutput</span> <span class="o">=</span> <span class="s">&#39;#user_id</span><span class="se">\t</span><span class="s">#tweet_id</span><span class="se">\t</span><span class="s">#date</span><span class="se">\t</span><span class="s">#time</span><span class="se">\t</span><span class="s">#reply_to_tweet_id</span><span class="se">\t</span><span class="s">#retweet_to_tweet_id</span><span class="se">\t</span><span class="s">#user_name</span><span class="se">\t</span><span class="s">#tweet</span><span class="se">\t</span><span class="s">#DATE=&#39;</span><span class="o">+</span><span class="n">pDate</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">#SEARCHTOKEN=echtalles</span><span class="se">\n</span><span class="s">&#39;</span>
 <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">==</span> <span class="n">dumpoutput</span><span class="p">:</span> <span class="c">#If there isn&#39;t any tweet try the request again.</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;No tweet found at the first time! I&#39;ll try again&quot;</span><span class="p">)</span>
@@ -242,48 +242,86 @@ It&#8217;ll assign the pDate to payload[&#8216;DATE&#8217;], so the new request 
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Tweets are O.K.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&#8216;dumpoutput&#8217; contains the first line of the tweet file from twiqs.nl. If the first 1000 charachters of output is equal to dumpoutput, it means output is empty and there isn&#8217;t any tweet.</p>
+</div>
 <p class="rubric">Event Detection</p>
+<p>Here we call the event detection method from DEvents script to find the new event from the new tweets:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">EventDic</span> <span class="o">=</span> <span class="n">ep</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c"># [:-1] = ignoring the last &#39;\n&#39; at the bottom of the file.</span>
 <span class="k">print</span><span class="p">(</span><span class="s">&quot;Event Detection Completed&quot;</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">DeleteFormerEvents</span><span class="p">:</span>
+</pre></div>
+</div>
+<p class="rubric">Deletion for Replacement</p>
+<p>With the following code, we delete the old event datas from database to refresh with the new ones:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">DeleteFormerEvents</span><span class="p">:</span>
         <span class="n">lecl</span><span class="o">.</span><span class="n">remove</span><span class="p">({</span> <span class="p">})</span> <span class="c">#Delete the old events from database</span>
         <span class="k">print</span><span class="p">(</span><span class="s">&quot;Former events are deleted from the database&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">EventDic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span> <span class="c">#For every detected event</span>
-
-        <span class="c">#TimeToEventEstimation Calculations;</span>
-        <span class="n">createDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="c">#TTE Estimation will be added to the current time</span>
-        <span class="n">randomTTE</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">193.0</span><span class="p">)</span> <span class="c">#random number for estimation (for now)</span>
-        <span class="n">hh</span><span class="p">,</span> <span class="n">premm</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">randomTTE</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">mm</span> <span class="o">=</span> <span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="n">premm</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span>
-        <span class="n">v</span><span class="p">[</span><span class="s">&#39;Estimation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">createDate</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hh</span><span class="p">),</span> <span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">mm</span><span class="p">))</span>
-
-        <span class="c">#Convert date formats to datetime format;</span>
-        <span class="c">#To avoid this error : &quot;bson.errors.InvalidDocument: Cannot encode object: datetime.date(2015, 6, 3)&quot;</span>
-        <span class="n">v</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-
-        <span class="c">#Writing keyterms in a list without keyterm scores; (In django using this list is more efficient)</span>
-        <span class="n">v</span><span class="p">[</span><span class="s">&#39;keylist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;keyterms&#39;</span><span class="p">]:</span>
-                <span class="n">mt</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="c">#capitalization</span>
-                <span class="n">v</span><span class="p">[</span><span class="s">&#39;keylist&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">DeleteTweetDetails</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;keyterms&#39;</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;tweets&#39;</span><span class="p">]:</span>
-                        <span class="k">del</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;date references&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;text&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;entities&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-                <span class="c">#If you don&#39;t delete details; convert date formats to datetime format;</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;tweets&#39;</span><span class="p">]:</span>
-                        <span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-
-        <span class="c">#Write to database event by event;</span>
-        <span class="n">lecl</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&quot;Written to Database&quot;</span><span class="p">)</span>
-
-<span class="k">continue</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">remove() is a pymongo method and &#8216;lecl&#8217; is the collection name.</p>
+</div>
+<p class="rubric">Database Modification</p>
+<p>With  the help of this for loop, we are reading the events, make the following modifications and write them to database one by one.
+Everything after that is working in this for loop:</p>
+<div class="highlight-python"><div class="highlight"><pre>for k,v in EventDic.items():
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">v is pointing events.</p>
+</div>
+<p class="rubric">Time-To-Event Estimation</p>
+<p>The following codes make a random prediction for the events for now. And writes to database on an attribute named &#8216;Estimation&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#TimeToEventEstimation Calculations;</span>
+<span class="n">createDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="c">#TTE Estimation will be added to the current time</span>
+<span class="n">randomTTE</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">193.0</span><span class="p">)</span> <span class="c">#random number for estimation (for now)</span>
+<span class="n">hh</span><span class="p">,</span> <span class="n">premm</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">randomTTE</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">mm</span> <span class="o">=</span> <span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="n">premm</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span>
+<span class="n">v</span><span class="p">[</span><span class="s">&#39;Estimation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">createDate</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hh</span><span class="p">),</span> <span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">mm</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="rubric">Date to Datetime</p>
+<p>As a result of event detection, there is an event date data formatted with &#8216;date&#8217;.
+But we can&#8217;t write this data to database like that because of an error. Therefore we convert the date format to datetime format:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">v</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The error : &#8220;bson.errors.InvalidDocument: Cannot encode object: datetime.date(2015, 6, 3)&#8221;</p>
+</div>
+<p class="rubric">Making a Keylist</p>
+<p>Normally as a result of event detection there is a keyterms list with scores in it.
+Since we are not using the scores we are creating a new keyterms list with only keyterms. And this new list makes querying easier and better in Django:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">v</span><span class="p">[</span><span class="s">&#39;keylist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;keyterms&#39;</span><span class="p">]:</span>
+        <span class="n">mt</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="c">#capitalization</span>
+        <span class="n">v</span><span class="p">[</span><span class="s">&#39;keylist&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Delete Some Data</p>
+<p>Here we delete the old keyterms list of events and some attributes of tweets of events we don&#8217;t need.
+If the DeleteTweetDetails value is not True, it only makes the same convertion for date value of tweets we did for the events before:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">DeleteTweetDetails</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;keyterms&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;tweets&#39;</span><span class="p">]:</span>
+                <span class="k">del</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;date references&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;text&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;entities&#39;</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;tweets&#39;</span><span class="p">]:</span>
+                <span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</pre></div>
+</div>
+<p class="rubric">Write to Database</p>
+<div class="highlight-python"><div class="highlight"><pre>        lecl.insert(v)
+print(&quot;Written to Database&quot;)
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">insert() is a pymongo method and &#8216;lecl&#8217; is the collection name.</p>
 </div>
 </div>
 </div>

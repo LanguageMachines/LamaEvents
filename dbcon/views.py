@@ -61,7 +61,7 @@ def call_dates(first_date, second_date):
 	#Find the events of those dates and put them in a list;
 	eventObjlist = []
 	for i in datetimelist:
-		eventX = Events.objects(date=i)
+		eventX = Events.objects(date=i).order_by('-score')
 		eventObjlist.append(eventX)
 
 	#Combination of this lists helps to find the events of the queried period for calendar.
@@ -254,7 +254,7 @@ class EventsofDate(View):
 	def get(self, request, dt):
 		"""Finds the events for the selected date. dt comes from the url which is clicked."""
 		#Before making the query, change the string(dt) to datetime.
-		events_date_list = Events.objects(date=datetime.strptime(dt, dateformat))
+		events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score')
 		
 		#Calculates the next and previous days for the navigation links;
 		nextDay = (datetime.strptime(dt, dateformat) + timedelta(days=1)).strftime(dateformat)

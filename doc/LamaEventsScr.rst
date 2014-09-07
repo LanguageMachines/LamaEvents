@@ -62,19 +62,15 @@ And then you can reach the configurations with following codes::
 
 
 
-
-
 .. rubric:: Connect to Database;
 ::
 
 	connection = pymongo.MongoClient(client_host, client_port)
 	ledb = connection[db_name] #Database
 	ledb.authenticate(user_name, passwd)
-	lecl = ledb.lecl #Collection
+	lecl = ledb.lecl #lecl: Collection
 	print("Connected to DB")
 	#!IDEA! = Add try-except block for the connection part
-
-
 
 
 
@@ -87,15 +83,12 @@ And then you can reach the configurations with following codes::
 
 
 
-
-
 .. rubric:: Get the cookie for twiqs.nl;
 
-Here the cookie is generated automatically::
+Here the cookie is generated automatically. After that we can find cookies with saying 's.cookies'::
 
 	s = requests.Session()
 	r = s.post("http://145.100.57.182/cgi-bin/twitter", data={"NAME":user_name2, "PASSWD":passwd2})
-
 
 
 
@@ -110,14 +103,13 @@ This dictionary defines the search on twiqs.nl. It points all the tweets for one
 .. note:: DATE = <start,end> --> start and end should point to the same hour in order to get tweets about an hour and it should be formed like 'yyyymmddhh'.
 
 
-The following code fetches the tweets from twiqs.nl::
+When the following method called for the first time, it starts a search at the twiqs.nl according to parameters you give to the link with 'payload'. When the search is done you can call it again and fetch the tweets as result::
 
 	def RequestTweets():
 		output1st = requests.get("http://145.100.57.182/cgi-bin/twitter", params=payload, cookies=s.cookies)
 		return output1st
 
 .. warning:: The url may need to be updated from time to time!
-
 
 
 
@@ -144,6 +136,8 @@ After all configurations set up and all method defined, program goes into a fore
 		time.sleep(120) #Check every two minutes if you are in the next hour.
 
 
+
+
 .. rubric:: Time Calculations
 
 Here the big deal is calculation of pDate. Because pDate will help to check the hour::
@@ -159,6 +153,8 @@ Here the big deal is calculation of pDate. Because pDate will help to check the 
 		tweethour = nowDate_earlier.strftime("%H:00 %d-%m-%Y") 
 	 	#Just for showing off the minutes while waiting for the next hour;
 		currTime = nowDate.strftime("%H:%M")
+
+
 
 	
 .. rubric:: Check the Hour
@@ -179,9 +175,10 @@ It'll assign the pDate to payload['DATE'], so the new request will be done with 
 
 
 
+
 .. rubric:: Request to Twiqs.nl
 
-Since we are in the new hour, time to request for the new tweets::
+Since we are in the new hour, time to request for the new tweets. This is first request and starts the search for the new tweets in twiqs.nl::
 
 			output = RequestTweets()
 			print("Request Completed")
@@ -200,7 +197,7 @@ We have to check the cookie first. if the cookie does not have access right to d
 
 .. note:: 'withoutcookie' contains the first 70 characters of the string which we will have without the right cookie.
 
-Then we have to check if the cookie has access right to download the tweets but still there is no tweet.::
+Mostly the search at the twiqs.nl doesn't complete immediatelly after the  first request, therefore there will not be any tweet as result. Here we check the result of the first request and if it is empty, we call a second request for the same subject after waiting 300 second (5 minutes). Then we check the results again, still if there isn't any tweet we skip this hour to protect the previous data in the database::
 
 			dumpoutput = '#user_id\t#tweet_id\t#date\t#time\t#reply_to_tweet_id\t#retweet_to_tweet_id\t#user_name\t#tweet\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
 			if output.text[:1000] == dumpoutput: #If there isn't any tweet try the request again.
@@ -214,53 +211,105 @@ Then we have to check if the cookie has access right to download the tweets but 
 					print("Tweets came at the second time")
 			else:
 				print("Tweets are O.K.")
-	
+
+.. note:: 'dumpoutput' contains the first line of the tweet file from twiqs.nl. If the first 1000 charachters of output is equal to dumpoutput, it means output is empty and there isn't any tweet.
+
+
+
 
 .. rubric:: Event Detection
-::
+
+Here we call the event detection method from DEvents script to find the new event from the new tweets::
 
 			EventDic = ep.detect_events(output.text[:-1]) # [:-1] = ignoring the last '\n' at the bottom of the file.
 			print("Event Detection Completed")
-	
+
+
+
+
+.. rubric:: Deletion for Replacement
+
+With the following code, we delete the old event datas from database to refresh with the new ones::
+
 			if DeleteFormerEvents:
 				lecl.remove({ }) #Delete the old events from database
 				print("Former events are deleted from the database")
+
+.. note:: remove() is a pymongo method and 'lecl' is the collection name.
+
+
+
+
+.. rubric:: Database Modification
+
+With  the help of this for loop, we are reading the events, make the following modifications and write them to database one by one. 
+Everything after that is working in this for loop:: 
 	
-			for k,v in EventDic.items(): #For every detected event
-	
+			for k,v in EventDic.items():
+
+.. note:: v is pointing events.
+
+
+
+.. rubric:: Time-To-Event Estimation
+
+The following codes make a random prediction for the events for now. And writes to database on an attribute named 'Estimation'::
+
 				#TimeToEventEstimation Calculations;
 				createDate = datetime.now() #TTE Estimation will be added to the current time
 				randomTTE = random.uniform(0.0, 193.0) #random number for estimation (for now)
 				hh, premm = divmod(randomTTE, 1)
 				mm = (60*premm)*0.1
 				v['Estimation'] = createDate + timedelta(hours=int(hh), minutes=int(mm))
-	
-				#Convert date formats to datetime format;
-				#To avoid this error : "bson.errors.InvalidDocument: Cannot encode object: datetime.date(2015, 6, 3)"
+
+
+
+
+
+.. rubric:: Date to Datetime
+
+As a result of event detection, there is an event date data formatted with 'date'. 
+But we can't write this data to database like that because of an error. Therefore we convert the date format to datetime format::
+
 				v['date'] = datetime.combine(v['date'], datetime.min.time())
 	
-				#Writing keyterms in a list without keyterm scores; (In django using this list is more efficient)
+.. note:: The error : "bson.errors.InvalidDocument: Cannot encode object: datetime.date(2015, 6, 3)"
+
+
+
+
+
+.. rubric:: Making a Keylist
+
+Normally as a result of event detection there is a keyterms list with scores in it. 
+Since we are not using the scores we are creating a new keyterms list with only keyterms. And this new list makes querying easier and better in Django::
+
 				v['keylist'] = []
 				for m in v['keyterms']:
 					mt = m[0].title() #capitalization
 					v['keylist'].append(mt)
 	
+
+.. rubric:: Delete Some Data
+
+Here we delete the old keyterms list of events and some attributes of tweets of events we don't need. 
+If the DeleteTweetDetails value is not True, it only makes the same convertion for date value of tweets we did for the events before:: 
+
 				if DeleteTweetDetails:
 					del v['keyterms']
 					for i in v['tweets']:
 						del i['date'], i['date references'], i['text'], i['entities']
 				else:
-					#If you don't delete details; convert date formats to datetime format;
 					for i in v['tweets']:
 						i['date'] = datetime.combine(i['date'], datetime.min.time())
-	
-				#Write to database event by event;
+
+.. rubric:: Write to Database
+::
+
 				lecl.insert(v) 
 			print("Written to Database")
 	
-			continue
-	
-	
+.. note:: insert() is a pymongo method and 'lecl' is the collection name.
 
 
 
