@@ -1,11 +1,11 @@
+"""
+.. note:: The code can be found on Django Snippets:
+		  `'Mobile Browser Detection Middleware' <https://djangosnippets.org/snippets/2001//>`_ written by 'pavl'
+"""
+
 import re
 
-
 class MobileDetectionMiddleware(object):
-    """
-    Useful middleware to detect if the user is
-    on a mobile device.
-    """
 
     def process_request(self, request):
         is_mobile = False;

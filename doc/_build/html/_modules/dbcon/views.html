@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>dbcon.views &mdash; Lama Events  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Lama Events  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Lama Events  documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for dbcon.views</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">&#39;is_mobile&#39; is for saying what will happen if the device is mobile. Works with basic if statement.</span>
+
+<span class="sd">&#39;urlprefix&#39; is for the links to point on server.</span>
+
+<span class="sd">&#39;totallist = call_dates(x, y)&#39; Calling the date-event calculator for the dates x and y and creating the totallist which we will use on the template. </span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">View</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="kn">import</span> <span class="nn">mongoengine</span>
+
+<span class="kn">from</span> <span class="nn">dbcon.models</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+
+<span class="c">#!HINT! : To change the time interval in calendar change &#39;timeIntstr&#39; (ex: week =&gt; &quot;timeIntstr = 7&quot;)</span>
+<span class="n">timeIntstr_d</span> <span class="o">=</span> <span class="mi">6</span> <span class="c">#you can describe here &#39;how many dates will shown at start and during navigation&#39;</span>
+<span class="n">time_interval_d</span> <span class="o">=</span> <span class="n">timeIntstr_d</span> <span class="o">-</span> <span class="mi">1</span> <span class="c">#&#39;-1&#39; is for making it look like time interval of twiqs.nl (For one day you have to write the same date twice, ex : 10-09-2014 &amp; 10-09-2014)</span>
+<span class="c">#same thing for mobile version:</span>
+<span class="n">timeIntstr_m</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">time_interval_m</span> <span class="o">=</span> <span class="n">timeIntstr_m</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="c">#!IDEA! : you can ask the &#39;timeIntstr&#39; value to user, for example with a dropdown menu.</span>
+
+<span class="c">#This format is used in strftimes and it is important for the links with dates. Links are passing this date format to make queries.</span>
+<span class="c">#if you change it, you will change the urls. Then you may be have to change the reqular expresion in the url.py too.</span>
+<span class="n">dateformat</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%d</span><span class="s">-%m-%Y&quot;</span>
+
+
+
+<div class="viewcode-block" id="call_dates"><a class="viewcode-back" href="../../dbcon.html#dbcon.views.call_dates">[docs]</a><span class="k">def</span> <span class="nf">call_dates</span><span class="p">(</span><span class="n">first_date</span><span class="p">,</span> <span class="n">second_date</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	For creating the dates and events in calendar and binding them to each others. </span>
+<span class="sd">	This is not a view! </span>
+<span class="sd">	It will create the calendar wherever it is needed.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">daterange</span><span class="p">(</span><span class="n">first_date</span><span class="p">,</span> <span class="n">second_date</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Calculation of the difference between the dates&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="nb">int</span><span class="p">((</span><span class="n">second_date</span> <span class="o">-</span> <span class="n">first_date</span><span class="p">)</span><span class="o">.</span><span class="n">days</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+			<span class="k">yield</span> <span class="n">first_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+	<span class="c">#Put the dates in lists with variations;</span>
+	<span class="n">datelist</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">dateliststr</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">datetimelist</span><span class="o">=</span><span class="p">[]</span>
+	<span class="k">for</span> <span class="n">single_date</span> <span class="ow">in</span> <span class="n">daterange</span><span class="p">(</span><span class="n">first_date</span><span class="p">,</span> <span class="n">second_date</span><span class="p">):</span>
+		<span class="n">datelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">single_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">))</span> <span class="c">#These are for the link</span>
+		<span class="n">dateliststr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">single_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%d</span><span class="s"> %b %Y %a&quot;</span><span class="p">))</span> <span class="c">#These are for showing</span>
+		<span class="n">datetimelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">((</span><span class="n">single_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)),</span> <span class="n">dateformat</span><span class="p">))</span> <span class="c">#These are for query</span>
+		<span class="c">#Change this last code... Write a code to make the hour in datetimes 0.</span>
+
+	<span class="c">#!HINT! : To change how the dates are shown on the calendar, change strftime of &#39;dateliststr&#39;.</span>
+
+	<span class="c">#Find the events of those dates and put them in a list;</span>
+	<span class="n">eventObjlist</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">datetimelist</span><span class="p">:</span>
+		<span class="n">eventX</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+		<span class="n">eventObjlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eventX</span><span class="p">)</span>
+
+	<span class="c">#Combination of this lists helps to find the events of the queried period for calendar.</span>
+	<span class="n">totallist1st</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&#39;datelist&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;dateliststr&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">&#39;eventObjlist&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s">&#39;datetimelist&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">3</span><span class="p">]}</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">datelist</span><span class="p">,</span> <span class="n">dateliststr</span><span class="p">,</span> <span class="n">eventObjlist</span><span class="p">,</span> <span class="n">datetimelist</span><span class="p">)]</span>
+	<span class="k">return</span> <span class="n">totallist1st</span>
+
+</div>
+<div class="viewcode-block" id="Calendar"><a class="viewcode-back" href="../../dbcon.html#dbcon.views.Calendar">[docs]</a><span class="k">class</span> <span class="nc">Calendar</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;All the inputs on website are coming here to find results&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Calendar.get"><a class="viewcode-back" href="../../dbcon.html#dbcon.views.Calendar.get">[docs]</a>	<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		This is working, when you open the page for the first time.</span>
+<span class="sd">		It&#39;ll calculate the current date and add number of dates which you described with &#39;timeIntstr&#39; at the beginning.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+			<span class="n">timeIntstr</span> <span class="o">=</span> <span class="n">timeIntstr_m</span>
+			<span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval_m</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/nextint.mobile.html&#39;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">timeIntstr</span> <span class="o">=</span> <span class="n">timeIntstr_d</span>
+			<span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval_d</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/nextint.html&#39;</span>
+
+		<span class="n">now_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+		<span class="n">dateLater</span> <span class="o">=</span> <span class="n">now_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">time_interval</span><span class="p">)</span>
+		
+		<span class="c">#These are for the navigation with next or previous buttons;</span>
+		<span class="n">nextDate</span> <span class="o">=</span> <span class="n">dateLater</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+		<span class="n">nextnextDate</span> <span class="o">=</span> <span class="p">(</span><span class="n">dateLater</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">time_interval</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+		<span class="n">prevDate</span> <span class="o">=</span> <span class="p">(</span><span class="n">now_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="n">time_interval</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+		<span class="n">currDate</span> <span class="o">=</span> <span class="n">now_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+	
+		<span class="n">totallist</span> <span class="o">=</span> <span class="n">call_dates</span><span class="p">(</span><span class="n">now_date</span><span class="p">,</span> <span class="n">dateLater</span><span class="p">)</span> 
+
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+				<span class="s">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span> <span class="c">#Calls the urlprefix from settings.</span>
+				<span class="s">&#39;totallist&#39;</span><span class="p">:</span> <span class="n">totallist</span><span class="p">,</span>
+				<span class="s">&#39;nextDate&#39;</span><span class="p">:</span> <span class="n">nextDate</span><span class="p">,</span>
+				<span class="s">&#39;nextnextDate&#39;</span><span class="p">:</span> <span class="n">nextnextDate</span><span class="p">,</span>
+				<span class="s">&#39;prevDate&#39;</span><span class="p">:</span> <span class="n">prevDate</span><span class="p">,</span>
+				<span class="s">&#39;currDate&#39;</span><span class="p">:</span> <span class="n">currDate</span><span class="p">,</span>
+				<span class="s">&#39;timeIntstr&#39;</span> <span class="p">:</span> <span class="n">timeIntstr</span><span class="p">,</span>
+		<span class="p">})</span>
+
+
+</div>
+	<span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+
+		<span class="k">if</span> <span class="s">&quot;date_picker&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+			<span class="sd">&quot;&quot;&quot;This is working, if someone writes dates in input boxes.&quot;&quot;&quot;</span>
+			<span class="c">#The input strings coming from input boxes. Also they are used for navigation with next or previous buttons;</span>
+			<span class="n">start_date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;start_date&#39;</span><span class="p">]</span>
+			<span class="n">end_date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;end_date&#39;</span><span class="p">]</span>
+
+			<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+				<span class="n">timeIntstr</span> <span class="o">=</span> <span class="n">timeIntstr_m</span>
+				<span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval_m</span>
+				<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/datepicker.mobile.html&#39;</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">timeIntstr</span> <span class="o">=</span> <span class="n">timeIntstr_d</span>
+				<span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval_d</span>
+				<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/datepicker.html&#39;</span>
+
+			<span class="c">#Convert the strings to datetime for call_dates function;		</span>
+			<span class="n">startDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">)</span>
+			<span class="n">endDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">)</span>
+
+			<span class="c">#These are for the navigation links;</span>
+			<span class="n">nextnext3Date</span> <span class="o">=</span> <span class="p">(</span><span class="n">endDate</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">time_interval</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+			<span class="n">prev3Date</span> <span class="o">=</span> <span class="p">(</span><span class="n">startDate</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="n">time_interval</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+
+			<span class="n">totallist</span> <span class="o">=</span> <span class="n">call_dates</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span>
+
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+					<span class="s">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span>
+					<span class="s">&#39;totallist&#39;</span><span class="p">:</span> <span class="n">totallist</span><span class="p">,</span>
+					<span class="s">&#39;start_date&#39;</span><span class="p">:</span> <span class="n">start_date</span><span class="p">,</span>
+					<span class="s">&#39;end_date&#39;</span><span class="p">:</span> <span class="n">end_date</span><span class="p">,</span>
+					<span class="s">&#39;nextnext3Date&#39;</span><span class="p">:</span> <span class="n">nextnext3Date</span><span class="p">,</span>
+					<span class="s">&#39;prev3Date&#39;</span><span class="p">:</span> <span class="n">prev3Date</span><span class="p">,</span>
+			<span class="p">})</span>
+
+
+
+		<span class="k">elif</span> <span class="s">&quot;ttee&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+			<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">			This is working, if someone writes hour and range in the second input box.</span>
+<span class="sd">			It finds the events between these ranges. </span>
+<span class="sd">			For example hour=100 range=20, it&#39;ll show the events between 80(start_hour) and 120(end_hour) hour after from now.</span>
+<span class="sd">			&quot;&quot;&quot;</span>
+			<span class="n">search_hour</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;search_hour&#39;</span><span class="p">]</span>
+			<span class="n">hour_range</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;hour_range&#39;</span><span class="p">]</span>
+
+			<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+				<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/ttee.mobile.html&#39;</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/ttee.html&#39;</span>
+
+			<span class="c">#For not to see the events in the past;</span>
+			<span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">search_hour</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">hour_range</span><span class="p">):</span> 
+				<span class="n">start_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">search_hour</span><span class="p">)</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">hour_range</span><span class="p">)))</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">start_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="c">#If search hour is smaller than the range, it&#39;ll set the start hour to now. So it can&#39;t show before now.</span>
+
+			<span class="n">end_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">search_hour</span><span class="p">)</span><span class="o">+</span><span class="nb">int</span><span class="p">(</span><span class="n">hour_range</span><span class="p">)))</span>
+
+			<span class="c">#These are for showing the date interval for the search;</span>
+			<span class="n">startHour</span> <span class="o">=</span> <span class="n">start_hour</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%d</span><span class="s"> %B %Y %H:00&quot;</span><span class="p">)</span>
+			<span class="n">endHour</span> <span class="o">=</span> <span class="n">end_hour</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%d</span><span class="s"> %B %Y %H:00&quot;</span><span class="p">)</span>
+
+			<span class="c">#Find events which fits &#39;end_hour &gt; event.Estimation &gt; start_hour&#39;</span>
+			<span class="n">event_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">Estimation__gte</span> <span class="o">=</span> <span class="n">start_hour</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">Estimation__lte</span> <span class="o">=</span> <span class="n">end_hour</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;Estimation&#39;</span><span class="p">)</span>
+
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+					<span class="s">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span>
+					<span class="s">&#39;event_list&#39;</span><span class="p">:</span> <span class="n">event_list</span><span class="p">,</span>
+					<span class="s">&#39;startHour&#39;</span><span class="p">:</span> <span class="n">startHour</span><span class="p">,</span>
+					<span class="s">&#39;endHour&#39;</span><span class="p">:</span> <span class="n">endHour</span><span class="p">,</span>
+			<span class="p">})</span>
+
+
+
+		<span class="k">elif</span> <span class="s">&quot;event_search&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+			<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">			This is working, if someone writes keyterms in the search by keyterms input box.</span>
+<span class="sd">			It&#39;ll find the events according to keyterms they wrote.</span>
+<span class="sd">			fst_key: first keyterm, snd_key: second keyterm.</span>
+<span class="sd">			&quot;&quot;&quot;</span>
+			<span class="n">fst_key</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;fst_key&#39;</span><span class="p">]</span>
+			<span class="n">snd_key</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;snd_key&#39;</span><span class="p">]</span>
+
+			<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+				<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/eventSearch.mobile.html&#39;</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/eventSearch.html&#39;</span>
+
+			<span class="c">#Find events which have first or second keyterm and not in the past. &#39;iexact&#39; means &#39;case insensitive&#39;;</span>
+			<span class="n">events_bykey_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">Estimation__gte</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">keylist__iexact</span><span class="o">=</span><span class="n">fst_key</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">keylist__iexact</span><span class="o">=</span><span class="n">snd_key</span><span class="p">)))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;Estimation&#39;</span><span class="p">)</span>
+
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+					<span class="s">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span>
+					<span class="s">&#39;events_bykey_list&#39;</span><span class="p">:</span> <span class="n">events_bykey_list</span><span class="p">,</span>
+					<span class="s">&#39;fst_key&#39;</span><span class="p">:</span> <span class="n">fst_key</span><span class="p">,</span>
+					<span class="s">&#39;snd_key&#39;</span><span class="p">:</span> <span class="n">snd_key</span><span class="p">,</span>
+			<span class="p">})</span>
+
+
+</div>
+<div class="viewcode-block" id="IntervalSeek"><a class="viewcode-back" href="../../dbcon.html#dbcon.views.IntervalSeek">[docs]</a><span class="k">class</span> <span class="nc">IntervalSeek</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	If navigation links used, it will redirect the dates here and make a loop for dates.</span>
+<span class="sd">	So if navigation link used again right after the first time, it will come here again.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="IntervalSeek.get"><a class="viewcode-back" href="../../dbcon.html#dbcon.views.IntervalSeek.get">[docs]</a>	<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">fst</span><span class="p">,</span> <span class="n">snd</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;fst: first day, snd: last day of the month. These parameters also used to create new navigation links.&quot;&quot;&quot;</span>
+
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+			<span class="n">timeIntstr</span> <span class="o">=</span> <span class="n">timeIntstr_m</span>
+			<span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval_m</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/intervalseek.mobile.html&#39;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">timeIntstr</span> <span class="o">=</span> <span class="n">timeIntstr_d</span>
+			<span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval_d</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/intervalseek.html&#39;</span>
+
+		<span class="c">#These are for using the dates which come from links, in call_dates</span>
+		<span class="n">currDate2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">fst</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">)</span>
+		<span class="n">dateLater2</span> <span class="o">=</span> <span class="n">currDate2</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">time_interval</span><span class="p">)</span>
+
+		<span class="c">#These are for the new navigation links.</span>
+		<span class="n">nextnext2Date</span> <span class="o">=</span> <span class="p">(</span><span class="n">dateLater2</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">time_interval</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+		<span class="n">prev2Date</span> <span class="o">=</span> <span class="p">(</span><span class="n">currDate2</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="n">time_interval</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+	
+		<span class="n">totallist</span> <span class="o">=</span> <span class="n">call_dates</span><span class="p">(</span><span class="n">currDate2</span><span class="p">,</span> <span class="n">dateLater2</span><span class="p">)</span>		
+
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+				<span class="s">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span>
+				<span class="s">&#39;totallist&#39;</span><span class="p">:</span> <span class="n">totallist</span><span class="p">,</span>
+				<span class="s">&#39;fst&#39;</span><span class="p">:</span> <span class="n">fst</span><span class="p">,</span>
+				<span class="s">&#39;snd&#39;</span><span class="p">:</span> <span class="n">snd</span><span class="p">,</span>
+				<span class="s">&#39;nextnext2Date&#39;</span><span class="p">:</span> <span class="n">nextnext2Date</span><span class="p">,</span>
+				<span class="s">&#39;prev2Date&#39;</span><span class="p">:</span> <span class="n">prev2Date</span><span class="p">,</span>
+		<span class="p">})</span>
+
+
+</div></div>
+<span class="k">class</span> <span class="nc">EventsofDate</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+
+	<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Finds the events for the selected date. dt comes from the url which is clicked.&quot;&quot;&quot;</span>
+		<span class="c">#Before making the query, change the string(dt) to datetime.</span>
+		<span class="n">events_date_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">))</span>
+		
+		<span class="c">#Calculates the next and previous days for the navigation links;</span>
+		<span class="n">nextDay</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+		<span class="n">prevDay</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dateformat</span><span class="p">)</span>
+	
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/events.mobile.html&#39;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/events.html&#39;</span>
+
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+				<span class="s">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span>
+				<span class="s">&#39;events_date_list&#39;</span><span class="p">:</span> <span class="n">events_date_list</span><span class="p">,</span>
+				<span class="s">&#39;eventDate&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="p">,</span>
+				<span class="s">&#39;nextDay&#39;</span><span class="p">:</span> <span class="n">nextDay</span><span class="p">,</span>
+				<span class="s">&#39;prevDay&#39;</span><span class="p">:</span> <span class="n">prevDay</span><span class="p">,</span>
+		<span class="p">})</span>
+
+
+<span class="k">class</span> <span class="nc">EventDetail</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+
+	<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Finds the exact event via id.&quot;&quot;&quot;</span>
+		<span class="n">event</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/eventDetail.mobile.html&#39;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/eventDetail.html&#39;</span>
+
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+				<span class="s">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span>
+				<span class="s">&#39;event&#39;</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span>
+		<span class="p">})</span>
+
+
+<span class="k">class</span> <span class="nc">About</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+
+	<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Redirects links to about pages.&quot;&quot;&quot;</span>
+
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/about.mobile.html&#39;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/about.html&#39;</span>
+
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span>
+		<span class="p">})</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Lama Events  documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mustafa Erkan Basar.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

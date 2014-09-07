@@ -1,5 +1,3 @@
-
-
 body {
 	margin: 0;
 	padding: 0;
@@ -235,7 +233,7 @@ input{
 	width: 100%;	
 	margin: 0 auto;
 	padding-bottom: 25px;
-	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
 }
 
 
@@ -282,9 +280,3 @@ input{
 	background: #e2e5fd;
 	border: 3px solid #000;
 }
-
-
-
-
-
-

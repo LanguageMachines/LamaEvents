@@ -252,7 +252,7 @@ class IntervalSeek(View):
 class EventsofDate(View):
 
 	def get(self, request, dt):
-		"""Finds the events for the selected date. dt comes from the url they click."""
+		"""Finds the events for the selected date. dt comes from the url which is clicked."""
 		#Before making the query, change the string(dt) to datetime.
 		events_date_list = Events.objects(date=datetime.strptime(dt, dateformat))
 		

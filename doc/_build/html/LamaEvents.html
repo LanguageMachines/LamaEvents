@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Django LamaEvents folder &mdash; Lama Events  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Lama Events  documentation" href="index.html" />
+    <link rel="next" title="Django dbcon Application Folder" href="dbcon.html" />
+    <link rel="prev" title="Lama Events Python Script" href="LamaEventsScr.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dbcon.html" title="Django dbcon Application Folder"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="LamaEventsScr.html" title="Lama Events Python Script"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Lama Events  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="django-lamaevents-folder">
+<h1>Django LamaEvents folder<a class="headerlink" href="#django-lamaevents-folder" title="Permalink to this headline">¶</a></h1>
+<p>This is the main folder of Django.</p>
+<div class="section" id="module-LamaEvents.settings">
+<span id="settings-py"></span><h2>settings.py<a class="headerlink" href="#module-LamaEvents.settings" title="Permalink to this headline">¶</a></h2>
+<p>Django settings for LamaEvents project.</p>
+</div>
+<div class="section" id="module-LamaEvents.urls">
+<span id="urls-py"></span><h2>urls.py<a class="headerlink" href="#module-LamaEvents.urls" title="Permalink to this headline">¶</a></h2>
+<p>This file makes the connections between views and the urls.</p>
+<p>Some links pass informations to views. Example:</p>
+<div class="highlight-python"><div class="highlight"><pre># When a user click the link below in a template;
+&lt;a href=&quot;/{{ event.linkDate }}/events&quot;/&gt;
+
+# This passes the &#39;dt&#39; to EventsofDate view;
+url(r&#39;^(?P&lt;dt&gt;\S+|\S*[^\w\s]\S*)/events$&#39;, EventsofDate.as_view()
+
+# Then you can use this &#39;dt&#39; information in the view;
+class EventsofDate(View): 
+        def get(self, request, dt):
+                foo = dt...
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The regular expressions in the url definitions must be suitable for the infi passed.</p>
+</div>
+</div>
+<div class="section" id="module-LamaEvents.middleware">
+<span id="middleware-py"></span><h2>middleware.py<a class="headerlink" href="#module-LamaEvents.middleware" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The code can be found on Django Snippets:
+<a class="reference external" href="https://djangosnippets.org/snippets/2001//">&#8216;Mobile Browser Detection Middleware&#8217;</a> written by &#8216;pavl&#8217;</p>
+</div>
+<dl class="class">
+<dt id="LamaEvents.middleware.MobileDetectionMiddleware">
+<em class="property">class </em><tt class="descclassname">LamaEvents.middleware.</tt><tt class="descname">MobileDetectionMiddleware</tt><a class="reference internal" href="_modules/LamaEvents/middleware.html#MobileDetectionMiddleware"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LamaEvents.middleware.MobileDetectionMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dl class="method">
+<dt id="LamaEvents.middleware.MobileDetectionMiddleware.process_request">
+<tt class="descname">process_request</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="_modules/LamaEvents/middleware.html#MobileDetectionMiddleware.process_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LamaEvents.middleware.MobileDetectionMiddleware.process_request" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Django LamaEvents folder</a><ul>
+<li><a class="reference internal" href="#module-LamaEvents.settings">settings.py</a></li>
+<li><a class="reference internal" href="#module-LamaEvents.urls">urls.py</a></li>
+<li><a class="reference internal" href="#module-LamaEvents.middleware">middleware.py</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="LamaEventsScr.html"
+                        title="previous chapter">Lama Events Python Script</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dbcon.html"
+                        title="next chapter">Django dbcon Application Folder</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/LamaEvents.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dbcon.html" title="Django dbcon Application Folder"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="LamaEventsScr.html" title="Lama Events Python Script"
+             >previous</a> |</li>
+        <li><a href="index.html">Lama Events  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mustafa Erkan Basar.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

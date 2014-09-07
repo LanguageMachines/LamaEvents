@@ -1,0 +1,357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Lama Events Python Script &mdash; Lama Events  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Lama Events  documentation" href="index.html" />
+    <link rel="next" title="Django LamaEvents folder" href="LamaEvents.html" />
+    <link rel="prev" title="Language Machines Events Documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LamaEvents.html" title="Django LamaEvents folder"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Language Machines Events Documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Lama Events  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="lama-events-python-script">
+<h1>Lama Events Python Script<a class="headerlink" href="#lama-events-python-script" title="Permalink to this headline">¶</a></h1>
+<p>Here the whole code explained line by line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">The Program flow is as follows:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ol class="first arabic simple">
+<li>Connect to MongoDB (MangoLab)</li>
+<li>Retrieve tweets from twiqs.nl every hour.</li>
+<li>Call the event detection.</li>
+<li>Clear the former results from the database.</li>
+<li>Run the time-to-event estimation module.</li>
+<li>Write the new results to database, after each time-to-event estimation.</li>
+</ol>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Trouble Shooting:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li>The URL for twiqs.nl may change from time to time.</li>
+<li>Twiqs.nl may not provide tweets in time. Therefore this particular hour will not be taken into account.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>You can reach this script from <a class="reference external" href="https://github.com/ErkanBasar/LamaEvents/blob/master/LamaEvents.py/">GitHub</a></p>
+<div class="section" id="beginning">
+<h2>Beginning<a class="headerlink" href="#beginning" title="Permalink to this headline">¶</a></h2>
+<p class="rubric">Imports;</p>
+<p>Here we are using these:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">pymongo</span>
+</pre></div>
+</div>
+<p>The following code imports a script developed by Florian Kunneman:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">DEvents.event_pairs</span> <span class="kn">as</span> <span class="nn">event_pairs</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">To use Event Detection code, you have to clone <a class="reference external" href="https://github.com/fkunneman/DEvents/">DEvents</a> and the requirements of that. Refer to Florian Kunneman for any issue about DEvents.</p>
+</div>
+<p class="rubric">Private things;</p>
+<p>All the private configurations is in another file. You have to read it first with ConfigParser():</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+<span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;/home/ebasar/oauth.ini&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And then you can reach the configurations with following codes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#MongoLab connection authentications;</span>
+<span class="n">client_host</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;LE_script_db&#39;</span><span class="p">,</span> <span class="s">&#39;client_host&#39;</span><span class="p">)</span>
+<span class="n">client_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;LE_script_db&#39;</span><span class="p">,</span> <span class="s">&#39;client_port&#39;</span><span class="p">))</span>
+<span class="n">db_name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;LE_script_db&#39;</span><span class="p">,</span> <span class="s">&#39;db_name&#39;</span><span class="p">)</span>
+<span class="n">user_name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;LE_script_db&#39;</span><span class="p">,</span> <span class="s">&#39;user_name&#39;</span><span class="p">)</span>
+<span class="n">passwd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;LE_script_db&#39;</span><span class="p">,</span> <span class="s">&#39;passwd&#39;</span><span class="p">)</span>
+
+<span class="c">#Twiqs.nl authentications;</span>
+<span class="n">user_name2</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;LE_script_twiqs&#39;</span><span class="p">,</span> <span class="s">&#39;user_name&#39;</span><span class="p">)</span>
+<span class="n">passwd2</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;LE_script_twiqs&#39;</span><span class="p">,</span> <span class="s">&#39;passwd&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Connect to Database;</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">connection</span> <span class="o">=</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">MongoClient</span><span class="p">(</span><span class="n">client_host</span><span class="p">,</span> <span class="n">client_port</span><span class="p">)</span>
+<span class="n">ledb</span> <span class="o">=</span> <span class="n">connection</span><span class="p">[</span><span class="n">db_name</span><span class="p">]</span> <span class="c">#Database</span>
+<span class="n">ledb</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span> <span class="n">passwd</span><span class="p">)</span>
+<span class="n">lecl</span> <span class="o">=</span> <span class="n">ledb</span><span class="o">.</span><span class="n">lecl</span> <span class="c">#Collection</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Connected to DB&quot;</span><span class="p">)</span>
+<span class="c">#!IDEA! = Add try-except block for the connection part</span>
+</pre></div>
+</div>
+<p class="rubric">Initialize the Event Detection code;</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ep</span> <span class="o">=</span> <span class="n">event_pairs</span><span class="o">.</span><span class="n">Event_pairs</span><span class="p">(</span><span class="s">&quot;all&quot;</span><span class="p">,</span><span class="s">&quot;coco_out/&quot;</span><span class="p">,</span><span class="s">&quot;tmp/&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Event Detection Initialized&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Get the cookie for twiqs.nl;</p>
+<p>Here the cookie is generated automatically:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">&quot;http://145.100.57.182/cgi-bin/twitter&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">&quot;NAME&quot;</span><span class="p">:</span><span class="n">user_name2</span><span class="p">,</span> <span class="s">&quot;PASSWD&quot;</span><span class="p">:</span><span class="n">passwd2</span><span class="p">})</span>
+</pre></div>
+</div>
+<p class="rubric">Requesting the tweets;</p>
+<p>This dictionary defines the search on twiqs.nl. It points all the tweets for one hour:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;SEARCH&#39;</span><span class="p">:</span> <span class="s">&#39;echtalles&#39;</span><span class="p">,</span> <span class="s">&#39;DATE&#39;</span><span class="p">:</span> <span class="s">&#39;start-end&#39;</span><span class="p">,</span> <span class="s">&#39;DOWNLOAD&#39;</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span> <span class="s">&#39;SHOWTWEETS&#39;</span><span class="p">:</span><span class="bp">True</span><span class="p">}</span>
+<span class="c">#!IDEA! = Argparser can be used to get system parameters in payload.</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">DATE = &lt;start,end&gt; &#8211;&gt; start and end should point to the same hour in order to get tweets about an hour and it should be formed like &#8216;yyyymmddhh&#8217;.</p>
+</div>
+<p>The following code fetches the tweets from twiqs.nl:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">RequestTweets</span><span class="p">():</span>
+        <span class="n">output1st</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://145.100.57.182/cgi-bin/twitter&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output1st</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The url may need to be updated from time to time!</p>
+</div>
+<p class="rubric">Extras;</p>
+<p>If True, don&#8217;t contain details of tweets except ids and users. Also don&#8217;t contain the keyterms of events after keeping them in keylist:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DeleteTweetDetails</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
+<p>If True, delete the former events from mongo db:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DeleteFormerEvents</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="inside-the-forever-loop">
+<h2>Inside the Forever Loop<a class="headerlink" href="#inside-the-forever-loop" title="Permalink to this headline">¶</a></h2>
+<p>After all configurations set up and all method defined, program goes into a forever loop where it will check the time every 2 minutes and do the all important thing every hour.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span> <span class="c">#Check every two minutes if you are in the next hour.</span>
+</pre></div>
+</div>
+<p class="rubric">Time Calculations</p>
+<p>Here the big deal is calculation of pDate. Because pDate will help to check the hour:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">nowDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="c">#Get the previous hour. Because you can get tweets for the last hour from twiqs.nl.</span>
+<span class="n">nowDate_earlier</span> <span class="o">=</span> <span class="n">nowDate</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c">#&#39;yyyymmddhh&#39; twiqs.nl format.</span>
+<span class="n">nes</span> <span class="o">=</span> <span class="n">nowDate_earlier</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y%m</span><span class="si">%d</span><span class="s">%H&quot;</span><span class="p">)</span>
+<span class="c">#Twiqs.nl needs this format. Start and end time should be the same to retrieve tweets for one hour.</span>
+<span class="n">pDate</span> <span class="o">=</span> <span class="n">nes</span><span class="o">+</span><span class="s">&#39;-&#39;</span><span class="o">+</span><span class="n">nes</span>
+<span class="c">#Just for showing off the hour which tweets requested;</span>
+<span class="n">tweethour</span> <span class="o">=</span> <span class="n">nowDate_earlier</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%H:00 </span><span class="si">%d</span><span class="s">-%m-%Y&quot;</span><span class="p">)</span>
+<span class="c">#Just for showing off the minutes while waiting for the next hour;</span>
+<span class="n">currTime</span> <span class="o">=</span> <span class="n">nowDate</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%H:%M&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Check the Hour</p>
+<p>If the pDate value is equal to payload[&#8216;DATE&#8217;], it means we are still in the same hour.
+Here the payload[&#8216;DATE&#8217;] contains the date which we use it for requesting the last tweets in twiqs.nl:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">payload</span><span class="p">[</span><span class="s">&#39;DATE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pDate</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">currTime</span><span class="p">)</span>
+        <span class="k">continue</span>
+</pre></div>
+</div>
+<p>If the pDate is not equal the hour of the last tweet request, it means we are in the new hour and there must be new tweets in twiqs.nl.
+It&#8217;ll assign the pDate to payload[&#8216;DATE&#8217;], so the new request will be done with the new date value:</p>
+<div class="highlight-python"><div class="highlight"><pre>else:
+        payload[&#39;DATE&#39;] = pDate #It will remain the same until next hour.
+        print(&quot;Tweet hour : &quot; + tweethour)
+</pre></div>
+</div>
+<p class="rubric">Request to Twiqs.nl</p>
+<p>Since we are in the new hour, time to request for the new tweets:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">output</span> <span class="o">=</span> <span class="n">RequestTweets</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Request Completed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We have to check the cookie first. if the cookie does not have access right to download the tweets, it will skip this hour and start to wait for the next hour:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">withoutcookie</span> <span class="o">=</span> <span class="s">&#39;#user_id</span><span class="se">\t</span><span class="s">#tweet_id</span><span class="se">\t</span><span class="s">#DATE=&#39;</span><span class="o">+</span><span class="n">pDate</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">#SEARCHTOKEN=echtalles</span><span class="se">\n</span><span class="s">&#39;</span>
+<span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">70</span><span class="p">]</span> <span class="o">==</span> <span class="n">withoutcookie</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Cookie is wrong. I&#39;ll skip tweets at &quot;</span> <span class="o">+</span> <span class="n">tweethour</span> <span class="o">+</span> <span class="s">&quot;You have to check your cookie configuration!&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+<span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Cookie is Fine.&quot;</span><span class="p">)</span>
+
+<span class="c">#!IDEA! = If the cookie is wrong, write the code(call the relevant method) for getting a new one here.</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&#8216;withoutcookie&#8217; contains the first 70 characters of the string which we will have without the right cookie.</p>
+</div>
+<p>Then we have to check if the cookie has access right to download the tweets but still there is no tweet.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dumpoutput</span> <span class="o">=</span> <span class="s">&#39;#user_id</span><span class="se">\t</span><span class="s">#tweet_id</span><span class="se">\t</span><span class="s">#date</span><span class="se">\t</span><span class="s">#time</span><span class="se">\t</span><span class="s">#reply_to_tweet_id</span><span class="se">\t</span><span class="s">#retweet_to_tweet_id</span><span class="se">\t</span><span class="s">#user_name</span><span class="se">\t</span><span class="s">#tweet</span><span class="se">\t</span><span class="s">#DATE=&#39;</span><span class="o">+</span><span class="n">pDate</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">#SEARCHTOKEN=echtalles</span><span class="se">\n</span><span class="s">&#39;</span>
+<span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">==</span> <span class="n">dumpoutput</span><span class="p">:</span> <span class="c">#If there isn&#39;t any tweet try the request again.</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;No tweet found at the first time! I&#39;ll try again&quot;</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span> <span class="c">#Wait for the search done at twiqs.nl before the next request</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">RequestTweets</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">==</span> <span class="n">dumpoutput</span><span class="p">:</span> <span class="c">#If there isn&#39;t any tweet again, it will skip this hour.</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Still there is not any tweet! I&#39;ll skip tweets at &quot;</span> <span class="o">+</span> <span class="n">tweethour</span><span class="p">)</span>
+                <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Tweets came at the second time&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Tweets are O.K.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Event Detection</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">EventDic</span> <span class="o">=</span> <span class="n">ep</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c"># [:-1] = ignoring the last &#39;\n&#39; at the bottom of the file.</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Event Detection Completed&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">DeleteFormerEvents</span><span class="p">:</span>
+        <span class="n">lecl</span><span class="o">.</span><span class="n">remove</span><span class="p">({</span> <span class="p">})</span> <span class="c">#Delete the old events from database</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Former events are deleted from the database&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">EventDic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span> <span class="c">#For every detected event</span>
+
+        <span class="c">#TimeToEventEstimation Calculations;</span>
+        <span class="n">createDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="c">#TTE Estimation will be added to the current time</span>
+        <span class="n">randomTTE</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">193.0</span><span class="p">)</span> <span class="c">#random number for estimation (for now)</span>
+        <span class="n">hh</span><span class="p">,</span> <span class="n">premm</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">randomTTE</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">mm</span> <span class="o">=</span> <span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="n">premm</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span>
+        <span class="n">v</span><span class="p">[</span><span class="s">&#39;Estimation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">createDate</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hh</span><span class="p">),</span> <span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">mm</span><span class="p">))</span>
+
+        <span class="c">#Convert date formats to datetime format;</span>
+        <span class="c">#To avoid this error : &quot;bson.errors.InvalidDocument: Cannot encode object: datetime.date(2015, 6, 3)&quot;</span>
+        <span class="n">v</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+
+        <span class="c">#Writing keyterms in a list without keyterm scores; (In django using this list is more efficient)</span>
+        <span class="n">v</span><span class="p">[</span><span class="s">&#39;keylist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;keyterms&#39;</span><span class="p">]:</span>
+                <span class="n">mt</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="c">#capitalization</span>
+                <span class="n">v</span><span class="p">[</span><span class="s">&#39;keylist&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">DeleteTweetDetails</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;keyterms&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;tweets&#39;</span><span class="p">]:</span>
+                        <span class="k">del</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;date references&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;text&#39;</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="s">&#39;entities&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+                <span class="c">#If you don&#39;t delete details; convert date formats to datetime format;</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="p">[</span><span class="s">&#39;tweets&#39;</span><span class="p">]:</span>
+                        <span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">datetime</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+
+        <span class="c">#Write to database event by event;</span>
+        <span class="n">lecl</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;Written to Database&quot;</span><span class="p">)</span>
+
+<span class="k">continue</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Lama Events Python Script</a><ul>
+<li><a class="reference internal" href="#beginning">Beginning</a></li>
+<li><a class="reference internal" href="#inside-the-forever-loop">Inside the Forever Loop</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Language Machines Events Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="LamaEvents.html"
+                        title="next chapter">Django LamaEvents folder</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/LamaEventsScr.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LamaEvents.html" title="Django LamaEvents folder"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Language Machines Events Documentation"
+             >previous</a> |</li>
+        <li><a href="index.html">Lama Events  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Mustafa Erkan Basar.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -11,7 +11,7 @@
 
 	<a href="{{ urlprefix }}/{{ prevDay }}/events" ><div id="prevbtn"></div></a>
 
-	Events op {{ eventDate }}
+	Events op {{ eventDate }} :
 	
 	<a href="{{ urlprefix }}/{{ nextDay }}/events"><div id="nextbtn"></div></a>
 
@@ -19,7 +19,7 @@
 
 {% if events_date_list %}
 
-<p>Klik op de sleutelwoorden om informatie over het event te zien;</p>
+<p>Klik op de sleutelwoorden om informatie over het event te zien :</p>
 
 <ul>
 	{%for event in events_date_list %}
