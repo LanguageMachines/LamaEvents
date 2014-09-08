@@ -48,6 +48,13 @@
             
   <h1>Source code for LamaEvents.middleware</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">This codes are helping the mobile device detection. &#39;is_mobile&#39; which we used in the views.py is connected to here.</span>
+
+<span class="sd">If you want to use a middleware like this, remember to add the following code to MIDDLEWARE_CLASSES in settings.py::</span>
+
+<span class="sd">	&#39;LamaEvents.middleware.MobileDetectionMiddleware&#39;</span>
+
 <span class="sd">.. note:: The code can be found on Django Snippets:</span>
 <span class="sd">		  `&#39;Mobile Browser Detection Middleware&#39; &lt;https://djangosnippets.org/snippets/2001//&gt;`_ written by &#39;pavl&#39;</span>
 <span class="sd">&quot;&quot;&quot;</span>

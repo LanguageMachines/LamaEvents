@@ -1,5 +1,39 @@
 """
 Django settings for LamaEvents project.
+
+The only thing different than normal here is we used MongoDB instead of any relational database.
+Also we used MongoEngine to make the connection between Django and MongoDB.
+
+The configurations of this special case is the following code::
+
+	DATABASES = {
+	    'default': {
+	        'ENGINE': 'django.db.backends.dummy',
+	    },
+	}
+	
+	AUTHENTICATION_BACKENDS = (
+	    'mongoengine.django.auth.MongoEngineBackend',
+	)
+	
+	SESSION_ENGINE = 'mongoengine.django.sessions'
+	SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
+
+
+	AUTH_USER_MODEL = 'mongo_auth.MongoUser'
+	MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
+
+	connect(db_name, host=db_host)
+
+Also, notice we used an if statement to check if the codes are working on Applejack server. 
+On the Applejack we have to add 'lamaevents' before all the links we used. Here we are defining it::
+
+	elif HOSTNAME[:9] == "applejack":	#for the server side
+		STATIC_URL = '/lamaevents/static/'
+		URLPREFIX = '/lamaevents'
+
+.. note:: You can see how we used URLPREFIX in views.py and in the templates.
+
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

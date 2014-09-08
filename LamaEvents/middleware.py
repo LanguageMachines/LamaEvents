@@ -1,6 +1,15 @@
 """
-.. note:: The code can be found on Django Snippets:
+
+This codes are helping the mobile device detection. 'is_mobile' which we used in the views.py is connected to here.
+
+If you want to use a middleware like this, remember to add the following code to MIDDLEWARE_CLASSES in settings.py::
+
+	'LamaEvents.middleware.MobileDetectionMiddleware'
+
+.. note:: Whole code can be found on Django Snippets:
 		  `'Mobile Browser Detection Middleware' <https://djangosnippets.org/snippets/2001//>`_ written by 'pavl'
+
+
 """
 
 import re

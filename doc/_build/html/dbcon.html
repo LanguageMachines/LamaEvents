@@ -24,6 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Lama Events  documentation" href="index.html" />
+    <link rel="next" title="How to run" href="run.html" />
     <link rel="prev" title="Django LamaEvents folder" href="LamaEvents.html" /> 
   </head>
   <body>
@@ -36,6 +37,9 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="run.html" title="How to run"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="LamaEvents.html" title="Django LamaEvents folder"
              accesskey="P">previous</a> |</li>
@@ -53,9 +57,57 @@
 <p>This application does basically everthing on the website.</p>
 <div class="section" id="module-dbcon.views">
 <span id="views-py"></span><h2>views.py<a class="headerlink" href="#module-dbcon.views" title="Permalink to this headline">¶</a></h2>
-<p>&#8216;is_mobile&#8217; is for saying what will happen if the device is mobile. Works with basic if statement.</p>
-<p>&#8216;urlprefix&#8217; is for the links to point on server.</p>
-<p>&#8216;totallist = call_dates(x, y)&#8217; Calling the date-event calculator for the dates x and y and creating the totallist which we will use on the template.</p>
+<p>This is the standart views file for Django.</p>
+<p class="rubric">Some Explanations</p>
+<p>With using &#8216;timeIntstr_d&#8217; and &#8216;timeIntstr_m&#8217; you can describe here how many dates will shown at 
+start and during navigation on calendar. &#8216;-1&#8217; is for making it look like time interval of 
+twiqs.nl (For one day you have to write the same date twice, ex : 10-09-2014 &amp; 10-09-2014).
+&#8216;_d&#8217; stands for &#8216;desktop&#8217; and &#8216;_m&#8217; stands for &#8216;mobile&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#Desktop;</span>
+<span class="n">timeIntstr_d</span> <span class="o">=</span> <span class="mi">6</span> 
+<span class="n">time_interval_d</span> <span class="o">=</span> <span class="n">timeIntstr_d</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="c">#Mobile;</span>
+<span class="n">timeIntstr_m</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">time_interval_m</span> <span class="o">=</span> <span class="n">timeIntstr_m</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>&#8216;is_mobile&#8217; is for saying what will happen if the device is mobile. Works with basic if statement. Also see LamaEvents/middleware.py:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">is_mobile</span><span class="p">:</span>
+        <span class="n">timeIntstr</span> <span class="o">=</span> <span class="n">timeIntstr_m</span>
+        <span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval_m</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s">&#39;mobile/nextint.mobile.html&#39;</span>
+<span class="k">else</span><span class="p">:</span>
+        <span class="n">timeIntstr</span> <span class="o">=</span> <span class="n">timeIntstr_d</span>
+        <span class="n">time_interval</span> <span class="o">=</span> <span class="n">time_interval_d</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="s">&#39;desktop/nextint.html&#39;</span>
+</pre></div>
+</div>
+<p>The following code is used in many strftime &amp; strptime convertions. It is important for the links with dates 
+because links are passing this date format to make queries. Therefore if you change it, you will change the urls. 
+Then you may be have to change the reqular expresion in the url.py too:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">dateformat</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%d</span><span class="s">-%m-%Y&quot;</span>
+</pre></div>
+</div>
+<p>On the Applejack server, the link starts with &#8216;/lamaevents&#8217;. Because of that we defined a variable called urlprefix in settings.py.
+And here we are sending this variable to templates for adding to the links:</p>
+<div class="highlight-python"><div class="highlight"><pre>return render(request, template, {
+        &#39;urlprefix&#39;: settings.URLPREFIX,
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contents:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="dbcon.views.About">
+<em class="property">class </em><tt class="descclassname">dbcon.views.</tt><tt class="descname">About</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#About"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.About" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redirects links to about pages.</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="dbcon.views.Calendar">
 <em class="property">class </em><tt class="descclassname">dbcon.views.</tt><tt class="descname">Calendar</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#Calendar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.Calendar" title="Permalink to this definition">¶</a></dt>
@@ -63,8 +115,161 @@
 <dl class="method">
 <dt id="dbcon.views.Calendar.get">
 <tt class="descname">get</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#Calendar.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.Calendar.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is working, when you open the page for the first time.
-It&#8217;ll calculate the current date and add number of dates which you described with &#8216;timeIntstr&#8217; at the beginning.</p>
+<dd><p>Calculates the current date and add number of dates which you described with &#8216;timeIntstr&#8217; at the beginning. 
+This is working, when you open the main page for the first time.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbcon.views.Calendar.post">
+<tt class="descname">post</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#Calendar.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.Calendar.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>post() is used for user inputs.</p>
+<p>There are if statements inside to find out which button submitted;</p>
+<ol class="arabic">
+<li><p class="first">Date Picker;</p>
+<blockquote>
+<div><ul>
+<li><p class="first">This is working, if someone used &#8216;Specificeer Datums&#8217; search.</p>
+</li>
+<li><p class="first">Assign the parameters to new string variables. These are also used for navigation with next or previous buttons:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">start_date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;start_date&#39;</span><span class="p">]</span>
+<span class="n">end_date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s">&#39;end_date&#39;</span><span class="p">]</span>     
+</pre></div>
+</div>
+</li>
+<li><p class="first">Convert the strings to datetime for call_dates function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">startDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">)</span>
+<span class="n">endDate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">)</span>
+
+<span class="n">allperEventsDictList</span> <span class="o">=</span> <span class="n">call_dates</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>start_date</strong> &#8211; </li>
+<li><strong>end_date</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic" start="2">
+<li><p class="first">Time-To-Event Estimation;</p>
+<blockquote>
+<div><ul>
+<li><p class="first">This is working, if someone used &#8220;Specificeer Uren&#8221; search.</p>
+</li>
+<li><p class="first">It finds the events between these ranges. For example hour=100 range=20, it&#8217;ll show the events between 80(start_hour) and 120(end_hour) hour after from now.</p>
+</li>
+<li><p class="first">If search hour is smaller than the range, it&#8217;ll set the start hour to now. So it can&#8217;t show before now:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">search_hour</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">hour_range</span><span class="p">):</span> 
+        <span class="n">start_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">search_hour</span><span class="p">)</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">hour_range</span><span class="p">)))</span>
+<span class="k">else</span><span class="p">:</span>
+        <span class="n">start_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> 
+</pre></div>
+</div>
+</li>
+<li><p class="first">Find events which fits &#8216;end_hour &gt; event.Estimation &gt; start_hour&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">event_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">Estimation__gte</span> <span class="o">=</span> <span class="n">start_hour</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">Estimation__lte</span> <span class="o">=</span> <span class="n">end_hour</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;Estimation&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>search_hour</strong> &#8211; </li>
+<li><strong>hour_range</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic" start="3">
+<li><p class="first">Event Search;</p>
+<blockquote>
+<div><ul>
+<li><p class="first">This is working, if someone used &#8220;Zoek met Zoekwoorden&#8221; search.</p>
+</li>
+<li><p class="first">It&#8217;ll find the events according to keyterms they wrote.</p>
+</li>
+<li><p class="first">The query finds events which have first or second keyterm and not in the past. &#8216;iexact&#8217; means &#8216;case insensitive&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">event_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">Estimation__gte</span> <span class="o">=</span> <span class="n">start_hour</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">Estimation__lte</span> <span class="o">=</span> <span class="n">end_hour</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;Estimation&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fst_key</strong> &#8211; First Keyterm</li>
+<li><strong>snd_key</strong> &#8211; Second Keyterm</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dbcon.views.EventDetail">
+<em class="property">class </em><tt class="descclassname">dbcon.views.</tt><tt class="descname">EventDetail</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#EventDetail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.EventDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>This view shows the details of the events such as tweets about it</p>
+<dl class="method">
+<dt id="dbcon.views.EventDetail.get">
+<tt class="descname">get</tt><big>(</big><em>request</em>, <em>id</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#EventDetail.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.EventDetail.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the exact event via id.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> &#8211; comes from the links</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dbcon.views.EventsofDate">
+<em class="property">class </em><tt class="descclassname">dbcon.views.</tt><tt class="descname">EventsofDate</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#EventsofDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.EventsofDate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This view shows the events for a specific date</p>
+<dl class="method">
+<dt id="dbcon.views.EventsofDate.get">
+<tt class="descname">get</tt><big>(</big><em>request</em>, <em>dt</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#EventsofDate.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.EventsofDate.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the events for the selected date. dt comes from the url which is clicked.</p>
+<p>Before making the query, change the string(dt) to datetime:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">events_date_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;-score&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dt</strong> &#8211; Comes from the links</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -74,10 +279,24 @@ It&#8217;ll calculate the current date and add number of dates which you describ
 <em class="property">class </em><tt class="descclassname">dbcon.views.</tt><tt class="descname">IntervalSeek</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#IntervalSeek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.IntervalSeek" title="Permalink to this definition">¶</a></dt>
 <dd><p>If navigation links used, it will redirect the dates here and make a loop for dates.
 So if navigation link used again right after the first time, it will come here again.</p>
+<p>This is using call_dates() with the new dates coming from the links.</p>
+<p>The date amount to show is defined with &#8216;timeIntstr&#8217; again.</p>
 <dl class="method">
 <dt id="dbcon.views.IntervalSeek.get">
 <tt class="descname">get</tt><big>(</big><em>request</em>, <em>fst</em>, <em>snd</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#IntervalSeek.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.IntervalSeek.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>fst: first day, snd: last day of the month. These parameters also used to create new navigation links.</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fst</strong> &#8211; First Day</li>
+<li><strong>snd</strong> &#8211; Last Day</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>These parameters also used to create new navigation links.</p>
 </dd></dl>
 
 </dd></dl>
@@ -86,8 +305,47 @@ So if navigation link used again right after the first time, it will come here a
 <dt id="dbcon.views.call_dates">
 <tt class="descclassname">dbcon.views.</tt><tt class="descname">call_dates</tt><big>(</big><em>first_date</em>, <em>second_date</em><big>)</big><a class="reference internal" href="_modules/dbcon/views.html#call_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.call_dates" title="Permalink to this definition">¶</a></dt>
 <dd><p>For creating the dates and events in calendar and binding them to each others. 
-This is not a view! 
-It will create the calendar wherever it is needed.</p>
+This is not a view!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>first_date</strong> &#8211; The Start Date</li>
+<li><strong>second_date</strong> &#8211; The End Date</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>First it calculates the all dates between the start date and the end date. Then put them in 4 different lists as different values and zip them in one list;</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>datelist = Used in the links to show events for one date. Resulted in dateitem.</li>
+<li>dateliststr = Used to show dates as strings in format &#8220;%d %b %Y %a&#8221; (e.g.: 09 Sep 2014 Tue). Resulted in dateitemstr.</li>
+<li>datetimelist = Used to query events. Items are in datetime format. Resulted in datetimeitem.</li>
+<li>eventObjlist = Holds the events found by querying with items in datetimelist. Resulted in eventObj.</li>
+</ol>
+</div></blockquote>
+<p class="rubric">Usage of call_dates()</p>
+<p>In the views which we will use calendar there must be two exact dates. 
+We need to call call_dates() method with using this dates as parameters and assign to a list:</p>
+<div class="highlight-python"><div class="highlight"><pre>allperEventsDictList = call_dates(now_date, dateLater) 
+
+#And we have to render this to template;
+return render(request, template, {
+        &#39;allperEventsDictList&#39;: allperEventsDictList,
+</pre></div>
+</div>
+<p>Then you can call them is template like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>#Iterate on the allperEventsDictList. each element of allperEventsDictList is a dictionary whose keys identify dateitem, dateitemstr, eventObj, datetimeitem;
+{% for x in allperEventsDictList %}
+
+        #eventObj is a list of events of a date. Thus, event is a Events class instance;
+        {% for event in x.eventObj %}
+                        {{ event.score }}
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -216,6 +474,9 @@ It inherits the Document Class from MongoEngine.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="LamaEvents.html"
                         title="previous chapter">Django LamaEvents folder</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="run.html"
+                        title="next chapter">How to run</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/dbcon.txt"
@@ -247,6 +508,9 @@ It inherits the Document Class from MongoEngine.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="run.html" title="How to run"
+             >next</a> |</li>
         <li class="right" >
           <a href="LamaEvents.html" title="Django LamaEvents folder"
              >previous</a> |</li>

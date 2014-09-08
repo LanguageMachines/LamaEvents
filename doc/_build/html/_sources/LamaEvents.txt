@@ -1,7 +1,7 @@
 Django LamaEvents folder 
 ========================
 
-This is the main folder of Django.
+This is the main folder of Django. 
 
 
 settings.py
@@ -9,8 +9,6 @@ settings.py
 
 .. automodule:: LamaEvents.settings
     :members:
-    :undoc-members:
-    :show-inheritance:
 
 
 urls.py
@@ -18,8 +16,6 @@ urls.py
 
 .. automodule:: LamaEvents.urls
     :members:
-    :undoc-members:
-    :show-inheritance:
 
 
 middleware.py
@@ -27,5 +23,3 @@ middleware.py
 
 .. automodule:: LamaEvents.middleware
     :members:
-    :undoc-members:
-    :show-inheritance:

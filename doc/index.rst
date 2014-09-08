@@ -19,6 +19,7 @@ Contents:
    LamaEventsScr
    LamaEvents
    dbcon
+   run
 
 
 Indices and tables
