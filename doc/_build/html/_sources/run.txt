@@ -12,9 +12,12 @@ Django Project
 
 	Running the Django app;
 
-		- Go to the project folder which contains manage.py; currently Hede
+		- Go to the project folder which contains manage.py::
+
 			>> python manage.py runserver (deafult port 8000)
-		- You can provide another port, for example 4545;
+
+		- You can provide another port, for example 4545::
+
 			>> python manage.py runserver 4545
 	
 
@@ -36,12 +39,12 @@ Python Paths
 
 Event Detection::
 
-	export PYTHONPATH=/vol/customopt/uvt-ru/src/colibri/scripts:/vol/customopt/uvt-ru/lib/python3.2/site-packages:~/Projects/ADNEXT/
+	>>export PYTHONPATH=/vol/customopt/uvt-ru/src/colibri/scripts:/vol/customopt/uvt-ru/lib/python3.2/site-packages:~/Projects/ADNEXT/
 
 Anaconda::
 
-	export PYTHONPATH="~/Anaconda3/lib/python3.4/site-packages:$PYTHONPATH"
-	export PATH="~/Anaconda3/bin/:$PATH"
+	>>export PYTHONPATH="~/Anaconda3/lib/python3.4/site-packages:$PYTHONPATH"
+	>>export PATH="~/Anaconda3/bin/:$PATH"
 
 
 
