@@ -83,7 +83,7 @@ $(function() {
 {% block pri_content %}
 
 
-{% if allperEventsDictList %}
+{% if allperEventsDictList%}
 
 
 {% block intervalseeker %}{% endblock %}
@@ -91,16 +91,15 @@ $(function() {
 
 <br>
 	<table>
-		{% for x in allperEventsDictList %}
+		{% for x in totallist %}
 			{% if forloop.counter0|divisibleby:1 %}
-			<!-- divisibleby should be same here and at the bottom -->
 				<tr>
 			{% endif %}
-				{% if not x.eventObj %}
+				{% if not x.eventObjlist %}
 					<td id="noeventd">
 						<table>
 							<tr>
-								{{ x.dateitemstr }}
+								{{ x.dateliststr }}
 								<td id="innertd">  </td>
 							</tr>
 						</table>
@@ -109,13 +108,13 @@ $(function() {
 					<td id="eventd">
 						<table>
 							<tr>
-								<a href="{{ urlprefix }}/{{ x.dateitem }}/events">{{ x.dateitemstr }}</a>
+								<a href="{{ urlprefix }}/{{ x.datelist }}/events">{{ x.dateliststr }}</a>
 								<td id="innertd">
 									<ul>
-										{% for event in x.eventObj %}
+										{% for eventObj in x.eventObjlist %}
 											<li>
-												<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
-													{% for keys in event.keylist %}
+												<a href="{{ urlprefix }}/{{ eventObj.id }}/eventDetail">
+													{% for keys in eventObj.keylist %}
 														{{ keys }}{% if forloop.last %}{% else %},{% endif %}
 													{% endfor %}
 												</a>
