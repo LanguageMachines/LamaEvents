@@ -49,7 +49,7 @@
 		<div id="cleaner"></div>
 
 		{% block about %}
-			<a href="{{ urlprefix }}/about">
+			<a href="{{ urlprefix }}{% url 'about' %}">
 				<img style="width: 200px;" src="{% static 'base/images/aboutbtn.png' %}"/></a>
 		{% endblock %}
 
