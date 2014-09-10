@@ -16,7 +16,13 @@ Here the whole code explained line by line.
  - The URL for twiqs.nl may change from time to time.
  - Twiqs.nl may not provide tweets in time. Therefore this particular hour will not be taken into account.
 
-You can reach this script from `GitHub <https://github.com/ErkanBasar/LamaEvents/blob/master/LamaEvents.py/>`_
+All loggings are written to 'LamaEvents.log'
+You can see the last loggings with this command line code::
+
+	>> tail -F Lamaevents.log 
+
+
+You can reach the whole script from `GitHub <https://github.com/ErkanBasar/LamaEvents/blob/master/LamaEvents.py/>`_
 
 Beginning
 -----------------------
@@ -32,12 +38,35 @@ Here we are using these::
 	import time
 	from datetime import date, datetime, timedelta
 	import pymongo
+	import logging
 
 The following code imports a script developed by Florian Kunneman::
 
 	import DEvents.event_pairs as event_pairs
 
 .. warning:: To use Event Detection code, you have to clone `DEvents <https://github.com/fkunneman/DEvents/>`_ and the requirements of that. Refer to Florian Kunneman for any issue about DEvents.
+
+
+.. rubric:: Waiting times
+
+You can define the waiting times as minutes here::
+
+	#Waiting time for every loop;
+	looptime = 2
+	#Waiting time for the second request;
+	requestwait = 10
+
+
+.. rubric:: Logging
+	
+Here we define logging configurations and point the which log file we will write::
+
+	logging.basicConfig(
+		format='%(asctime)s, %(levelname)s: %(message)s',
+		filename='LamaEvents.log',
+		datefmt='%d-%m-%Y %H:%M',
+		level=logging.INFO)
+
 
 
 .. rubric:: Private things;
@@ -69,7 +98,7 @@ And then you can reach the configurations with following codes::
 	ledb = connection[db_name] #Database
 	ledb.authenticate(user_name, passwd)
 	lecl = ledb.lecl #lecl: Collection
-	print("Connected to DB")
+	logging.info('Connected to DB')
 	#!IDEA! = Add try-except block for the connection part
 
 
@@ -79,7 +108,7 @@ And then you can reach the configurations with following codes::
 ::
 
 	ep = event_pairs.Event_pairs("all","coco_out/","tmp/")
-	print("Event Detection Initialized")
+	logging.info('Event Detection Initialised')
 
 
 
@@ -130,10 +159,10 @@ If True, delete the former events from mongo db::
 Inside the Forever Loop
 -------------------------
 
-After all configurations set up and all method defined, program goes into a forever loop where it will check the time every 2 minutes and do the all important thing every hour.::
+After all configurations set up and all method defined, program goes into a forever loop where it will check the time every <looptime> minutes and do the all important thing every hour.::
 
 	while True:
-		time.sleep(120) #Check every two minutes if you are in the next hour.
+		time.sleep(60*looptime) #Check every <looptime> minutes if you are in the next hour.
 
 
 
@@ -151,10 +180,16 @@ Here the big deal is calculation of pDate. Because pDate will help to check the 
 		pDate = nes+'-'+nes 
 		#Just for showing off the hour which tweets requested;
 		tweethour = nowDate_earlier.strftime("%H:00 %d-%m-%Y") 
-	 	#Just for showing off the minutes while waiting for the next hour;
-		currTime = nowDate.strftime("%H:%M")
 
 
+.. rubric:: Reminder
+
+It will remind it's waiting for the next hour in every 5th time it goes on loop.
+If it is a new hour, timereminder will be reset::
+
+		timereminder += 1
+		if timereminder 5 == 0:
+			logging.info('Waiting for the next hour')
 
 	
 .. rubric:: Check the Hour
@@ -163,7 +198,6 @@ If the pDate value is equal to payload['DATE'], it means we are still in the sam
 Here the payload['DATE'] contains the date which we use it for requesting the last tweets in twiqs.nl::
 
 		if payload['DATE'] == pDate: 
-			print(currTime)
 			continue
 
 If the pDate is not equal the hour of the last tweet request, it means we are in the new hour and there must be new tweets in twiqs.nl.
@@ -171,7 +205,7 @@ It'll assign the pDate to payload['DATE'], so the new request will be done with 
 
 		else:
 			payload['DATE'] = pDate #It will remain the same until next hour.
-			print("Tweet hour : " + tweethour)
+			logging.info('Tweet hour : %s', tweethour)
 
 
 
@@ -181,17 +215,17 @@ It'll assign the pDate to payload['DATE'], so the new request will be done with 
 Since we are in the new hour, time to request for the new tweets. This is first request and starts the search for the new tweets in twiqs.nl::
 
 			output = RequestTweets()
-			print("Request Completed")
+			logging.info('First Request Completed')
 
 
 We have to check the cookie first. if the cookie does not have access right to download the tweets, it will skip this hour and start to wait for the next hour::
 
 			withoutcookie = '#user_id\t#tweet_id\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
 			if output.text[:70] == withoutcookie: 
-				print("Cookie is wrong. I'll skip tweets at " + tweethour + "You have to check your cookie configuration!")
+				logging.warning('Cookie is wrong. It skipped the tweets at ' + tweethour + '. You have to check your cookie configuration!')
 				continue
 			else:
-				print("Cookie is Fine.")
+				logging.info('Cookie is Fine')
 
 			#!IDEA! = If the cookie is wrong, write the code(call the relevant method) for getting a new one here.
 
@@ -201,16 +235,16 @@ Mostly the search at the twiqs.nl doesn't complete immediatelly after the  first
 
 			dumpoutput = '#user_id\t#tweet_id\t#date\t#time\t#reply_to_tweet_id\t#retweet_to_tweet_id\t#user_name\t#tweet\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
 			if output.text[:1000] == dumpoutput: #If there isn't any tweet try the request again.
-				print("No tweet found at the first time! I'll try again")
-				time.sleep(300) #Wait for the search done at twiqs.nl before the next request
+				logging.warning('No tweet found at the first time!')
+				time.sleep(60*requestwait) #Wait for the search done at twiqs.nl before the next request
 				output = RequestTweets()
 				if output.text[:1000] == dumpoutput: #If there isn't any tweet again, it will skip this hour.
-					print("Still there is not any tweet! I'll skip tweets at " + tweethour)
+					logging.warning('Still there is not any tweet! It skipped the tweets at %s', tweethour)
 					continue
 				else:
-					print("Tweets came at the second time")
+					logging.info('Tweets came at the second time')
 			else:
-				print("Tweets are O.K.")
+				logging.info('Tweets are O.K.')
 
 .. note:: 'dumpoutput' contains the first line of the tweet file from twiqs.nl. If the first 1000 charachters of output is equal to dumpoutput, it means output is empty and there isn't any tweet.
 
@@ -222,7 +256,7 @@ Mostly the search at the twiqs.nl doesn't complete immediatelly after the  first
 Here we call the event detection method from DEvents script to find the new event from the new tweets::
 
 			EventDic = ep.detect_events(output.text[:-1]) # [:-1] = ignoring the last '\n' at the bottom of the file.
-			print("Event Detection Completed")
+			logging.info('Event Detection Completed')
 
 
 
@@ -233,7 +267,7 @@ With the following code, we delete the old event datas from database to refresh 
 
 			if DeleteFormerEvents:
 				lecl.remove({ }) #Delete the old events from database
-				print("Former events are deleted from the database")
+				logging.info('Former events are deleted from the database')
 
 .. note:: remove() is a pymongo method and 'lecl' is the collection name.
 
@@ -307,7 +341,7 @@ If the DeleteTweetDetails value is not True, it only makes the same convertion f
 ::
 
 				lecl.insert(v) 
-			print("Written to Database")
+			logging.info('Written to Database')
 	
 .. note:: insert() is a pymongo method and 'lecl' is the collection name.
 

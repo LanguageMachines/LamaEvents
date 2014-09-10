@@ -79,7 +79,12 @@
 </tr>
 </tbody>
 </table>
-<p>You can reach this script from <a class="reference external" href="https://github.com/ErkanBasar/LamaEvents/blob/master/LamaEvents.py/">GitHub</a></p>
+<p>All loggings are written to &#8216;LamaEvents.log&#8217;
+You can see the last loggings with this command line code:</p>
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt; tail -F Lamaevents.log
+</pre></div>
+</div>
+<p>You can reach the whole script from <a class="reference external" href="https://github.com/ErkanBasar/LamaEvents/blob/master/LamaEvents.py/">GitHub</a></p>
 <div class="section" id="beginning">
 <h2>Beginning<a class="headerlink" href="#beginning" title="Permalink to this headline">¶</a></h2>
 <p class="rubric">Imports;</p>
@@ -90,6 +95,7 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">pymongo</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 </pre></div>
 </div>
 <p>The following code imports a script developed by Florian Kunneman:</p>
@@ -99,6 +105,23 @@
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">To use Event Detection code, you have to clone <a class="reference external" href="https://github.com/fkunneman/DEvents/">DEvents</a> and the requirements of that. Refer to Florian Kunneman for any issue about DEvents.</p>
+</div>
+<p class="rubric">Waiting times</p>
+<p>You can define the waiting times as minutes here:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#Waiting time for every loop;</span>
+<span class="n">looptime</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c">#Waiting time for the second request;</span>
+<span class="n">requestwait</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<p class="rubric">Logging</p>
+<p>Here we define logging configurations and point the which log file we will write:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+        <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s">, </span><span class="si">%(levelname)s</span><span class="s">: </span><span class="si">%(message)s</span><span class="s">&#39;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s">&#39;LamaEvents.log&#39;</span><span class="p">,</span>
+        <span class="n">datefmt</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">-%m-%Y %H:%M&#39;</span><span class="p">,</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</pre></div>
 </div>
 <p class="rubric">Private things;</p>
 <p>All the private configurations is in another file. You have to read it first with ConfigParser():</p>
@@ -124,13 +147,13 @@
 <span class="n">ledb</span> <span class="o">=</span> <span class="n">connection</span><span class="p">[</span><span class="n">db_name</span><span class="p">]</span> <span class="c">#Database</span>
 <span class="n">ledb</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span> <span class="n">passwd</span><span class="p">)</span>
 <span class="n">lecl</span> <span class="o">=</span> <span class="n">ledb</span><span class="o">.</span><span class="n">lecl</span> <span class="c">#lecl: Collection</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&quot;Connected to DB&quot;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Connected to DB&#39;</span><span class="p">)</span>
 <span class="c">#!IDEA! = Add try-except block for the connection part</span>
 </pre></div>
 </div>
 <p class="rubric">Initialize the Event Detection code;</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">ep</span> <span class="o">=</span> <span class="n">event_pairs</span><span class="o">.</span><span class="n">Event_pairs</span><span class="p">(</span><span class="s">&quot;all&quot;</span><span class="p">,</span><span class="s">&quot;coco_out/&quot;</span><span class="p">,</span><span class="s">&quot;tmp/&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&quot;Event Detection Initialized&quot;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Event Detection Initialised&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="rubric">Get the cookie for twiqs.nl;</p>
@@ -171,9 +194,9 @@
 </div>
 <div class="section" id="inside-the-forever-loop">
 <h2>Inside the Forever Loop<a class="headerlink" href="#inside-the-forever-loop" title="Permalink to this headline">¶</a></h2>
-<p>After all configurations set up and all method defined, program goes into a forever loop where it will check the time every 2 minutes and do the all important thing every hour.:</p>
+<p>After all configurations set up and all method defined, program goes into a forever loop where it will check the time every &lt;looptime&gt; minutes and do the all important thing every hour.:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span> <span class="c">#Check every two minutes if you are in the next hour.</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="n">looptime</span><span class="p">)</span> <span class="c">#Check every &lt;looptime&gt; minutes if you are in the next hour.</span>
 </pre></div>
 </div>
 <p class="rubric">Time Calculations</p>
@@ -187,15 +210,20 @@
 <span class="n">pDate</span> <span class="o">=</span> <span class="n">nes</span><span class="o">+</span><span class="s">&#39;-&#39;</span><span class="o">+</span><span class="n">nes</span>
 <span class="c">#Just for showing off the hour which tweets requested;</span>
 <span class="n">tweethour</span> <span class="o">=</span> <span class="n">nowDate_earlier</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%H:00 </span><span class="si">%d</span><span class="s">-%m-%Y&quot;</span><span class="p">)</span>
-<span class="c">#Just for showing off the minutes while waiting for the next hour;</span>
-<span class="n">currTime</span> <span class="o">=</span> <span class="n">nowDate</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%H:%M&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Reminder</p>
+<p>It will remind it&#8217;s waiting for the next hour in every 5th time it goes on loop.
+If it is a new hour, timereminder will be reset:</p>
+<div class="highlight-python"><div class="highlight"><pre>timereminder += 1
+if timereminder 5 == 0:
+        logging.info(&#39;Waiting for the next hour&#39;)
 </pre></div>
 </div>
 <p class="rubric">Check the Hour</p>
 <p>If the pDate value is equal to payload[&#8216;DATE&#8217;], it means we are still in the same hour.
 Here the payload[&#8216;DATE&#8217;] contains the date which we use it for requesting the last tweets in twiqs.nl:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">payload</span><span class="p">[</span><span class="s">&#39;DATE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pDate</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">currTime</span><span class="p">)</span>
         <span class="k">continue</span>
 </pre></div>
 </div>
@@ -203,22 +231,22 @@ Here the payload[&#8216;DATE&#8217;] contains the date which we use it for reque
 It&#8217;ll assign the pDate to payload[&#8216;DATE&#8217;], so the new request will be done with the new date value:</p>
 <div class="highlight-python"><div class="highlight"><pre>else:
         payload[&#39;DATE&#39;] = pDate #It will remain the same until next hour.
-        print(&quot;Tweet hour : &quot; + tweethour)
+        logging.info(&#39;Tweet hour : %s&#39;, tweethour)
 </pre></div>
 </div>
 <p class="rubric">Request to Twiqs.nl</p>
 <p>Since we are in the new hour, time to request for the new tweets. This is first request and starts the search for the new tweets in twiqs.nl:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">output</span> <span class="o">=</span> <span class="n">RequestTweets</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&quot;Request Completed&quot;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;First Request Completed&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We have to check the cookie first. if the cookie does not have access right to download the tweets, it will skip this hour and start to wait for the next hour:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">withoutcookie</span> <span class="o">=</span> <span class="s">&#39;#user_id</span><span class="se">\t</span><span class="s">#tweet_id</span><span class="se">\t</span><span class="s">#DATE=&#39;</span><span class="o">+</span><span class="n">pDate</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">#SEARCHTOKEN=echtalles</span><span class="se">\n</span><span class="s">&#39;</span>
 <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">70</span><span class="p">]</span> <span class="o">==</span> <span class="n">withoutcookie</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Cookie is wrong. I&#39;ll skip tweets at &quot;</span> <span class="o">+</span> <span class="n">tweethour</span> <span class="o">+</span> <span class="s">&quot;You have to check your cookie configuration!&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;Cookie is wrong. It skipped the tweets at &#39;</span> <span class="o">+</span> <span class="n">tweethour</span> <span class="o">+</span> <span class="s">&#39;. You have to check your cookie configuration!&#39;</span><span class="p">)</span>
         <span class="k">continue</span>
 <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Cookie is Fine.&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Cookie is Fine&#39;</span><span class="p">)</span>
 
 <span class="c">#!IDEA! = If the cookie is wrong, write the code(call the relevant method) for getting a new one here.</span>
 </pre></div>
@@ -230,16 +258,16 @@ It&#8217;ll assign the pDate to payload[&#8216;DATE&#8217;], so the new request 
 <p>Mostly the search at the twiqs.nl doesn&#8217;t complete immediatelly after the  first request, therefore there will not be any tweet as result. Here we check the result of the first request and if it is empty, we call a second request for the same subject after waiting 300 second (5 minutes). Then we check the results again, still if there isn&#8217;t any tweet we skip this hour to protect the previous data in the database:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">dumpoutput</span> <span class="o">=</span> <span class="s">&#39;#user_id</span><span class="se">\t</span><span class="s">#tweet_id</span><span class="se">\t</span><span class="s">#date</span><span class="se">\t</span><span class="s">#time</span><span class="se">\t</span><span class="s">#reply_to_tweet_id</span><span class="se">\t</span><span class="s">#retweet_to_tweet_id</span><span class="se">\t</span><span class="s">#user_name</span><span class="se">\t</span><span class="s">#tweet</span><span class="se">\t</span><span class="s">#DATE=&#39;</span><span class="o">+</span><span class="n">pDate</span><span class="o">+</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">#SEARCHTOKEN=echtalles</span><span class="se">\n</span><span class="s">&#39;</span>
 <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">==</span> <span class="n">dumpoutput</span><span class="p">:</span> <span class="c">#If there isn&#39;t any tweet try the request again.</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;No tweet found at the first time! I&#39;ll try again&quot;</span><span class="p">)</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span> <span class="c">#Wait for the search done at twiqs.nl before the next request</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;No tweet found at the first time!&#39;</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="n">requestwait</span><span class="p">)</span> <span class="c">#Wait for the search done at twiqs.nl before the next request</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">RequestTweets</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="o">==</span> <span class="n">dumpoutput</span><span class="p">:</span> <span class="c">#If there isn&#39;t any tweet again, it will skip this hour.</span>
-                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Still there is not any tweet! I&#39;ll skip tweets at &quot;</span> <span class="o">+</span> <span class="n">tweethour</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;Still there is not any tweet! It skipped the tweets at </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">tweethour</span><span class="p">)</span>
                 <span class="k">continue</span>
         <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Tweets came at the second time&quot;</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Tweets came at the second time&#39;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Tweets are O.K.&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Tweets are O.K.&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -249,14 +277,14 @@ It&#8217;ll assign the pDate to payload[&#8216;DATE&#8217;], so the new request 
 <p class="rubric">Event Detection</p>
 <p>Here we call the event detection method from DEvents script to find the new event from the new tweets:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">EventDic</span> <span class="o">=</span> <span class="n">ep</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c"># [:-1] = ignoring the last &#39;\n&#39; at the bottom of the file.</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&quot;Event Detection Completed&quot;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Event Detection Completed&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="rubric">Deletion for Replacement</p>
 <p>With the following code, we delete the old event datas from database to refresh with the new ones:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">DeleteFormerEvents</span><span class="p">:</span>
         <span class="n">lecl</span><span class="o">.</span><span class="n">remove</span><span class="p">({</span> <span class="p">})</span> <span class="c">#Delete the old events from database</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Former events are deleted from the database&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Former events are deleted from the database&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -316,7 +344,7 @@ If the DeleteTweetDetails value is not True, it only makes the same convertion f
 </div>
 <p class="rubric">Write to Database</p>
 <div class="highlight-python"><div class="highlight"><pre>        lecl.insert(v)
-print(&quot;Written to Database&quot;)
+logging.info(&#39;Written to Database&#39;)
 </pre></div>
 </div>
 <div class="admonition note">
