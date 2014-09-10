@@ -33,48 +33,51 @@ $(function() {
 
 
 
-{% block pri_sidebar %}
+{% block search %}
 
 
-<table>
+<div class="sidebar_box">
 
-	<tr>
-		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                             
-			{% csrf_token %}
-			<tr> <h3>Specificeer datums: </h3>	</tr>
-			<tr> <input type="text" name="start_date" id="datepicker" placeholder="Startdatum (dd-mm-yy)" required/>	</tr>
-			<tr> <input type="text" name="end_date" id="datepicker2" placeholder="Einddatum (dd-mm-yy)" required/>	</tr>
-			<tr> <button type="submit" name="date_picker">Zoeken</button>	</tr>
-		</form>
-	</tr>
+	<table>
 
-<br><br>
+		<tr>
+			<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                             
+				{% csrf_token %}
+				<tr> <h3>Specificeer datums: </h3>	</tr>
+				<tr> <input type="text" name="start_date" id="datepicker" placeholder="Startdatum (dd-mm-yy)" required/>	</tr>
+				<tr> <input type="text" name="end_date" id="datepicker2" placeholder="Einddatum (dd-mm-yy)" required/>	</tr>
+				<tr> <button type="submit" name="date_picker">Zoeken</button>	</tr>
+			</form>
+		</tr>
 
-	<tr>
-		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                             
-			{% csrf_token %}
-			<tr> <h3>Specificeer uren: </h3>	</tr>
-			<tr> <input type="number" name="search_hour" placeholder="Uur" required/>	</tr>
-			<tr> <input type="number" name="hour_range" placeholder="Range" required/>	</tr>
-			<tr> <button type="submit" name="ttee">Zoeken</button>	</tr>
-		</form>
-	</tr>
+	<br><br>
 
-<br><br>
+		<tr>
+			<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                             
+				{% csrf_token %}
+				<tr> <h3>Specificeer uren: </h3>	</tr>
+				<tr> <input type="number" name="search_hour" placeholder="Uur" required/>	</tr>
+				<tr> <input type="number" name="hour_range" placeholder="Range" required/>	</tr>
+				<tr> <button type="submit" name="ttee">Zoeken</button>	</tr>
+			</form>
+		</tr>
 
-	<tr>
-		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                             
-			{% csrf_token %}
-			<tr> <h3>Zoek met zoekwoorden: </h3>	</tr>
-			<tr> <input type="text" name="fst_key" placeholder="Eerste Zoekwoord" />	</tr>
-			<tr> <input type="text" name="snd_key" placeholder="Tweede Zoekwoord" />	</tr>
-			<tr> <button type="submit" name="event_search">Zoeken</button>	</tr>
-		</form>
-	</tr>
+	<br><br>
 
+		<tr>                                                         
+			<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                          
+				{% csrf_token %}
+				<tr> <h3>Zoek met zoekwoorden: </h3>	</tr>
+				<tr> <input type="text" name="fst_key" placeholder="Eerste Zoekwoord" />	</tr>
+				<tr> <input type="text" name="snd_key" placeholder="Tweede Zoekwoord" />	</tr>
+				<tr> <button type="submit" name="event_search">Zoeken</button>	</tr>
+			</form>
+		</tr>
+	
 
-</table>
+	</table>
 
+</div> 
 
 {% endblock %}
 

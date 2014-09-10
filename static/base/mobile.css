@@ -235,8 +235,8 @@ input{
 	width: 100%;	
 	margin: 0 auto;
 	padding-bottom: 25px;
-	border-bottom: 1px solid #000;
 }
+
 
 
 #pri_sidebar{
@@ -270,6 +270,7 @@ input{
 	width: 100%;
 	height: 0;	
 }
+
 
 
 /* ------------------------ General Divs; ------------------------- */

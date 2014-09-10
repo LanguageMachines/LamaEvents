@@ -55,20 +55,19 @@ config = configparser.ConfigParser()
 #Calls the authentication file;
 if getpass.getuser() == "ebasar":	#to work on applejack home
 	config.read("/home/ebasar/oauth.ini")
+	DEBUG = True
+	TEMPLATE_DEBUG = True
 elif HOSTNAME[:9] == "applejack":	#to work on the server
 	config.read('/scratch2/www/LamaEvents/oauth.ini')
-
-
-DEBUG = True
-
-TEMPLATE_DEBUG = True
+	DEBUG = False
+	TEMPLATE_DEBUG = False
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.get('LE_settings', 'secret_key')
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 

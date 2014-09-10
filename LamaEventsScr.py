@@ -17,7 +17,7 @@ Trouble Shooting:
 
 Usage;
 
-You van define this variables as minutes;
+You can define this variables as minutes;
  -'looptime' is waiting time for every loop
  -'requestwait' is waiting time for the next request
 
@@ -44,6 +44,7 @@ import DEvents.event_pairs as event_pairs
 #!HINT! : Change this variables to decide to waiting times (use minutes)
 looptime = 2
 requestwait = 2
+requestloop = int(30/requestwait)
 
 
 #Logging Configurations;
@@ -75,9 +76,9 @@ passwd2 = config.get('LE_script_twiqs', 'passwd')
 
 #Sends mail to 'toaddrs' about warnings and errors.
 def send_mail(msg):
-	toaddrs  = 'mustafaerkanbasar@gmail.com' 
 	#Mail OAuth;
 	fromaddr = config.get('LE_script_mail', 'fromaddr')   
+	toaddrs  = config.get('LE_script_mail', 'ebasar') #to address options = hurrial, florrian, antalb, ebasar
 	username = config.get('LE_script_mail', 'user_name') 
 	password = config.get('LE_script_mail', 'password')
 	subject = "Lama Events"
@@ -182,8 +183,8 @@ while True:
 		#Check the result of request;
 		dumpoutput = '#user_id\t#tweet_id\t#date\t#time\t#reply_to_tweet_id\t#retweet_to_tweet_id\t#user_name\t#tweet\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
 		if output.text[:1000] == dumpoutput: #If there isn't any tweet try the request again for 10 times.
-			logging.info("There isn't any tweet yet. Starting to request tweets every "+ str(requestwait) +" minutes, maximum 15 times")
-			for i in range(0,15):
+			logging.info("There isn't any tweet yet. Starting to request tweets every "+ str(requestwait) +" minutes, maximum "+ str(requestloop) +" times")
+			for i in range(0,requestloop):
 				time.sleep(60*requestwait) #Wait for the search done at twiqs.nl before the next request
 				output = RequestTweets()
 				if output.text[:1000] == dumpoutput: #If there isn't any tweet again, it will skip this hour.
@@ -210,6 +211,8 @@ while True:
 		if DeleteFormerEvents:
 			lecl.remove({ }) #Delete the old events from database
 			logging.info('Former events are deleted from the database')
+		else:
+			logging.info('Former events are NOT deleted from the database')
 
 		for k,v in EventDic.items(): #For every detected event
 
@@ -234,15 +237,18 @@ while True:
 				del v['keyterms']
 				for i in v['tweets']:
 					del i['date'], i['date references'], i['text'], i['entities']
-				logging.info("Tweet Details Deleted")
+			
 			else:
 				#If you don't delete details; convert date formats to datetime format;
 				for i in v['tweets']:
 					i['date'] = datetime.combine(i['date'], datetime.min.time())
 
 			#Write to database event by event;
-			lecl.insert(v) 
-		logging.info('Written to Database')
+			lecl.insert(v)
 
+		if DeleteTweetDetails:
+			logging.info("Tweet Details Deleted")
+
+		logging.info("New Events Written to Database")
 
 

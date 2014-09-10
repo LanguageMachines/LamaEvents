@@ -27,13 +27,7 @@
 
 <div id="wrapper">
 
-	<div id="github">
-
-		<a href="https://github.com/ErkanBasar/LamaEvents" >
-			<img  src="{% static 'base/images/github_left.png' %}"></a>
-
-	</div>
-
+	{% block github %}{% endblock %}
 
 	<div id="header">
 
@@ -50,13 +44,17 @@
 
 		<div id="cleaner"></div>
 
-		<div id="pri_sidebar">
-			{% block pri_sidebar %}{% endblock %}
-		</div>
+		{% block search %}{% endblock %}
 
 		<div id="cleaner"></div>
 
-		<a href="{{ urlprefix }}{% url 'about' %}">Over deze pagina</a>
+		{% block about %}
+			<a href="{{ urlprefix }}/about">
+				<img style="width: 200px;" src="{% static 'base/images/aboutbtn.png' %}"/></a>
+		{% endblock %}
+
+		<a href="https://twitter.com/Adnext_Commit">
+				<img style="width: 200px;" src="{% static 'base/images/twitter-logo.png' %}"/></a>
 
 	</div>
 
