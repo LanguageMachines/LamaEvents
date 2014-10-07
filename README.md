@@ -7,7 +7,7 @@ Lama Events is different from other future calendar applications because of its 
 
 Lama Events makes mistakes! It occasionally projects a past event into the future, and sometimes groups together tweets that do not refer to the same event. The estimated date and the estimated time in hours:minutes may differ. Lama event is part of ongoing research at the Language and Speech Technology group of the Centre for Language Studies at Radboud University Nijmegen.
 
-Lama Events was developed by Mustafa Erkan Başar (@me_basar)(programming, design) on the basis of research by Florian Kunneman (@Flowian7) and Ali Hürriyetoglu (@alihurriyetoglu) as part of the ADNEXT (@Adnext_Commit) work package of the COMMIT/ Infiniti-project (@COMMIT_nl) project, with contributions from Nelleke Oostdijk, Antal van den Bosch (@antalvdb), Maarten van Gompel (@proycon), and Erik Tjong Kim Sang (@tkserik). Erkan Başar's work was made possible by the Erasmus programme.
+Lama Events was developed by Mustafa Erkan Başar (@me_basar)(programming, design) on the basis of research by Florian Kunneman (@Flowian7) and Ali Hürriyetoğlu (@hurrial) as part of the ADNEXT (@Adnext_Commit) work package of the COMMIT/ Infiniti-project (@COMMIT_nl) project, with contributions from Nelleke Oostdijk, Antal van den Bosch (@antalvdb), Maarten van Gompel (@proycon), and Erik Tjong Kim Sang (@tkserik). Erkan Başar's work was made possible by the Erasmus programme.
 
 
 Link :http://applejack.science.ru.nl/lamaevents/
