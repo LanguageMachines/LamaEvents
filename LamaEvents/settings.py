@@ -122,12 +122,13 @@ AUTH_USER_MODEL = 'mongo_auth.MongoUser'
 MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 
-db_name = config.get('LE_settings', 'db_name')
-db_host = config.get('LE_settings', 'db_host')
+db_name = config.get('LE_script_db', 'db_name')
+db_host = config.get('LE_script_db', 'client_host')
+db_port = int(config.get('LE_script_db', 'client_port'))
 
 
 #This code is connet to MongoDB host. The host now is MongoLab;
-connect(db_name, host=db_host)
+connect(db_name, host=db_host, port=db_port)
 
 
 # Internationalization;
