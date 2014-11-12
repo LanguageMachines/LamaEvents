@@ -58,7 +58,7 @@ if getpass.getuser() == "ebasar":	#to work on applejack home
 	DEBUG = True
 	TEMPLATE_DEBUG = True
 elif HOSTNAME[:9] == "applejack":	#to work on the server
-	config.read('/scratch2/www/LamaEvents/oauth.ini')
+	config.read('/scratch/fkunneman/lamaevents/oauth.ini')
 	DEBUG = False
 	TEMPLATE_DEBUG = False
 

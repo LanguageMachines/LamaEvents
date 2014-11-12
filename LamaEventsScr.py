@@ -37,8 +37,7 @@ import logging
 import requests
 import configparser
 from datetime import date, datetime, timedelta
-
-import DEvents.event_pairs as event_pairs
+import event_pairs
 
 
 #!HINT! : Change this variables to decide to waiting times (use minutes)
@@ -59,14 +58,14 @@ logging.info('Lama Events Script Started')
 
 #Get all the private configurations;
 config = configparser.ConfigParser()
-config.read('/home/ebasar/oauth.ini')
+config.read('/scratch/fkunneman/lamaevents/oauth.ini')
 
 #MongoLab OAuth;
 client_host = config.get('LE_script_db', 'client_host')
 client_port = int(config.get('LE_script_db', 'client_port'))
 db_name = config.get('LE_script_db', 'db_name')
-user_name = config.get('LE_script_db', 'user_name')
-passwd = config.get('LE_script_db', 'passwd')
+#user_name = config.get('LE_script_db', 'user_name')
+#passwd = config.get('LE_script_db', 'passwd')
 
 
 #Twiqs OAuth;
@@ -78,7 +77,7 @@ passwd2 = config.get('LE_script_twiqs', 'passwd')
 def send_mail(msg):
 	#Mail OAuth;
 	fromaddr = config.get('LE_script_mail', 'fromaddr')   
-	toaddrs  = config.get('LE_script_mail', 'ebasar') #to address options = hurrial, florrian, antalb, ebasar
+	toaddrs  = config.get('LE_script_mail', 'florian') #to address options = hurrial, florrian, antalb, ebasar
 	username = config.get('LE_script_mail', 'user_name') 
 	password = config.get('LE_script_mail', 'password')
 	subject = "Lama Events"
@@ -94,11 +93,15 @@ def send_mail(msg):
 #!IDEA! = Add try-except block for the connection part;
 #MongoLab Connection;
 try:
+	print(client_host,client_port,db_name)
 	connection = pymongo.MongoClient(client_host, client_port)
+	print("connection succes")
 	ledb = connection[db_name] #Database
-	ledb.authenticate(user_name, passwd)
+	#ledb.authenticate(user_name, passwd)
+	print("ledb succes")
 	lecl = ledb.lecl #Collection
 	logging.info('Connected to DB')
+	print("YES!")
 except Exception:
 	logging.error("Database Connection Failed. Script Stopped.")
 	send_mail("Lama Events Error : Database Connection Failed. Script Stopped.")
@@ -106,14 +109,14 @@ except Exception:
 	pass
 
 
-ep = event_pairs.Event_pairs("all","coco_out/","tmp/")
+ep = event_pairs.Event_pairs("coco_out/","tmp/",10)
 logging.info('Event Detection Initialised')
 
 
 #Get the cookie for twiqs.nl;
-s = requests.Session()
-r = s.post("http://145.100.57.182/cgi-bin/twitter", data={"NAME":user_name2, "PASSWD":passwd2})
-logging.info('Cookie Created')
+#s = requests.Session()
+#r = s.post("http://145.100.58.136/cgi-bin/twitter", data={"NAME":user_name2, "PASSWD":passwd2})
+#logging.info('Cookie Created')
 
 
 #Twiqs.nl parameters;
@@ -127,7 +130,10 @@ def RequestTweets():
 	Fetches the tweets from twiqs.nl
 	Warning = The url may need to be updated from time to time!
 	"""
-	output1st = requests.get("http://145.100.57.182/cgi-bin/twitter", params=payload, cookies=s.cookies)
+	try:
+		output1st = requests.get("http://145.100.58.136//cgi-bin/twitter", params=payload, cookies=s.cookies)
+	except:
+		output1st = False
 	return output1st
 
 
@@ -165,57 +171,62 @@ while True:
 		timereminder = 0
 
 		#Request to Twiqs;
-		output = RequestTweets()
-		logging.info('First Request Completed')
+		#output = False
+		#while not output:
+	#		output = RequestTweets()
+	#	logging.info('First Request Completed')
 
 
 		#Check the cookie;
-		withoutcookie = '#user_id\t#tweet_id\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
-		if output.text[:70] == withoutcookie: #if the cookie doesn't have access right to download the tweets, it will skip this hour.
-			logging.warning("Cookie doesn't have access right to download. It skipped the tweets at " + tweethour + '. You have to check your cookie configuration!')
-			send_mail("Lama Events Warning : Cookie doesn't have access right to download. It skipped the tweets at " + tweethour)
+		#withoutcookie = '#user_id\t#tweet_id\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
+		#if output.text[:70] == withoutcookie: #if the cookie doesn't have access right to download the tweets, it will skip this hour.
+	#		logging.warning("Cookie doesn't have access right to download. It skipped the tweets at " + tweethour + '. You have to check your cookie configuration!')
+	#		send_mail("Lama Events Warning : Cookie doesn't have access right to download. It skipped the tweets at " + tweethour)
 			#!IDEA! = If the cookie is wrong, write the code(call the relevant method) for getting a new one here.
-			continue
-		else:
-			logging.info('Cookie is Fine')
+	#		continue
+	#	else:
+	#		logging.info('Cookie is Fine')
 
 
 		#Check the result of request;
-		dumpoutput = '#user_id\t#tweet_id\t#date\t#time\t#reply_to_tweet_id\t#retweet_to_tweet_id\t#user_name\t#tweet\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
-		if output.text[:1000] == dumpoutput: #If there isn't any tweet try the request again for 10 times.
-			logging.info("There isn't any tweet yet. Starting to request tweets every "+ str(requestwait) +" minutes, maximum "+ str(requestloop) +" times")
-			for i in range(0,requestloop):
-				time.sleep(60*requestwait) #Wait for the search done at twiqs.nl before the next request
-				output = RequestTweets()
-				if output.text[:1000] == dumpoutput: #If there isn't any tweet again, it will skip this hour.
-					logging.info('No tweet at ' + str(i))
-					continue
-				else:
-					logging.info('Tweets came on '+ str(i))
-					break
-		else:
-			logging.info('Tweets are O.K.')
+	#	dumpoutput = '#user_id\t#tweet_id\t#date\t#time\t#reply_to_tweet_id\t#retweet_to_tweet_id\t#user_name\t#tweet\t#DATE='+pDate+'\t#SEARCHTOKEN=echtalles\n'
+	#	if output.text[:1000] == dumpoutput: #If there isn't any tweet try the request again for 10 times.
+	#		logging.info("There isn't any tweet yet. Starting to request tweets every "+ str(requestwait) +" minutes, maximum "+ str(requestloop) +" times")
+	#		for i in range(0,requestloop):
+	#			time.sleep(60*requestwait) #Wait for the search done at twiqs.nl before the next request
+	#			output = False
+	#			while not output:
+	#				output = RequestTweets()
+	#			if output.text[:1000] == dumpoutput: #If there isn't any tweet again, it will skip this hour.
+	#				logging.info('No tweet at ' + str(i))
+	#				continue
+	#			else:
+	#				logging.info('Tweets came on '+ str(i))
+	#				break
+	#	else:
+	#		logging.info('Tweets are O.K.')
 
 
 		#Check the results one last time if there isn't any tweet send an e-mail;
-		if output.text[:1000] == dumpoutput: #If there isn't any tweet again, it will skip this hour.
-			logging.warning('Still there is not any tweet! It skipped the tweets at '+ tweethour)
-			send_mail("Lama Events Warning : There isn't any tweet for this hour from twiqs.nl :" + tweethour)
-			continue
+	#	if output.text[:1000] == dumpoutput: #If there isn't any tweet again, it will skip this hour.
+#			logging.warning('Still there is not any tweet! It skipped the tweets at '+ tweethour)
+#			send_mail("Lama Events Warning : There isn't any tweet for this hour from twiqs.nl :" + tweethour)
+#			continue
 
 
 		#Event Detection; (refer to Florian Kunneman for any issue)
-		EventDic = ep.detect_events(output.text[:-1]) # [:-1] = ignoring the last '\n' at the bottom of the file.
+#		EventDic = ep.detect_events(output.text[:-1]) # [:-1] = ignoring the last '\n' at the bottom of the file.
+		EventDic = ep.detect_events() # [:-1] = ignoring the last '\n' at the bottom of the file.
 		logging.info('Event Detection Completed')
 
 		if DeleteFormerEvents:
 			lecl.remove({ }) #Delete the old events from database
+			#we should check the free space
 			logging.info('Former events are deleted from the database')
 		else:
 			logging.info('Former events are NOT deleted from the database')
 
 		for k,v in EventDic.items(): #For every detected event
-
 			#TimeToEventEstimation Calculations;
 			createDate = datetime.now() #TTE Estimation will be added to the current time
 			randomTTE = random.uniform(0.0, 193.0) #random number for estimation (for now)
@@ -244,11 +255,13 @@ while True:
 					i['date'] = datetime.combine(i['date'], datetime.min.time())
 
 			#Write to database event by event;
-			lecl.insert(v)
+			try:			
+				lecl.insert(v)
+			except:
+				print("cant insert, check database", dir(lecl))
+				break
 
 		if DeleteTweetDetails:
 			logging.info("Tweet Details Deleted")
 
 		logging.info("New Events Written to Database")
-
-
