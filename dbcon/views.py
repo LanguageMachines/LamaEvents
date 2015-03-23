@@ -313,7 +313,8 @@ class Calendar(View):
 			else:
 				template = 'desktop/eventSearch.html'
 
-			events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
+			#events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
+			events_bykey_list = Events.objects((Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key)))
 
 			return render(request, template, {
 					'urlprefix': settings.URLPREFIX,
