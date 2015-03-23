@@ -121,7 +121,7 @@ AUTH_USER_MODEL = 'mongo_auth.MongoUser'
 MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 
-db_name = config.get('LE_settings', 'db_name')
+db_name = config.get('LE_script_db', 'db_name')
 db_host = config.get('LE_settings', 'db_host')
 
 
