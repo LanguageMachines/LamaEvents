@@ -11,11 +11,11 @@ The configurations of this special case is the following code::
 	        'ENGINE': 'django.db.backends.dummy',
 	    },
 	}
-	
+
 	AUTHENTICATION_BACKENDS = (
 	    'mongoengine.django.auth.MongoEngineBackend',
 	)
-	
+
 	SESSION_ENGINE = 'mongoengine.django.sessions'
 	SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
 
@@ -25,7 +25,7 @@ The configurations of this special case is the following code::
 
 	connect(db_name, host=db_host)
 
-Also, notice we used an if statement to check if the codes are working on Applejack server. 
+Also, notice we used an if statement to check if the codes are working on Applejack server.
 On the Applejack we have to add 'lamaevents' before all the links we used. Here we are defining it::
 
 	elif HOSTNAME[:9] == "applejack":	#for the server side
@@ -50,7 +50,7 @@ import configparser
 
 #The passwords and some private configurations encrypted in a different file.
 #We are calling the informations from that file with using ConfigParser.
-config = configparser.ConfigParser() 
+config = configparser.ConfigParser()
 
 #Calls the authentication file;
 if getpass.getuser() == "ebasar":	#to work on applejack home
@@ -58,6 +58,7 @@ if getpass.getuser() == "ebasar":	#to work on applejack home
 	DEBUG = True
 	TEMPLATE_DEBUG = True
 elif HOSTNAME[:9] == "applejack":	#to work on the server
+    # config.read('/scratch2/www/LamaEvents/oauth.ini')
 	config.read('/scratch/fkunneman/lamaevents/oauth.ini')
 	DEBUG = False
 	TEMPLATE_DEBUG = False
@@ -100,7 +101,7 @@ WSGI_APPLICATION = 'LamaEvents.wsgi.application'
 
 
 # Database;
-#We used MongoDB as database instead of sqlite or any other relational database. 
+#We used MongoDB as database instead of sqlite or any other relational database.
 #So configuration is little bit different;
 
 DATABASES = {
@@ -122,11 +123,15 @@ MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 
 db_name = config.get('LE_script_db', 'db_name')
-db_host = config.get('LE_settings', 'db_host')
+#<<<<<<< HEAD
+#db_host = config.get('LE_settings', 'db_host')
+#=======
+db_host = config.get('LE_script_db', 'client_host')
+db_port = int(config.get('LE_script_db', 'client_port'))
 
 
 #This code is connet to MongoDB host. The host now is MongoLab;
-connect(db_name, host=db_host)
+connect(db_name, host=db_host, port=db_port)
 
 
 # Internationalization;
