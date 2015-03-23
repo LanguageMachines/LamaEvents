@@ -227,7 +227,8 @@ class Calendar(View):
 
 			* The query finds events which have first or second keyterm and not in the past. 'iexact' means 'case insensitive'::
 
-				event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
+				event_list = Events.objects()
+#				event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
 
 
 		:param fst_key: First Keyterm
