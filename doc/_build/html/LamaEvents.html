@@ -35,9 +35,6 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="dbcon.html" title="Django dbcon Application Folder"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -55,77 +52,14 @@
   <div class="section" id="django-lamaevents-folder">
 <h1>Django LamaEvents folder<a class="headerlink" href="#django-lamaevents-folder" title="Permalink to this headline">¶</a></h1>
 <p>This is the main folder of Django.</p>
-<div class="section" id="module-LamaEvents.settings">
-<span id="settings-py"></span><h2>settings.py<a class="headerlink" href="#module-LamaEvents.settings" title="Permalink to this headline">¶</a></h2>
-<p>Django settings for LamaEvents project.</p>
-<p>The only thing different than normal here is we used MongoDB instead of any relational database.
-Also we used MongoEngine to make the connection between Django and MongoDB.</p>
-<p>The configurations of this special case is the following code:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.dummy&#39;</span><span class="p">,</span>
-    <span class="p">},</span>
-<span class="p">}</span>
-
-<span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s">&#39;mongoengine.django.auth.MongoEngineBackend&#39;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">SESSION_ENGINE</span> <span class="o">=</span> <span class="s">&#39;mongoengine.django.sessions&#39;</span>
-<span class="n">SESSION_SERIALIZER</span> <span class="o">=</span> <span class="s">&#39;mongoengine.django.sessions.BSONSerializer&#39;</span>
-
-
-<span class="n">AUTH_USER_MODEL</span> <span class="o">=</span> <span class="s">&#39;mongo_auth.MongoUser&#39;</span>
-<span class="n">MONGOENGINE_USER_DOCUMENT</span> <span class="o">=</span> <span class="s">&#39;mongoengine.django.auth.User&#39;</span>
-
-<span class="n">connect</span><span class="p">(</span><span class="n">db_name</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">db_host</span><span class="p">)</span>
-</pre></div>
+<div class="section" id="settings-py">
+<h2>settings.py<a class="headerlink" href="#settings-py" title="Permalink to this headline">¶</a></h2>
 </div>
-<p>Also, notice we used an if statement to check if the codes are working on Applejack server. 
-On the Applejack we have to add &#8216;lamaevents&#8217; before all the links we used. Here we are defining it:</p>
-<div class="highlight-python"><div class="highlight"><pre>elif HOSTNAME[:9] == &quot;applejack&quot;:       #for the server side
-        STATIC_URL = &#39;/lamaevents/static/&#39;
-        URLPREFIX = &#39;/lamaevents&#39;
-</pre></div>
+<div class="section" id="urls-py">
+<h2>urls.py<a class="headerlink" href="#urls-py" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">You can see how we used URLPREFIX in views.py and in the templates.</p>
-</div>
-</div>
-<div class="section" id="module-LamaEvents.urls">
-<span id="urls-py"></span><h2>urls.py<a class="headerlink" href="#module-LamaEvents.urls" title="Permalink to this headline">¶</a></h2>
-<p>This file makes the connections between views and the urls.</p>
-<p>Some links pass informations to views. Example:</p>
-<div class="highlight-python"><div class="highlight"><pre># When a user click the link below in a template;
-&lt;a href=&quot;/{{ event.linkDate }}/events&quot;/&gt;
-
-# This passes the &#39;dt&#39; to EventsofDate view;
-url(r&#39;^(?P&lt;dt&gt;\S+|\S*[^\w\s]\S*)/events$&#39;, EventsofDate.as_view()
-
-# Then you can use this &#39;dt&#39; information in the view;
-class EventsofDate(View): 
-        def get(self, request, dt):
-                foo = dt...
-</pre></div>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">The regular expressions in the url definitions must be suitable for the infi passed.</p>
-</div>
-</div>
-<div class="section" id="module-LamaEvents.middleware">
-<span id="middleware-py"></span><h2>middleware.py<a class="headerlink" href="#module-LamaEvents.middleware" title="Permalink to this headline">¶</a></h2>
-<p>This codes are helping the mobile device detection. &#8216;is_mobile&#8217; which we used in the views.py is connected to here.</p>
-<p>If you want to use a middleware like this, remember to add the following code to MIDDLEWARE_CLASSES in settings.py:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;LamaEvents.middleware.MobileDetectionMiddleware&#39;</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Whole code can be found on Django Snippets:
-<a class="reference external" href="https://djangosnippets.org/snippets/2001//">&#8216;Mobile Browser Detection Middleware&#8217;</a> written by &#8216;pavl&#8217;</p>
-</div>
+<div class="section" id="middleware-py">
+<h2>middleware.py<a class="headerlink" href="#middleware-py" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -138,9 +72,9 @@ class EventsofDate(View):
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Django LamaEvents folder</a><ul>
-<li><a class="reference internal" href="#module-LamaEvents.settings">settings.py</a></li>
-<li><a class="reference internal" href="#module-LamaEvents.urls">urls.py</a></li>
-<li><a class="reference internal" href="#module-LamaEvents.middleware">middleware.py</a></li>
+<li><a class="reference internal" href="#settings-py">settings.py</a></li>
+<li><a class="reference internal" href="#urls-py">urls.py</a></li>
+<li><a class="reference internal" href="#middleware-py">middleware.py</a></li>
 </ul>
 </li>
 </ul>
@@ -180,9 +114,6 @@ class EventsofDate(View):
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="dbcon.html" title="Django dbcon Application Folder"
              >next</a> |</li>
         <li class="right" >
@@ -193,7 +124,7 @@ class EventsofDate(View):
     </div>
     <div class="footer">
         &copy; Copyright 2014, Mustafa Erkan Basar.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

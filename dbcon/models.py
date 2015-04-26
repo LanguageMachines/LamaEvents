@@ -66,12 +66,21 @@ class Events(Document):
 		ld = self.date.strftime("%d-%m-%Y") #dates which can be used in links
 		return ld
 
-	def datestr(self):
+	def datestr1(self):
 		"""
 		Only defines a string format to show in templates.
+		(datestr split in three to show them seperately in the templates.)
 		"""
-		ds = self.date.strftime("%d %B %Y %A")#to string format
-		return ds
+		ds1 = self.date.strftime("%A").title()
+		return ds1
+
+	def datestr2(self):
+		ds2 = self.date.strftime("%d %B %Y") 
+		return ds2
+
+	def datestr3(self):
+		ds3 = self.date.strftime("%H.%M uur")
+		return ds3
 
 	def Estimationstr(self):
 		"""Only defines a string format to show in templates."""

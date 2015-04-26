@@ -5,31 +5,37 @@
 {% block title %}Events op {{ eventDate }}{% endblock %}
 
 
+{% block en_about %}{% endblock %}
+
+
 {% block pri_content %}
 
-<h1>
+<header> 
 
-	<a href="{{ urlprefix }}/{{ prevDay }}/events" ><div id="prevbtn"></div></a>
+		<a href="{{ urlprefix }}/{{ prevDay }}/events" class="pijl-links"> 
+				<i class="pijl-icon icon-pijl-links"></i>eerder</a>
+				
+		<a href="{{ urlprefix }}/{{ nextDay }}/events" class="pijl-rechts">later
+				<i class="pijl-icon icon-pijl-rechts"></i></a>
+				
+				<h1>Events op {{ eventDate }}</h1>
 
-	Events op {{ eventDate }}
-	
-	<a href="{{ urlprefix }}/{{ nextDay }}/events"><div id="nextbtn"></div></a>
+</header>
 
-</h1>
 
 {% if events_date_list %}
 
-<p>Klik op de sleutelwoorden om informatie over het event te zien:</p>
+	<p>Klik op de sleutelwoorden om informatie over het event te zien:</p>
 
-<ul>
-	{%for event in events_date_list %}
-		<li><a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
-					{% for keys in event.keylist %}
-							{{ keys }}{% if forloop.last %}{% else %},{% endif %}
-					{% endfor %}
-		</a></li>
-	{% endfor %}
-</ul>
+	<ul>
+		{%for event in events_date_list %}
+			<li><a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+						{% for keys in event.keylist %}
+								{{ keys }}{% if forloop.last %}{% else %},{% endif %}
+						{% endfor %}
+			</a></li>
+		{% endfor %}
+	</ul>
 
 {% else %}
 

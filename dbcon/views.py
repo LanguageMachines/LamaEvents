@@ -53,6 +53,8 @@ from django.http import HttpResponse
 
 from datetime import datetime, timedelta
 
+import locale
+
 import mongoengine
 
 from dbcon.models import * #Event and Tweet models
@@ -68,6 +70,10 @@ time_interval_m = timeIntstr_m - 1
 
 
 dateformat = "%d-%m-%Y"
+
+
+#To implement Dutch dates (E.g. Dinsdag 12 mei 2015);
+locale.setlocale(locale.LC_TIME, "nl_NL.utf8")
 
 
 
@@ -118,7 +124,7 @@ def call_dates(first_date, second_date):
 	datetimelist=[]
 	for single_date in daterange(first_date, second_date):
 		datelist.append(single_date.strftime(dateformat)) 
-		dateliststr.append(single_date.strftime("%d %b %Y %a")) 
+		dateliststr.append(single_date.strftime("%A %d %b %Y").title())
 		datetimelist.append(datetime.strptime((single_date.strftime(dateformat)), dateformat)) 
 		#Change this last code... Write a code to make the hour in datetimes 0.
 
@@ -430,12 +436,12 @@ class EventDetail(View):
 
 class About(View):
 	"""Redirects links to about pages."""
-	def get(self, request):
+	def get(self, request, ov):
 
 		if request.is_mobile:
 			template = 'mobile/about.mobile.html'
 		else:
-			template = 'desktop/about.html'
+			template = 'desktop/'+ ov +'-lama.html'
 
 		return render(request, template, {
 			'urlprefix': settings.URLPREFIX,

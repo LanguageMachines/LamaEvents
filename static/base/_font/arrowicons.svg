@@ -1,0 +1,13 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2015 by original authors @ fontello.com</metadata>
+<defs>
+<font id="contacticons" horiz-adv-x="1000" >
+<font-face font-family="contacticons" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="pijl-links" unicode="&#xe800;" d="m569-94c0-19-6-31-25-31-13 0-19 6-25 12l-488 457 488 456c6 6 19 13 25 13 19 0 25-7 25-32v-18l-38-238h394v-362h-394l44-244v-13z" horiz-adv-x="925" />
+<glyph glyph-name="pijl-rechts" unicode="&#xe801;" d="m356-75l44 238h-394v362h394l-44 244v12c0 19 7 32 25 32 13 0 19-7 25-13l488-456-488-450c-6-7-18-13-25-13-18 0-25 6-25 31v13z" horiz-adv-x="925" />
+</font>
+</defs>
+</svg>
