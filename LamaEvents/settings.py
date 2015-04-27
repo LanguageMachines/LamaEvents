@@ -53,15 +53,19 @@ import configparser
 config = configparser.ConfigParser()
 
 #Calls the authentication file;
-if getpass.getuser() == "ebasar":	#to work on applejack home
-	config.read("/home/ebasar/oauth.ini")
-	DEBUG = True
-	TEMPLATE_DEBUG = True
-elif HOSTNAME[:9] == "applejack":	#to work on the server
+if HOSTNAME[:9] == "applejack":		#to work on the server
     # config.read('/scratch2/www/LamaEvents/oauth.ini')
 	config.read('/scratch/fkunneman/lamaevents/oauth.ini')
 	DEBUG = False
 	TEMPLATE_DEBUG = False
+elif getpass.getuser() == "ebasar":	#to work on applejack home
+	config.read("/home/ebasar/oauth.ini")
+	DEBUG = True
+	TEMPLATE_DEBUG = True
+else:								#to work on local
+	config.read("../oauth.ini")
+	DEBUG = True
+	TEMPLATE_DEBUG = True
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -123,15 +127,23 @@ MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 
 db_name = config.get('LE_script_db', 'db_name')
-#<<<<<<< HEAD
-#db_host = config.get('LE_settings', 'db_host')
-#=======
 db_host = config.get('LE_script_db', 'client_host')
 db_port = int(config.get('LE_script_db', 'client_port'))
 
 
-#This code is connet to MongoDB host. The host now is MongoLab;
-connect(db_name, host=db_host, port=db_port)
+#MongoDB connection;
+if HOSTNAME[:9] == "applejack":		#to work on the server
+	connect(db_name, host=db_host, port=db_port)
+
+elif getpass.getuser() == "ebasar":	#to work on applejack home
+	db_uname = config.get('LE_script_db', 'user_name')
+	db_passwd = config.get('LE_script_db', 'passwd')
+	connect(db_name, host=db_host, port=db_port, username=db_uname , password=db_passwd)
+
+else:								#to work on local
+	db_uname = config.get('LE_script_db', 'user_name')
+	db_passwd = config.get('LE_script_db', 'passwd')
+	connect(db_name, host=db_host, port=db_port, username=db_uname , password=db_passwd)
 
 
 # Internationalization;
@@ -149,12 +161,13 @@ USE_TZ = True
 
 # Static files;
 
-if getpass.getuser() =='ebasar':	#to work on applejack home
-	STATIC_URL = '/static/'
-	URLPREFIX = ''
-elif HOSTNAME[:9] == "applejack":	#for the server side
+
+if HOSTNAME[:9] == "applejack":		#for the server side
 	STATIC_URL = '/lamaevents/static/'
 	URLPREFIX = '/lamaevents'
+elif getpass.getuser() =='ebasar':	#to work on applejack home
+	STATIC_URL = '/static/'
+	URLPREFIX = ''
 else:								#to work on local
 	STATIC_URL = '/static/'
 	URLPREFIX = ''
@@ -167,8 +180,6 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "templates"),
 )
-
-
 
 
 

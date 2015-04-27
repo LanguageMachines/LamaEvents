@@ -4,13 +4,24 @@
 
 {% block title %}Events voor '{{ fst_key }} {{ snd_key }}'{% endblock %}
 
+{% block css_extra %}
+
+#eventKeys, #timeLeft{
+	width: 50%;
+	padding: 5px;	
+	text-align: left;
+}
+
+{% endblock %}
 
 {% block pri_content %}
 
 
 {% if events_bykey_list %}
 
-	<h1>Events voor '{{ fst_key }} {{ snd_key }}':</h1>
+	<header>
+		<h1>Events voor '{{ fst_key }} {{ snd_key }}'</h1>
+	</header>
 
 	<table>
 			<tr>

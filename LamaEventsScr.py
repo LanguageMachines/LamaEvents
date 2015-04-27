@@ -64,8 +64,8 @@ config.read('/scratch/fkunneman/lamaevents/oauth.ini')
 client_host = config.get('LE_script_db', 'client_host')
 client_port = int(config.get('LE_script_db', 'client_port'))
 db_name = config.get('LE_script_db', 'db_name')
-#user_name = config.get('LE_script_db', 'user_name')
-#passwd = config.get('LE_script_db', 'passwd')
+user_name = config.get('LE_script_db', 'user_name')
+passwd = config.get('LE_script_db', 'passwd')
 
 
 #Twiqs OAuth;

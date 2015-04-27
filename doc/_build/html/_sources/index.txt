@@ -20,6 +20,7 @@ Contents:
    LamaEvents
    dbcon
    run
+   aboutdoc
 
 
 Indices and tables

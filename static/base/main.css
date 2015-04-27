@@ -1,0 +1,394 @@
+/*! HTML5 Boilerplate v5.0.0 | MIT License | http://h5bp.com/ */
+
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+html {
+    color: #222;
+    font-size: 0.8em;
+    line-height: 1.4;
+    height:100%;
+	 margin:0;
+}
+
+/*
+ * Remove text-shadow in selection highlight:
+ * https://twitter.com/miketaylr/status/12228805301
+ *
+ * These selection rule sets have to be separate.
+ * Customize the background color to match your design.
+ */
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+/*
+ * Remove the gap between audio, canvas, iframes,
+ * images, videos and the bottom of their containers:
+ * https://github.com/h5bp/html5-boilerplate/issues/440
+ */
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+    vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+
+textarea {
+    resize: vertical;
+}
+
+/* ==========================================================================
+   Browser Upgrade Prompt
+   ========================================================================== */
+
+.browserupgrade {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+   
+@font-face {
+    font-family: 'allerbold';
+    src: url('_font/aller_bd-webfont.eot');
+    src: url('_font/aller_bd-webfont.eot?#iefix') format('embedded-opentype'),
+         url('_font/aller_bd-webfont.woff2') format('woff2'),
+         url('_font/aller_bd-webfont.woff') format('woff'),
+         url('_font/aller_bd-webfont.ttf') format('truetype'),
+         url('_font/aller_bd-webfont.svg#allerbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+  font-family: 'arrowicons';
+  src: url('_font/arrowicons.eot?11665377');
+  src: url('_font/arrowicons.eot?11665377#iefix') format('embedded-opentype'),
+       url('_font/arrowicons.woff?11665377') format('woff'),
+       url('_font/arrowicons.ttf?11665377') format('truetype'),
+       url('_font/arrowicons.svg?11665377#contacticons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.pijl-icon
+    {
+      font-family: "arrowicons";
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      speak: none;
+     
+      display: inline-block;
+      text-decoration: inherit;
+      width: 1em;
+      margin-right: .2em;
+      text-align: center;
+      vertical-align: sub;
+      /* opacity: .8; */
+     
+      /* For safety - reset parent styles, that can break glyph codes*/
+      font-variant: normal;
+      text-transform: none;
+     
+      /* fix buttons height, for twitter bootstrap */
+      line-height: 1em;
+     
+      /* Animation center compensation - margins should be symmetric */
+      /* remove if not needed */
+      margin-left: .2em;
+     
+      /* You can be more comfortable with increased icons size */
+      /* font-size: 120%; */
+     
+      /* Font smoothing. That was taken from TWBS */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+     
+      /* Uncomment for 3D effect */
+      /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+    }
+
+body {background-image: url("images/bg-grid.png"); background-repeat: repeat; background-color: #c8c8c8; height:100%; }
+#main { width: 1175px;  margin: 0 auto; background-color: #ffffff;}
+#left { width: 155px; height: 100%; margin: 25px 15px 25px 25px; font-size: 11px; float: left;}
+#left a a:hover a:active {text-decoration: none;}
+#container {width: 810px; display: block; float: left;}
+.uitleg {margin-top: 10px; font-size: 11px;}
+.vet { font-weight: bold;}
+.vet13 { font-weight: bold; font-size: 13px;}
+footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff; height: 140px; text-align: left; padding-top: 7px; margin: -30px auto 0; position:relative; clear:both;}
+.info {width: 155px; height: 7px; padding:3px 0px 11px ; color: #fff; background-color: #000; text-align: center;}
+.info:hover {background-color: #a5c5da; color: #000;}
+.space {margin-top: 50px;}
+.onderruimte {margin: 0 0 10px 20px;}
+
+.pijl-links { display: inline-block; float: left; margin-top: 12px; }
+.pijl-rechts { display: inline-block; float: right; margin: 12px 10px 0 0; }
+
+
+
+.icon-pijl-links:before { content: '\e800'; }
+.icon-pijl-rechts:before { content: '\e801'; }
+
+
+#container > header > h1 { display: inline; font-family: 'allerbold'; font-weight: normal; font-size: 22px;}
+#container > header > h1.eenpijl { position: relative; left: -69px;}
+#container > header { text-align: center; margin: 33px 0 25px; }
+#container > header a { color: #000; font-size: 11px;}
+#container > header a:hover { color: #a5c5da; }
+#container >  header a:hover .pijl-rechts { background-position: -15px -15px;}
+
+#events > section {float: left; font-size: 11px; width: 253px; margin: 7px;}
+#events > section > header {text-align: center; font-size: 13px;}
+
+#events > section > div { height: 338px; border: 14px solid #a5c5da; overflow: auto;}
+#events > section > div > ul {margin: 0; list-style-type: none; padding: 0;}
+#events > section > div li {padding: 10px;}
+#events > section > div li:nth-child(odd) {background-color: #ffffff;}
+#events > section > div li:nth-child(even) {background-color: #e7e7e7;}
+
+#eventinfo { height: 140px; }
+#eventinfo > section {float: left; font-size: 11px; width: 253px; margin: 7px;}
+#eventinfo > section > header {text-align: center; font-size: 13px;}
+#eventinfo > section > div { height: 60px; border: 14px solid #a5c5da; overflow: auto; text-align: center; padding: 10px; vertical-align: center; font-size: 12px;}
+
+#right { width: 130px; margin: 5px 15px 25px 6px; font-size: 11px; display: block; float: left; padding-top: 100px;}
+#right p { font-weight: bold; font-size: 12px; margin: 20px 0 0; }
+input[type=submit] { width: 70px; height:21px; border: none; background: #000; color: #fff; margin-top: 7px;}
+input[type=submit]:hover { background: #a5c5da; color: #000;}
+input[type="text"] { border: 1px solid #000; color: #aaa; height: 17px; margin-top: 7px; padding-left: 10px; width: 130px;}
+
+#logocontainer{ width: 810px; margin: 10px 202px 15px; }
+#logocontainer a {margin-right: 34px;}
+#logocontainer a:last-child {margin-right: 0;}
+.zwart{ width: 100%; height: 21px; background-color: #000;}
+
+
+#about { padding-top: 4px; margin:0 7px;}
+#about article { width: 460px; display: inline-block; }
+#about > article > p { margin-bottom: 15px;}
+
+
+
+.twitterbar {display: inline-block; float: right; text-align: left; width: 280px; margin: 11px 20px 0 0;}
+.twitterbar > p {margin: 0 43px 20px 10px; font-weight: bold; font-size: 13px;}
+.twitter-timeline { height: 600px; }
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/*
+ * Hide visually and from screen readers:
+ * http://juicystudio.com/article/screen-readers-display-none.php
+ */
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screen readers:
+ * http://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+ */
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element
+ * to be focusable when navigated to via the keyboard:
+ * https://www.drupal.org/node/897638
+ */
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screen readers, but maintain layout
+ */
+
+.invisible {
+    visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid the additional HTTP request:
+   http://www.phpied.com/delay-loading-your-print-css/
+   ========================================================================== */
+
+@media print {
+    *,
+    *:before,
+    *:after {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster:
+                                   http://www.sanbeiji.com/archives/953 */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links that are fragment identifiers,
+     * or use the `javascript:` pseudo protocol
+     */
+
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    /*
+     * Printing Tables:
+     * http://css-discuss.incutio.com/wiki/Printing_Tables
+     */
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}

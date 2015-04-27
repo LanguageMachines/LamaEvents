@@ -1,0 +1,25 @@
+About Documentation
+============
+
+
+	Running the Django app;
+
+		- Go to the project folder which contains manage.py::
+
+			>> python manage.py runserver (deafult port 8000)
+
+		- You can provide another port, for example 4545::
+
+			>> python manage.py runserver 4545
+	
+
+	Model-View-Controller
+	
+		- Main folder of this project is <project_folder>/Lamaevents
+		- It uses views.py from dbcon folder, urls.py from LamaEvents folder
+
+
+
+
+
+
