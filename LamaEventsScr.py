@@ -109,7 +109,7 @@ logging.info('Event Detection Initialised')
 
 #Get the cookie for twiqs.nl;
 s = requests.Session()
-r = s.post("http://145.100.58.245/cgi-bin/twitter", data={"NAME":user_name2, "PASSWD":passwd2})
+r = s.post("http://145.100.58.95/cgi-bin/twitter", data={"NAME":user_name2, "PASSWD":passwd2})
 logging.info('Cookie Created')
 
 
@@ -131,7 +131,7 @@ def RequestTweets(t):
 	Warning = The url may need to be updated from time to time!
 	"""
 	try:
-		output1st = requests.get("http://145.100.58.245/cgi-bin/twitter", params=t, cookies=s.cookies)
+		output1st = requests.get("http://145.100.58.95/cgi-bin/twitter", params=t, cookies=s.cookies)
 #		print("output1st",output1st)
 	except:
 		print("output1st = false")
