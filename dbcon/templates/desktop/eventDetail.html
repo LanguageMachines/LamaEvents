@@ -48,10 +48,10 @@
 	<table>
 	{%for tweet in event.tweets %}
 		{% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
-			<td style="width: 400px;">
-				<blockquote class="twitter-tweet tw-align-center" data-conversation="none" data-cards="hidden" lang="nl">
-					<a href="https://twitter.com/{{ tweet.user }}/statuses/{{ tweet.id }}"></a></blockquote>
-			</td> <!-- more info: https://dev.twitter.com/docs/embedded-tweets -->
+			<td class="tweetbox">
+				<blockquote class="twitter-tweet tw-align-center" width="380px" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
+				<a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
+			</td>
 		{% if forloop.counter|divisibleby:2 %}<tr>{% endif %}
 	{% endfor %}
 	</table>
