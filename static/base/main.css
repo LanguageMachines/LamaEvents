@@ -218,10 +218,10 @@ input[type="text"] { border: 1px solid #000; color: #aaa; height: 17px; margin-t
 #about > article > p { margin-bottom: 15px;}
 
 
-
+.tweetbox {float: left; margin: 8px 8px 0 8px; border: 3px solid #a5c5da; border-radius: 9px; }
 .twitterbar {display: inline-block; float: right; text-align: left; width: 280px; margin: 11px 20px 0 0;}
 .twitterbar > p {margin: 0 43px 20px 10px; font-weight: bold; font-size: 13px;}
-.twitter-timeline { height: 600px; }
+.twitter-timeline { height: 600px; border: 3px solid #a5c5da; border-radius: 9px; }
 
 /* ==========================================================================
    Helper classes
