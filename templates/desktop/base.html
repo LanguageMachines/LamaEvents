@@ -85,15 +85,14 @@ $(function() {
   			<input type="text" name="hour_range" placeholder="uren eerder of later" required/><br>
   			<input type="submit" name="ttee" value="zoek">
   		</form>
-  		
-  		<form >
+  		<!-- There is not any function about this section yet 
+  		<form>
   			<p>plaats</p>
-  			<!-- There is not any function about this section yet -->
   			<input type="text" name="startdatum" placeholder="plaatsnaam" required/><br>
   			<input type="text" name="einddatum" placeholder="+0 km" required/><br>
   			<input type="submit" value="zoek">
-  		</form>
-  		
+  		</form> 
+  		-->
   		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
   			{% csrf_token %}
   			<p>zoekwoorden</p>

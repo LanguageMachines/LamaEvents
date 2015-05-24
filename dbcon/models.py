@@ -48,8 +48,10 @@ class Events(Document):
 	"""
 	meta = {'collection' : 'lecl'}
 	tweets = ListField(EmbeddedDocumentField(Tweets))
+	#Date from DEvents
 	date = DateTimeField()
 	score = FloatField()
+	#Date from time to event estimation;
 	Estimation = DateTimeField()
 	keylist = ListField(StringField())	
 
@@ -92,8 +94,8 @@ class Events(Document):
 		Calculates the time left to the events.
 		
 		"""
-		if self.Estimation > datetime.now():
-			hl =  self.Estimation - datetime.now()
+		if self.date > datetime.now():
+			hl =  self.date - datetime.now()
 			#!IDEA!: add 'time left' string to hl.
 		else:
 			hl = "Het event is al geweest."
