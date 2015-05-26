@@ -298,7 +298,7 @@ class Calendar(View):
 			startHour = start_hour.strftime("%d %B %Y %H:00")
 			endHour = end_hour.strftime("%d %B %Y %H:00")
 
-			event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
+			event_list = Events.objects(Q(date__gte = start_hour) & Q(date__lte = end_hour)).order_by('date')
 
 			return render(request, template, {
 					'urlprefix': settings.URLPREFIX,

@@ -206,6 +206,7 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 input[type=submit] { width: 70px; height:21px; border: none; background: #000; color: #fff; margin-top: 7px;}
 input[type=submit]:hover { background: #a5c5da; color: #000;}
 input[type="text"] { border: 1px solid #000; color: #aaa; height: 17px; margin-top: 7px; padding-left: 10px; width: 130px;}
+input[type="number"] { border: 1px solid #000; color: #aaa; height: 17px; margin-top: 7px; padding-left: 10px; width: 130px;}
 
 #logocontainer{ width: 810px; margin: 10px 202px 15px; }
 #logocontainer a {margin-right: 34px;}

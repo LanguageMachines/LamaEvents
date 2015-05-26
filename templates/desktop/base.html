@@ -81,8 +81,8 @@ $(function() {
   		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
   			{% csrf_token %}
   			<p>selecteer tijd</p>
-  			<input type="text" name="search_hour" placeholder="uur" required/><br>
-  			<input type="text" name="hour_range" placeholder="uren eerder of later" required/><br>
+  			<input type="number" name="search_hour" placeholder="uur" required/><br>
+  			<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br>
   			<input type="submit" name="ttee" value="zoek">
   		</form>
   		<!-- There is not any function about this section yet 
