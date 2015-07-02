@@ -1,46 +1,60 @@
-{% extends 'mobile/dbcon.mobile.html' %}
+{% extends 'desktop/dbcon.html' %}
 {% load staticfiles %}
 
 
 {% block title %}Event Informatie{% endblock %}
 
 
+{% block en_about %}{% endblock %}
+
+
 {% block pri_content %}
 
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<header> 
 
-<h1>Event Informatie</h1>
+ <a href="{{ urlprefix }}/" onClick="javascript:history.back();return false;"><div class="pijl-links"><i class="pijl-icon icon-pijl-links"></i>terug naar overzicht</div></a><h1 class="eenpijl">Event informatie</h1></header>
+
+	<div id="eventinfo">
+
+		<section>
+			<header>Sleutelwoorden voor dit event:</header>
+			<div class="vet13">
+					{% for keys in event.keylist %}
+						{{ keys }}{% if forloop.last %}{% else %},{% endif %}
+					{% endfor %}
+			</div>
+		</section>
+		
+		<section>
+			<header>Geschatte datum voor dit event:</header>
+			<div>
+				<a href="{{ urlprefix }}/{{ event.linkDate }}/events">{{ event.datestr1 }}<br><b>{{ event.datestr2 }}</b><br>{{ event.datestr3 }}</a>
+			</div>
+		</section>
+	
+		<section>
+			<header>Vermoedelijke locatie voor dit event:</header>
+			<div>
+					Deze informatie is momenteel niet beschikbaar.
+			</div>
+		</section>
+	</div>
+	
+	<header><h1>Tweets over dit event</h1></header>
 
 
-<h3>Sleutelwoorden voor dit event:</h3>
-{% for keys in event.keylist %}
-	{{ keys }}{% if forloop.last %}{% else %},{% endif %}
-{% endfor %}
+	<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-
-<h3>Geschatte datum voor dit event:</h3>
-<a href="{{ urlprefix }}/{{ event.linkDate }}/events">{{ event.datestr }}</a>
-
-
-<h3>Geschatte tijd tot de aanvang van het event:</h3>
-{{ event.Estimationstr }}
-<br>
-{{ event.timeLeft }}
-
-
-<h3>Tweets over het event:</h3>
-
-
-<table>
+	<table>
 	{%for tweet in event.tweets %}
-		{% if forloop.counter0|divisibleby:1 %}<tr>{% endif %}
-			<td style="width: 500px;">
-				<blockquote class="twitter-tweet tw-align-center" data-conversation="none" data-cards="hidden" lang="en">
-					<a href="https://twitter.com/{{ tweet.user }}D/statuses/{{ tweet.id }}"></a></blockquote>
+		{% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
+			<td class="tweetbox">
+				<blockquote class="twitter-tweet tw-align-center" width="380px" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
+				<a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
 			</td>
-		{% if forloop.counter|divisibleby:1 %}<tr>{% endif %}
+		{% if forloop.counter|divisibleby:2 %}<tr>{% endif %}
 	{% endfor %}
-</table>
+	</table>
     		     
 {% endblock %}
 

@@ -1,86 +1,135 @@
 {% load staticfiles %}
 
+
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="shortcut icon" href="{% static 'base/images/just-lama.png' %}" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="shortcut icon" href="{% static 'base/images/favicon.png' %}" />
 <title>{% block title %}{% endblock %}</title>
 
-{% block ex_head %}{% endblock %}
+<link rel="stylesheet" type="text/css" href="{% static 'base/normalize.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'base/main.css' %}" />
 
-<link rel="stylesheet" type="text/css" href="{% static 'base/mobile.css' %}" />
 
+<script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
+
+<style type="text/css">
+	{% block css_extra %}{% endblock %}
+</style>
 
 <script>
 
-{% block script %}{% endblock %}
+$(function() {
+	var pickerOpts = {
+		dateFormat: 'dd-mm-yy',
+		changeMonth: true,
+		changeYear: true,
+		showAnim: 'drop',
+	};  
+	$( "#datepicker" ).datepicker(pickerOpts);
+   $( "#datepicker2" ).datepicker(pickerOpts);
+});
 
 </script>
 
 
 </head>
 
-
 <body>
 
+ <div id="main">
 
-<div id="wrapper">
+	<div id="left">
+	
+ 		<a href="{{ urlprefix }}/">
+ 		<img class="onderruimte" src="{% static 'base/images/Lama-events-logo.png' %}" alt="lama logo"></a>
+ 		<br>
 
-	{% block github %}{% endblock %}
+ 		<p class="uitleg"><span class="vet13">Lama Events</span> is een kalender gevuld met gebeurtenissen in de nabije toekomst. De gebeurtenissen zijn volledig automatisch gedetecteerd in de grote stroom van Nederlandse tweets op Twitter.com</p>
+		<a href="{{ urlprefix }}/over-lama/"><div class="info">meer over Lama</div></a>	
 
-	<div id="header">
+	  {% block en_about %}
+			<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+ 			<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
+			<a href="{{ urlprefix }}/about-lama/"><div class="info">more about Lama</div></a>
+     {% endblock %}	
+	
+	</div>
+	
+	
+ 	<div id="container">
+		
+			{% block pri_content %}{% endblock %}
+		
+	</div>
 
-		<a href="{{ urlprefix }}/"><img src="{% static 'base/images/lama-events.png' %}"/></a>
-  
+
+	<div id="right">
+		
+		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
+			{% csrf_token %}
+			<p>selecteer datums</p>
+  			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/><br>
+  			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)" required/><br>
+  			<input type="submit" name="date_picker" value="zoek">
+  		</form>
+  		
+  		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
+  			{% csrf_token %}
+  			<p>selecteer tijd</p>
+  			<input type="number" name="search_hour" placeholder="uur" required/><br>
+  			<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br>
+  			<input type="submit" name="ttee" value="zoek">
+  		</form>
+  		<!-- There is not any function about this section yet 
+  		<form>
+  			<p>plaats</p>
+  			<input type="text" name="startdatum" placeholder="plaatsnaam" required/><br>
+  			<input type="text" name="einddatum" placeholder="+0 km" required/><br>
+  			<input type="submit" value="zoek">
+  		</form> 
+  		-->
+  		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
+  			{% csrf_token %}
+  			<p>zoekwoorden</p>
+  			<input type="text" name="fst_key" placeholder="eerste zoekwoord" required/><br>
+  			<input type="text" name="snd_key" placeholder="tweede zoekwoord" /><br>
+  			<input type="submit" name="event_search" value="zoek">
+		</form>
+
 	</div>
 		
+		
+	<footer>
+		
+		<div id="logocontainer">
+			
+    			<p>Lama events wordt mogelijk gemaakt door:</p>
 
-	<div id="primary">
+				<a href="http://applejack.science.ru.nl/languagemachines/"><img src="{% static 'base/images/logo-LanguageMachines.png' %}" alt="logo Language Machines"></a>
 
-		<div id="pri_content">
-			{% block pri_content %}{% endblock %}
+				<a href="http://commit-nl.nl/"><img src="{% static 'base/images/logo-Commit.png' %}" alt="logo Commit"></a>
+
+				<a href="http://145.100.58.95/cgi-bin/twitter"><img src="{% static 'base/images/logo-Twiqs.png' %}" alt="logo Twiqs"></a>
+					
+				<a href="http://project-infiniti.nl/"><img src="{% static 'base/images/logo-Infiniti.png' %}" alt="logo Infiniti"></a>
+					
+				<a href="http://www.ru.nl/"><img src="{% static 'base/images/logo-RU.png' %}" alt="logo Radboud Universiteit"></a>
+
 		</div>
+			
+		<div class="zwart"></div>
+	
+	</footer>
+	
+	
+  </div>
 
-		<div id="cleaner"></div>
-
-		{% block search %}{% endblock %}
-
-		<div id="cleaner"></div>
-
-		{% block about %}
-			<a href="{{ urlprefix }}{% url 'about' %}">
-				<img style="width: 200px;" src="{% static 'base/images/aboutbtn.png' %}"/></a>
-		{% endblock %}
-
-		<a href="https://twitter.com/Adnext_Commit">
-				<img style="width: 200px;" src="{% static 'base/images/twitter-logo.png' %}"/></a>
-
-	</div>
-
-
-	<div id="bar">
-
-		<img src="{% static 'base/images/lama-logo.png' %}"/>
-
-		<a href="http://project-infiniti.nl/">
-			<img src="{% static 'base/images/infiniti.png' %}"/></a>
-
-		<a href="http://commit-nl.nl/">
-			<img src="{% static 'base/images/commit.png' %}"/></a>
-
-		<a href="http://ru.nl/">
-			<img src="{% static 'base/images/radboud.png' %}"/></a>
-
-		</br>
-
-		<a href="http://twiqs.nl/">
-			<img src="{% static 'base/images/twiqs.png' %}"/></a>
-
-	</div>
-
-
-</div>
 
 </body>
+
 </html>

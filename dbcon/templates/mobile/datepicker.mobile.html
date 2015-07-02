@@ -1,15 +1,21 @@
-{% extends 'mobile/dbcon.mobile.html' %}
+{% extends 'desktop/dbcon.html' %}
 {% load staticfiles %}
 
 
 {% block intervalseeker %}
 
 
-<h3>De events tussen {{ start_date }} en {{ end_date }}:</h3>
+<header> 
 
-<a href="{{ urlprefix }}/intervalseek/from:{{ prev3Date }}to:{{ start_date }}"><div id="prevbtn"></div></a>
+		<a href="{{ urlprefix }}/intervalseek/from:{{ prev3Date }}to:{{ start_date }}" class="pijl-links"> 
+				<i class="pijl-icon icon-pijl-links"></i>eerder</a>
+				
+		<a href="{{ urlprefix }}/intervalseek/from:{{ end_date }}to:{{ nextnext3Date }}" class="pijl-rechts">later
+				<i class="pijl-icon icon-pijl-rechts"></i></a>
+				
+				<h1>Events tussen {{ start_date}} en {{ end_date }}</h1>
 
-<a href="{{ urlprefix }}/intervalseek/from:{{ end_date }}to:{{ nextnext3Date }}"><div id="nextbtn"></div></a>
+</header>
 
 
 {% endblock %}

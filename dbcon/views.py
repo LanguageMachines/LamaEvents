@@ -65,7 +65,7 @@ from django.conf import settings
 timeIntstr_d = 6 
 time_interval_d = timeIntstr_d - 1 
 
-timeIntstr_m = 2
+timeIntstr_m = 6
 time_interval_m = timeIntstr_m - 1
 
 
@@ -439,7 +439,7 @@ class About(View):
 	def get(self, request, ov):
 
 		if request.is_mobile:
-			template = 'mobile/about.mobile.html'
+			template = 'mobile/'+ ov +'-lama.mobile.html'
 		else:
 			template = 'desktop/'+ ov +'-lama.html'
 

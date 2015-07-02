@@ -1,149 +1,59 @@
-{% extends 'mobile/base.mobile.html' %}
+{% extends 'desktop/base.html' %}
 {% load staticfiles %}
 
 
-{% block title %}LaMa Events{% endblock %}
-
-
-{% block ex_head %}
-
-<script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
-<script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
-
-<link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
-
-{% endblock %}
-
-
-{% block script %}
-
-$(function() {
-	var pickerOpts = {
-		dateFormat: 'dd-mm-yy',
-		changeMonth: true,
-		changeYear: true,
-		showAnim: 'drop',
-	};  
-	$( "#datepicker" ).datepicker(pickerOpts);
-    $( "#datepicker2" ).datepicker(pickerOpts);
-});
-
-
-{% endblock %}
-
-
-
-{% block search %}
-
-
-<div class="sidebar_box">
-
-	<table>
-
-		<tr>
-			<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                             
-				{% csrf_token %}
-				<tr> <h3>Specificeer datums: </h3>	</tr>
-				<tr> <input type="text" name="start_date" id="datepicker" placeholder="Startdatum (dd-mm-yy)" required/>	</tr>
-				<tr> <input type="text" name="end_date" id="datepicker2" placeholder="Einddatum (dd-mm-yy)" required/>	</tr>
-				<tr> <button type="submit" name="date_picker">Zoeken</button>	</tr>
-			</form>
-		</tr>
-
-	<br><br>
-
-		<tr>
-			<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                             
-				{% csrf_token %}
-				<tr> <h3>Specificeer uren: </h3>	</tr>
-				<tr> <input type="number" name="search_hour" placeholder="Uur" required/>	</tr>
-				<tr> <input type="number" name="hour_range" placeholder="Range" required/>	</tr>
-				<tr> <button type="submit" name="ttee">Zoeken</button>	</tr>
-			</form>
-		</tr>
-
-	<br><br>
-
-		<tr>                                                         
-			<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">                                                          
-				{% csrf_token %}
-				<tr> <h3>Zoek met zoekwoorden: </h3>	</tr>
-				<tr> <input type="text" name="fst_key" placeholder="Eerste Zoekwoord" />	</tr>
-				<tr> <input type="text" name="snd_key" placeholder="Tweede Zoekwoord" />	</tr>
-				<tr> <button type="submit" name="event_search">Zoeken</button>	</tr>
-			</form>
-		</tr>
-	
-
-	</table>
-
-</div> 
-
-{% endblock %}
-
+{% block title %}LAMA events : kalender met gebeurtenissen in de nabije toekomst{% endblock %}
 
 
 {% block pri_content %}
 
 
-{% if allperEventsDictList %}
-
-
 {% block intervalseeker %}{% endblock %}
 
 
-<br>
-	<table>
+<div id="events">
+
+	{% if allperEventsDictList %}
+
+
 		{% for x in allperEventsDictList %}
-			{% if forloop.counter0|divisibleby:1 %}
-			<!-- divisibleby should be same here and at the bottom -->
-				<tr>
-			{% endif %}
-				{% if not x.eventObj %}
-					<td id="noeventd">
-						<table>
-							<tr>
-								{{ x.dateitemstr }}
-								<td id="innertd">  </td>
-							</tr>
-						</table>
-					</td>
-				{% else %}
-					<td id="eventd">
-						<table>
-							<tr>
-								<a href="{{ urlprefix }}/{{ x.dateitem }}/events">{{ x.dateitemstr }}</a>
-								<td id="innertd">
-									<ul>
-										{% for event in x.eventObj %}
-											<li>
-												<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+			
+
+			<section>
+			<header><a href="{{ urlprefix }}/{{ x.dateitem }}/events">{{ x.dateitemstr }}</a></header>
+			<div>
+					<ul>
+						{% for event in x.eventObj %}
+								<li>
+										<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
 													{% for keys in event.keylist %}
 														{{ keys }}{% if forloop.last %}{% else %},{% endif %}
 													{% endfor %}
-												</a>
-											</li>
-										{% endfor %}
-									</ul>
-								</td>
-							</tr>
-						</table>
-					</td>
-			{% endif %}
-			{% if forloop.counter|divisibleby:1 %}
-				</tr>
-			{% endif %}
+										</a>		
+								</li>
+						{% endfor %}
+					</ul>
+			</div>
+			</section>
+	
 		{% endfor %}
-	</table>
-
-{% else %}
-
-	<h3>Er is geen datum tussen de ingevulde velden</h3>
-	<h4>Herinnering: 'Einddatum' moet plaatsvinden na 'Startdatum'</h4>
+	
+	
 
 
-{% endif %}
+	{% else %}
 
+		<h3>Er is geen datum tussen de ingevulde velden</h3>
+		<h4>Herinnering: 'Einddatum' moet plaatsvinden na 'Startdatum'</h4>
+
+
+	{% endif %}
+
+
+</div>
 
 {% endblock %}
+
+
+
 
