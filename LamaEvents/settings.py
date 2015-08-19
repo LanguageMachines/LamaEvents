@@ -63,7 +63,7 @@ elif getpass.getuser() == "ebasar":	#to work on applejack home
 	DEBUG = True
 	TEMPLATE_DEBUG = True
 else:								#to work on local
-	config.read("../../../oauth.ini")
+	config.read("/tmp/oauth.ini")
 	DEBUG = True
 	TEMPLATE_DEBUG = True
 
