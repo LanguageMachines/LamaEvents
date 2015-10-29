@@ -59,11 +59,11 @@ if HOSTNAME[:9] == "applejack":		#to work on the server
 	DEBUG = True
 	TEMPLATE_DEBUG = False
 elif getpass.getuser() == "ebasar":	#to work on applejack home
-	config.read("/home/ebasar/oauth.ini")
+	config.read("oauth.ini")
 	DEBUG = True
 	TEMPLATE_DEBUG = True
 else:								#to work on local
-	config.read("/tmp/oauth.ini")
+	config.read("oauth.ini")
 	DEBUG = True
 	TEMPLATE_DEBUG = True
 

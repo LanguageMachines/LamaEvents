@@ -1,7 +1,12 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
 *~
+8.ini
+
+# virtualenv folder
+lamaenv/
 
 # C extensions
 *.so
