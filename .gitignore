@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 
 *~
-8.ini
+*.ini
 
 # virtualenv folder
 lamaenv/
