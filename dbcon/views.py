@@ -65,7 +65,7 @@ from django.conf import settings
 timeIntstr_d = 6 
 time_interval_d = timeIntstr_d - 1 
 
-timeIntstr_m = 6
+timeIntstr_m = 2
 time_interval_m = timeIntstr_m - 1
 
 
