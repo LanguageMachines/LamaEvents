@@ -42,6 +42,49 @@ $(function() {
 <body>
 
  <div id="main">
+ 
+ 
+ 	<nav>
+
+			<a href="#" id="menu-icon">Zoeken</a>
+
+			<div id="right">
+		
+				<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
+					{% csrf_token %}
+					<p>selecteer datums</p>
+  					<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/><br>
+  					<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)" required/><br>
+  					<input type="submit" name="date_picker" value="zoek">
+  				</form>
+  		
+  				<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
+  					{% csrf_token %}
+  					<p>selecteer tijd</p>
+  					<input type="number" name="search_hour" placeholder="uur" required/><br>
+  					<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br>
+  					<input type="submit" name="ttee" value="zoek">
+  				</form>
+  				<!-- There is not any function about this section yet 
+  				<form>
+  					<p>plaats</p>
+  					<input type="text" name="startdatum" placeholder="plaatsnaam" required/><br>
+  					<input type="text" name="einddatum" placeholder="+0 km" required/><br>
+  					<input type="submit" value="zoek">
+  				</form> 
+  				-->
+  				<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
+  					{% csrf_token %}
+  					<p>zoekwoorden</p>
+  					<input type="text" name="fst_key" placeholder="eerste zoekwoord" required/><br>
+  					<input type="text" name="snd_key" placeholder="tweede zoekwoord" /><br>
+  					<input type="submit" name="event_search" value="zoek">
+				</form>
+
+			</div>
+
+	</nav>
+ 
 
 	<div id="left">
 	
@@ -66,6 +109,8 @@ $(function() {
 
 	</div>
 	
+
+	
 	
  	<div id="container">
 		
@@ -74,40 +119,7 @@ $(function() {
 	</div>
 
 
-	<div id="right">
-		
-		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
-			{% csrf_token %}
-			<p>selecteer datums</p>
-  			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/><br>
-  			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)" required/><br>
-  			<input type="submit" name="date_picker" value="zoek">
-  		</form>
-  		
-  		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
-  			{% csrf_token %}
-  			<p>selecteer tijd</p>
-  			<input type="number" name="search_hour" placeholder="uur" required/><br>
-  			<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br>
-  			<input type="submit" name="ttee" value="zoek">
-  		</form>
-  		<!-- There is not any function about this section yet 
-  		<form>
-  			<p>plaats</p>
-  			<input type="text" name="startdatum" placeholder="plaatsnaam" required/><br>
-  			<input type="text" name="einddatum" placeholder="+0 km" required/><br>
-  			<input type="submit" value="zoek">
-  		</form> 
-  		-->
-  		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
-  			{% csrf_token %}
-  			<p>zoekwoorden</p>
-  			<input type="text" name="fst_key" placeholder="eerste zoekwoord" required/><br>
-  			<input type="text" name="snd_key" placeholder="tweede zoekwoord" /><br>
-  			<input type="submit" name="event_search" value="zoek">
-		</form>
 
-	</div>
 		
 		
 	<footer>

@@ -157,6 +157,7 @@ textarea {
       /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
     }
 
+
 body {background-image: url("images/bg-grid.png"); background-repeat: repeat; background-color: #c8c8c8; height:100%; }
 #main { width: 100%;  margin: 0 auto; background-color: #ffffff; position:absolute; top:0; left:0; right:0;}
 #left { width: 100%; height: 100%; margin: 25px 15px 25px 25px; font-size: 11px; float: left;}
@@ -204,12 +205,12 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 #eventinfo > section > header {text-align: center; font-size: 13px;}
 #eventinfo > section > div { height: 60px; border: 14px solid #a5c5da; overflow: auto; text-align: center; padding: 10px; vertical-align: center; font-size: 12px;}
 
-#right { width: 130px; margin: 5px 15px 25px 6px; font-size: 11px; display: block; padding-top: 100px;}
-#right p { font-weight: bold; font-size: 12px; margin: 20px 0 0; }
-input[type=submit] { width: 70px; height:21px; border: none; background: #000; color: #fff; margin-top: 7px;}
+#right { width: 100%; margin: 5px 5px 5px 6px; font-size: 2em; display: block; padding-top: 10px;}
+#right p { font-weight: bold; font-size: 2em; margin: 20px 0 0; text-align: center;}
+input[type=submit] { width: 97%; height:50px; border: none; background: #000; color: #fff; margin: 7px;}
 input[type=submit]:hover { background: #a5c5da; color: #000;}
-input[type="text"] { border: 1px solid #000; color: #aaa; height: 17px; margin-top: 7px; padding-left: 10px; width: 130px;}
-input[type="number"] { border: 1px solid #000; color: #aaa; height: 17px; margin-top: 7px; padding-left: 10px; width: 130px;}
+input[type="text"] { border: 1px solid #000; color: #aaa; height: 50px; margin: 7px; width: 97%;}
+input[type="number"] { border: 1px solid #000; color: #aaa; height: 50px; margin: 7px; padding-left: 10px; width: 97%;}
 
 #logocontainer{ width: 100%; margin: 10px 15px; }
 #logocontainer a {margin-right: 34px;}
@@ -226,6 +227,40 @@ input[type="number"] { border: 1px solid #000; color: #aaa; height: 17px; margin
 .twitterbar {display: inline-block; float: right; text-align: left; width: 280px; margin: 11px 20px 0 0;}
 .twitterbar > p {margin: 0 43px 20px 10px; font-weight: bold; font-size: 13px;}
 .twitter-timeline { height: 600px; border: 3px solid #a5c5da; border-radius: 9px; }
+
+
+/* ==========================================================================
+   Navigation Menu Wrapper
+   ========================================================================== */
+ 
+   #menu-icon {
+		display:inline-block;
+		width: 100%;
+		height: 40px;
+		background: #000;
+		text-align: center;
+		color: #FFF;
+		font-size: 2em;
+		padding-top: 15px;
+	}
+
+	nav #right, nav:active #right { 
+		display: none;
+		position: absolute;
+		background: #fff;
+		border: 5px solid #444;
+		top: 60px;
+		width: 100%;
+		border-radius: 4px 0 4px 4px;
+		z-index: 1;
+	}
+
+
+	nav:hover #right {
+		display: block;
+	}
+
+
 
 /* ==========================================================================
    Helper classes
