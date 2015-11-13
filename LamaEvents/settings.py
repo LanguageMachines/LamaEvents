@@ -56,7 +56,7 @@ config = configparser.ConfigParser()
 if HOSTNAME[:9] == "applejack":		#to work on the server
     # config.read('/scratch2/www/LamaEvents/oauth.ini')
 	config.read('/scratch/fkunneman/lamaevents/oauth.ini')
-	DEBUG = False
+	DEBUG = True
 	TEMPLATE_DEBUG = False
 elif getpass.getuser() == "ebasar":	#to work on applejack home
 	config.read("oauth.ini")

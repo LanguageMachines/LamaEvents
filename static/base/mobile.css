@@ -159,8 +159,8 @@ textarea {
 
 
 body {background-image: url("images/bg-grid.png"); background-repeat: repeat; background-color: #c8c8c8; height:100%; }
-#main { width: 100%;  margin: 0 auto; background-color: #ffffff; position:absolute; top:0; left:0; right:0;}
-#left { width: 100%; height: 100%; margin: 25px 15px 25px 25px; font-size: 11px; float: left;}
+#main { margin: 0 auto; background-color: #ffffff; position:absolute; top:0; left:0; right:0;}
+#left { height: 100%; margin: 25px 0; font-size: 11px; float: left;}
 #left a a:hover a:active {text-decoration: none;}
 #container {width: 100%; display: block; float: left;}
 .uitleg { font-size: 1.5em;}
@@ -177,7 +177,6 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 
 .pijl-links { display: inline-block; float: left; margin-top: 0; }
 .pijl-rechts { display: inline-block; float: right; margin: 0; }
-
 
 
 .icon-pijl-links:before { content: '\e800'; }
@@ -200,33 +199,38 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 #events > section > div li:nth-child(odd) {background-color: #ffffff;}
 #events > section > div li:nth-child(even) {background-color: #e7e7e7;}
 
-#eventinfo { height: 140px; }
-#eventinfo > section {float: left; font-size: 11px; width: 253px; margin: 7px;}
-#eventinfo > section > header {text-align: center; font-size: 13px;}
-#eventinfo > section > div { height: 60px; border: 14px solid #a5c5da; overflow: auto; text-align: center; padding: 10px; vertical-align: center; font-size: 12px;}
 
-#right { width: 100%; margin: 5px 5px 5px 6px; font-size: 2em; display: block; padding-top: 10px;}
+#eventinfo > section {float: left; font-size: 1.5em; width: 98%; margin: 7px;}
+#eventinfo > section > header {text-align: center; font-size: 1.5em; }
+#eventinfo > section > div {  border: 14px solid #a5c5da; overflow: auto; text-align: center; padding: 10px; vertical-align: center; font-size: 1.5em;}
+
+#right { margin: 5px 5px 5px 6px; font-size: 2em; display: block; padding-top: 10px;}
 #right p { font-weight: bold; font-size: 2em; margin: 20px 0 0; text-align: center;}
 input[type=submit] { width: 97%; height:50px; border: none; background: #000; color: #fff; margin: 7px;}
 input[type=submit]:hover { background: #a5c5da; color: #000;}
 input[type="text"] { border: 1px solid #000; color: #aaa; height: 50px; margin: 7px; width: 97%;}
 input[type="number"] { border: 1px solid #000; color: #aaa; height: 50px; margin: 7px; padding-left: 10px; width: 97%;}
 
-#logocontainer{ width: 100%; margin: 10px 15px; }
+#logocontainer{ margin: 10px 0; padding-left: 10px;}
 #logocontainer a {margin-right: 34px;}
 #logocontainer a:last-child {margin-right: 0;}
 .zwart{ width: 100%; height: 21px; background-color: #000;}
 
 
 #about { padding-top: 4px; margin:0 7px;}
-#about article { width: 460px; display: inline-block; }
-#about > article > p { margin-bottom: 15px;}
+#about article { padding: 0 20px; display: inline-block; }
+#about > article > p { margin-bottom: 15px; text-align: justify; font-size: 2em;}
 
 
-.tweetbox {float: left; margin: 8px 8px 0 11px; }
+.tweetbox {margin: 0 auto; padding-left: 40%;}
 .twitterbar {display: inline-block; float: right; text-align: left; width: 280px; margin: 11px 20px 0 0;}
 .twitterbar > p {margin: 0 43px 20px 10px; font-weight: bold; font-size: 13px;}
 .twitter-timeline { height: 600px; border: 3px solid #a5c5da; border-radius: 9px; }
+
+
+#centertext {font-size: 2em; margin: 0 10px; text-align: center;}
+#centertext ul {line-height: 2em; text-align: left;}
+
 
 
 /* ==========================================================================
@@ -236,7 +240,7 @@ input[type="number"] { border: 1px solid #000; color: #aaa; height: 50px; margin
    #menu-icon {
 		display:inline-block;
 		width: 100%;
-		height: 40px;
+		height: 60px;
 		background: #000;
 		text-align: center;
 		color: #FFF;
@@ -250,7 +254,7 @@ input[type="number"] { border: 1px solid #000; color: #aaa; height: 50px; margin
 		background: #fff;
 		border: 5px solid #444;
 		top: 60px;
-		width: 100%;
+		width: 98%;
 		border-radius: 4px 0 4px 4px;
 		z-index: 1;
 	}
