@@ -40,9 +40,14 @@ class Tweets(EmbeddedDocument):
 	"""
 	user = StringField()
 	id = StringField()
+	postags = StringField()
+	date = DateTimeField()
+	entities = StringField()
+	text = StringField()
+	date_references = StringField()
 
 
-class Events(Document):
+class Events(DynamicDocument):
 	"""
 	It represents MongoDB structure and inherits the Document Class from MongoEngine.
 	"""
@@ -53,7 +58,8 @@ class Events(Document):
 	score = FloatField()
 	#Date from time to event estimation;
 	Estimation = DateTimeField()
-	keylist = ListField(StringField())	
+	keylist = ListField(StringField())
+	keyterms = ListField(ListField()) # In the second ListField, there is a string and an integer E.g. : [['string1', 1], ['string2', 2]]
 
 	def linkDate(self):
 		"""

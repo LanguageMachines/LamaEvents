@@ -1,7 +1,14 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
 *~
+*.ini
+
+*ropeproject/
+
+# virtualenv folder
+lamaenv/
 
 # C extensions
 *.so
