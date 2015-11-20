@@ -13,6 +13,7 @@
 
 
 <script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'dbcon/jquery/jquery.mobile-1.4.5.js' %}"></script>
 <script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
 
 <link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
@@ -22,6 +23,8 @@
 </style>
 
 <script>
+{% block script_extra %}{% endblock %}
+
 
 $(function() {
 	var pickerOpts = {
@@ -34,9 +37,31 @@ $(function() {
    $( "#datepicker2" ).datepicker(pickerOpts);
 });
 
-{% block script_extra %}{% endblock %}
+
+$(document).ready(function() {
+    twitterCheck = setInterval(function() {
+        if($('iframe[id^="twitter-widget-"]').length) {
+            $('iframe[id^="twitter-widget-"]').each(function () {
+                $(this).contents().find(".timeline").attr("style","max-width:100% !important;");
+                $(this).attr("style","max-width:100% !important; width: 100% !important;");
+            });
+            clearInterval(twitterCheck);
+        }
+    }, 1000);
+});
+
+
+function hideshow(which){
+if (!document.getElementById)
+return
+if (which.style.display=="block")
+which.style.display="none"
+else
+which.style.display="block"
+}
 
 </script>
+
 
 
 </head>
@@ -48,7 +73,7 @@ $(function() {
  
  	<nav>
 
-			<a href="#" id="menu-icon">Zoeken</a>
+			<a href="javascript:hideshow(document.getElementById('right'))" id="menu-icon">Zoeken</a>
 
 			<div id="right">
 		
