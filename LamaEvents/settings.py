@@ -56,7 +56,7 @@ config = configparser.ConfigParser()
 if HOSTNAME[:9] == "applejack":		#to work on the server
     # config.read('/scratch2/www/LamaEvents/oauth.ini')
 	config.read('/scratch/fkunneman/lamaevents/oauth.ini')
-	DEBUG = True
+	DEBUG = False
 	TEMPLATE_DEBUG = False
 elif getpass.getuser() == "ebasar":	#to work on applejack home
 	config.read("oauth.ini")
@@ -72,7 +72,7 @@ else:								#to work on local
 SECRET_KEY = config.get('LE_settings', 'secret_key')
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'applejack.science.ru.nl', 'applejack.science.ru.nl/lamaevents/',]
 
 
 
