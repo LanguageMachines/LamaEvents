@@ -72,7 +72,7 @@ else:								#to work on local
 SECRET_KEY = config.get('LE_settings', 'secret_key')
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'applejack.science.ru.nl', 'applejack.science.ru.nl/lamaevents/',]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'applejack.science.ru.nl', 'applejack.science.ru.nl/lamaevents/']
 
 
 
