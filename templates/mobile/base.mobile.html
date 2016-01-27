@@ -32,6 +32,8 @@ $(function() {
 		changeMonth: true,
 		changeYear: true,
 		showAnim: 'drop',
+		monthNamesShort: [ "Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sept", "Okt", "Nov", "Dec" ],
+		dayNamesMin: [ "Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za" ]
 	};  
 	$( "#datepicker" ).datepicker(pickerOpts);
    $( "#datepicker2" ).datepicker(pickerOpts);
@@ -70,10 +72,29 @@ which.style.display="block"
 
  <div id="main">
  
- 
- 	<nav>
 
-			<a href="javascript:hideshow(document.getElementById('right'))" id="menu-icon">Zoeken</a>
+	<div id="left">
+	
+		<div class="lama-logo">
+ 			<a href="{{ urlprefix }}/">
+ 			<img class="onderruimte" src="{% static 'base/images/Lama-events-logo.png' %}" alt="lama logo"></a>
+		</div> 		
+ 		<br>	
+
+	</div>
+	
+	
+ 	<div id="container">
+		
+			{% block pri_content %}{% endblock %}
+		
+	</div>
+	
+	<div id="zoekbar">
+	
+		<a href="javascript:hideshow(document.getElementById('right'))" id="menu-icon">Zoeken</a>
+			
+		<nav>
 
 			<div id="right">
 		
@@ -110,16 +131,12 @@ which.style.display="block"
 
 			</div>
 
-	</nav>
- 
+		</nav>
+	
+	</div>
+
 
 	<div id="left">
-	
-		<div class="lama-logo">
- 			<a href="{{ urlprefix }}/">
- 			<img class="onderruimte" src="{% static 'base/images/Lama-events-logo.png' %}" alt="lama logo"></a>
-		</div> 		
- 		<br>
 
 		<div class="over">
  			<p class="uitleg"><span class="vet13">Lama Events</span> is een kalender gevuld met gebeurtenissen in de nabije toekomst. De gebeurtenissen zijn volledig automatisch gedetecteerd in de grote stroom van Nederlandse tweets op Twitter.com</p>
@@ -132,23 +149,10 @@ which.style.display="block"
  				<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
 				<a href="{{ urlprefix }}/about-lama/"><div class="info">more about Lama</div></a>
 			</div>
-     {% endblock %}		
-
-	</div>
+     {% endblock %}	
 	
-
+	</div>	
 	
-	
- 	<div id="container">
-		
-			{% block pri_content %}{% endblock %}
-		
-	</div>
-
-
-
-		
-		
 	<footer>
 		
 		<div id="logocontainer">

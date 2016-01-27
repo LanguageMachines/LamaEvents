@@ -160,7 +160,7 @@ textarea {
 
 body {background-image: url("images/bg-grid.png"); background-repeat: repeat; background-color: #c8c8c8; height:100%; }
 #main { margin: 0 auto; background-color: #ffffff; position:absolute; top:0; left:0; right:0;}
-#left { height: 100%; margin: 25px 0; font-size: 11px; float: left;}
+#left { width: 100%; height: 100%; margin: 25px 0; font-size: 11px; float: left;}
 #left a a:hover a:active {text-decoration: none;}
 #container {width: 100%; display: block; float: left;}
 .uitleg { font-size: 1.5em;}
@@ -171,9 +171,9 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 .info:hover {background-color: #a5c5da; color: #000;}
 .onderruimte { width: 150%; margin: 17% 0 0 10%; height: 100%;}
 
-#left .lama-logo {float: left; margin: 25px 15px 25px 25px;}
-#left .over { width: 28%; display: block; float: left; margin: 51px 0 25px 12%; }
-#left .about {width: 28%; display: block; float: left; margin: 25px 0 25px 9%;}
+#left .lama-logo {width: 10%; margin: 0 41%; position: relative;}
+#left .over { width: 40%; display: block; float: left; margin: 51px 0 25px 4%;}
+#left .about {width: 40%; display: block; float: left; margin: 45px 0 25px 9%;}
 
 .pijl-links { display: inline-block; float: left; margin-top: 0; }
 .pijl-rechts { display: inline-block; float: right; margin: 0; }
@@ -239,21 +239,22 @@ input[type="number"] { border: 1px solid #000; color: #aaa; height: 50px; margin
  
    #menu-icon {
 		display:inline-block;
-		width: 100%;
+		width: 99%;
 		height: 60px;
-		background: #000;
+		background: #FFF;
 		text-align: center;
-		color: #FFF;
+		color: #000;
+		border: 3px solid #000;
 		font-size: 2em;
 		padding-top: 15px;
+		margin-top: 15px;
 	}
 
 	nav #right, nav:active #right { 
 		display: none;
-		position: absolute;
+		position: relative;
 		background: #fff;
 		border: 5px solid #444;
-		top: 60px;
 		width: 98%;
 		border-radius: 4px 0 4px 4px;
 		z-index: 1;
