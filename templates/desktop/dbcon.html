@@ -1,0 +1,59 @@
+{% extends 'desktop/base.html' %}
+{% load staticfiles %}
+
+
+{% block title %}LAMA events : kalender met gebeurtenissen in de nabije toekomst{% endblock %}
+
+
+{% block pri_content %}
+
+
+{% block intervalseeker %}{% endblock %}
+
+
+<div id="events">
+
+	{% if allperEventsDictList %}
+
+
+		{% for x in allperEventsDictList %}
+			
+
+			<section>
+			<header><a href="{{ urlprefix }}/{{ x.dateitem }}/events">{{ x.dateitemstr }}</a></header>
+			<div>
+					<ul>
+						{% for event in x.eventObj %}
+								<li>
+										<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+													{% for keys in event.keylist %}
+														{{ keys }}{% if forloop.last %}{% else %},{% endif %}
+													{% endfor %}
+										</a>		
+								</li>
+						{% endfor %}
+					</ul>
+			</div>
+			</section>
+	
+		{% endfor %}
+	
+	
+
+
+	{% else %}
+
+		<h3>Er is geen datum tussen de ingevulde velden</h3>
+		<h4>Herinnering: 'Einddatum' moet plaatsvinden na 'Startdatum'</h4>
+
+
+	{% endif %}
+
+
+</div>
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,59 @@
+{% extends 'mobile/dbcon.mobile.html' %}
+{% load staticfiles %}
+
+
+{% block title %}Events voor '{{ fst_key }} {{ snd_key }}'{% endblock %}
+
+{% block css_extra %}
+
+ul#keyword{ font-size: 2em; text-align:center; overflow:hidden; padding: 0;}
+#keyword li {line-height: 2em; padding: 5px 0; float:left; display:inline; }
+#keyword li  { width:50%;} <span class="code-comment">/* 2 col */</span>
+
+{% endblock %}
+
+{% block pri_content %}
+
+
+{% if events_bykey_list %}
+
+	<header>
+		<h1>Events voor '{{ fst_key }} {{ snd_key }}'</h1>
+	</header>
+	
+
+		<ul id="keyword"> <span class="dbcloumn"><!-- Alter ID accordingly --></span>
+		
+			<li style="font-weight: bold;" >Sleutelwoorden</li>
+			<li style="font-weight: bold;" >Aantal dagen tot het event</li>
+		
+		{%for event in events_bykey_list %}
+
+			<br style="clear:both;"/>
+  			<li>
+  				<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+						{% for keys in event.keylist %}
+									{{ keys }}{% if forloop.last %}{% else %},{% endif %}
+						{% endfor %}
+				</a> 
+			</li>
+
+  			<li>{{ event.timeLeft }}</li>
+  			
+  			
+		{% endfor %}
+		
+		
+		</ul>
+
+
+{% else %}
+
+<div id="centertext">
+    <p>Er is geen event met de sleutelwoorden '{{ fst_key }} {{ snd_key }}'</p>
+</div>
+
+{% endif %}
+
+
+{% endblock %}
