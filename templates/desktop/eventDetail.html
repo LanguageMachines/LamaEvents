@@ -44,8 +44,20 @@
 
 
 	<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+	
+	{%for tweet in event.tweets %}
+	
+		<section>
+	
+				<blockquote class="twitter-tweet tw-align-center" width="500px;" margin="0px;" data-conversation="none" data-cards="hidden" lang="nl">
+				<a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
 
-	<table>
+		</section>
+
+	{% endfor %}
+
+
+	<!--table>
 	{%for tweet in event.tweets %}
 		{% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
 			<td class="tweetbox">
@@ -54,7 +66,9 @@
 			</td>
 		{% if forloop.counter|divisibleby:2 %}<tr>{% endif %}
 	{% endfor %}
-	</table>
-    		     
+	</table-->
+
+
+
 {% endblock %}
 

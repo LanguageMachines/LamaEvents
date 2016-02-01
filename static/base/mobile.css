@@ -186,7 +186,7 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 #container > header > h1 { display: inline; font-family: 'allerbold'; font-weight: normal; font-size: 2em;}
 #container > header > h1.eenpijl { position: relative; left: -69px;}
 #container > header { text-align: center; margin: 33px 0 25px; }
-#container > header a { color: #000; font-size: 1.5em;}
+#container > header a { color: #000; font-size: 1em;}
 #container > header a:hover { color: #a5c5da; }
 #container >  header a:hover .pijl-rechts { background-position: -15px -15px;}
 
@@ -205,27 +205,31 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 #eventinfo > section > div {  border: 14px solid #a5c5da; overflow: auto; text-align: center; padding: 10px; vertical-align: center; font-size: 1.5em;}
 
 #right { margin: 5px 5px 5px 6px; font-size: 2em; display: block; padding-top: 10px;}
-#right p { font-weight: bold; font-size: 2em; margin: 20px 0 0; text-align: center;}
+#right p { font-weight: bold; font-size: 1em; margin: 20px 0 0; text-align: center;}
 input[type=submit] { width: 97%; height:50px; border: none; background: #000; color: #fff; margin: 7px;}
 input[type=submit]:hover { background: #a5c5da; color: #000;}
 input[type="text"] { border: 1px solid #000; color: #aaa; height: 50px; margin: 7px; width: 97%;}
 input[type="number"] { border: 1px solid #000; color: #aaa; height: 50px; margin: 7px; padding-left: 10px; width: 97%;}
 
-#logocontainer{ margin: 10px 0; padding-left: 10px;}
-#logocontainer a {margin-right: 34px;}
+#logocontainer{ margin: 10px 0; padding-left: 10px; font-size: 2em;}
+#logocontainer a {margin-left: 5%;}
 #logocontainer a:last-child {margin-right: 0;}
 .zwart{ width: 100%; height: 21px; background-color: #000;}
 
 
 #about { padding-top: 4px; margin:0 7px;}
 #about article { padding: 0 20px; display: inline-block; }
-#about > article > p { margin-bottom: 15px; text-align: justify; font-size: 2em;}
+#about > article > p { margin-bottom: 15px; text-align: justify; font-size: 1em;}
 
 
 .tweetbox {margin: 0 auto; padding-left: 40%;}
-.twitterbar {display: inline-block; text-align: left; width: 100%;}
-.twitterbar > p { font-weight: bold; font-size: 13px;}
-.twitter-timeline2 { border: 3px solid #a5c5da; width: 100%; border-radius: 9px; }
+.twitterbar {display: block; text-align: left;}
+.twitterbar > p { font-weight: bold; font-size: 2em; text-align: center;}
+/*.twitter-timeline2 { height: 600px; border: 3px solid #a5c5da; border-radius: 9px; }*/
+
+.twitter-timeline2 iframe {
+		margin: 0 20%;
+}
 
 
 #centertext {font-size: 2em; margin: 0 10px; text-align: center;}
@@ -236,6 +240,13 @@ input[type="number"] { border: 1px solid #000; color: #aaa; height: 50px; margin
 /* ==========================================================================
    Navigation Menu Wrapper
    ========================================================================== */
+ 
+	#zoekbar {
+		position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      } 
  
    #menu-icon {
 		display:inline-block;
@@ -353,87 +364,5 @@ input[type="number"] { border: 1px solid #000; color: #aaa; height: 50px; margin
     /* Style adjustments for viewports that meet the condition */
 }
 
-@media print,
-       (-o-min-device-pixel-ratio: 5/4),
-       (-webkit-min-device-pixel-ratio: 1.25),
-       (min-resolution: 120dpi) {
-    /* Style adjustments for high resolution devices */
-}
 
-/* ==========================================================================
-   Print styles.
-   Inlined to avoid the additional HTTP request:
-   http://www.phpied.com/delay-loading-your-print-css/
-   ========================================================================== */
-
-@media print {
-    *,
-    *:before,
-    *:after {
-        background: transparent !important;
-        color: #000 !important; /* Black prints faster:
-                                   http://www.sanbeiji.com/archives/953 */
-        box-shadow: none !important;
-        text-shadow: none !important;
-    }
-
-    a,
-    a:visited {
-        text-decoration: underline;
-    }
-
-    a[href]:after {
-        content: " (" attr(href) ")";
-    }
-
-    abbr[title]:after {
-        content: " (" attr(title) ")";
-    }
-
-    /*
-     * Don't show links that are fragment identifiers,
-     * or use the `javascript:` pseudo protocol
-     */
-
-    a[href^="#"]:after,
-    a[href^="javascript:"]:after {
-        content: "";
-    }
-
-    pre,
-    blockquote {
-        border: 1px solid #999;
-        page-break-inside: avoid;
-    }
-
-    /*
-     * Printing Tables:
-     * http://css-discuss.incutio.com/wiki/Printing_Tables
-     */
-
-    thead {
-        display: table-header-group;
-    }
-
-    tr,
-    img {
-        page-break-inside: avoid;
-    }
-
-    img {
-        max-width: 100% !important;
-    }
-
-    p,
-    h2,
-    h3 {
-        orphans: 3;
-        widows: 3;
-    }
-
-    h2,
-    h3 {
-        page-break-after: avoid;
-    }
-}
 

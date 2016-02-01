@@ -44,17 +44,28 @@
 
 
 	<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+	
+	{%for tweet in event.tweets %}
+	
+		<section>
+	
+				<blockquote class="twitter-tweet tw-align-center" width="500px" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
+				<a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
 
-	<table>
+		</section>
+ 
+	{% endfor %}
+
+	<!--table>
 	{%for tweet in event.tweets %}
 		{% if forloop.counter0|divisibleby:1 %}<tr>{% endif %}
 			<td class="tweetbox">
-				<blockquote class="twitter-tweet tw-align-center" width="2000px" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
+				<blockquote class="twitter-tweet tw-align-center" width="100%" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
 				<a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
 			</td>
-		{% if forloop.counter|divisibleby:2 %}<tr>{% endif %}
+		{% if forloop.counter|divisibleby:1 %}<tr>{% endif %}
 	{% endfor %}
-	</table>
+	</table-->
     		     
 {% endblock %}
 
