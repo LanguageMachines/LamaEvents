@@ -8,14 +8,13 @@
 <link rel="shortcut icon" href="{% static 'base/images/favicon.png' %}" />
 <title>{% block title %}{% endblock %}</title>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+
 <link rel="stylesheet" type="text/css" href="{% static 'base/normalize.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'base/mobile.css' %}" />
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 
 
 <style type="text/css">
@@ -24,20 +23,6 @@
 
 <script>
 {% block script_extra %}{% endblock %}
-
-
-$(function() {
-	var pickerOpts = {
-		dateFormat: 'dd-mm-yy',
-		changeMonth: true,
-		changeYear: true,
-		showAnim: 'drop',
-		monthNamesShort: [ "Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sept", "Okt", "Nov", "Dec" ],
-		dayNamesMin: [ "Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za" ]
-	};  
-	$( "#datepicker" ).datepicker(pickerOpts);
-   $( "#datepicker2" ).datepicker(pickerOpts);
-});
 
 
 $(document).ready(function() {
@@ -91,8 +76,6 @@ which.style.display="block"
 	</div>
 	
 	<div id="zoekbar">
-	
-		<a href="javascript:hideshow(document.getElementById('right'))" id="menu-icon">Zoeken</a>
 			
 		<nav>
 
@@ -132,16 +115,21 @@ which.style.display="block"
 			</div>
 
 		</nav>
+		
+		<a href="javascript:hideshow(document.getElementById('right'))" id="menu-icon">Zoeken</a>
 	
 	</div>
 
 
 	<div id="left">
 
+		{% block nl_about %}
 		<div class="over">
  			<p class="uitleg"><span class="vet13">Lama Events</span> is een kalender gevuld met gebeurtenissen in de nabije toekomst. De gebeurtenissen zijn volledig automatisch gedetecteerd in de grote stroom van Nederlandse tweets op Twitter.com</p>
 			<a href="{{ urlprefix }}/over-lama/"><div class="info">meer over Lama</div></a>	
 		</div>
+		{% endblock %}
+	
 	
 	  {% block en_about %}
 	  		<div class="about">
