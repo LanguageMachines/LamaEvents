@@ -12,7 +12,7 @@
 
 <header> 
 
- <a href="{{ urlprefix }}/" onClick="javascript:history.back();return false;"><div class="pijl-links"><i class="pijl-icon icon-pijl-links"></i>terug naar overzicht</div></a><h1 class="eenpijl">Event informatie</h1></header>
+ 	<h1 >Event informatie</h1></header>
 
 	<div id="eventinfo">
 
@@ -32,29 +32,40 @@
 			</div>
 		</section>
 	
-		<section>
+		<!--section>
 			<header>Vermoedelijke locatie voor dit event:</header>
 			<div>
 					Deze informatie is momenteel niet beschikbaar.
 			</div>
-		</section>
+		</section-->
 	</div>
 	
 	<header><h1>Tweets over dit event</h1></header>
 
 
 	<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-	<table>
+	
 	{%for tweet in event.tweets %}
-		{% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
+	
+		<section>
+	
+				<blockquote class="twitter-tweet tw-align-center" width="500px" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
+				<a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
+
+		</section>
+ 
+	{% endfor %}
+
+	<!--table>
+	{%for tweet in event.tweets %}
+		{% if forloop.counter0|divisibleby:1 %}<tr>{% endif %}
 			<td class="tweetbox">
-				<blockquote class="twitter-tweet tw-align-center" width="380px" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
+				<blockquote class="twitter-tweet tw-align-center" width="100%" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
 				<a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
 			</td>
-		{% if forloop.counter|divisibleby:2 %}<tr>{% endif %}
+		{% if forloop.counter|divisibleby:1 %}<tr>{% endif %}
 	{% endfor %}
-	</table>
+	</table-->
     		     
 {% endblock %}
 
