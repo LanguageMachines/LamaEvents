@@ -71,8 +71,8 @@ config = configparser.ConfigParser()
 #	TEMPLATE_DEBUG = True
 #else:								#to work on local
 config.read('/scratch/fkunneman/lamaevents/oauth.ini')
-DEBUG = True
-TEMPLATE_DEBUG = True
+DEBUG = False
+TEMPLATE_DEBUG = False
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
