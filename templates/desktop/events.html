@@ -30,7 +30,7 @@
 	<ul>
 		{%for event in events_date_list %}
 			<li><a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
-						{% for keys in event.keylist %}
+						{% for keys in event.entities %}
 								{{ keys }}{% if forloop.last %}{% else %},{% endif %}
 						{% endfor %}
 			</a></li>

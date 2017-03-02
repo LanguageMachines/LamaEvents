@@ -38,9 +38,16 @@ On the Applejack we have to add 'lamaevents' before all the links we used. Here 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
+#BASE_DIR = '/scratch2/www/LamaEvents/'
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-HOSTNAME = os.uname()[1]
+print(BASE_DIR)
+#BASE_DIR = ''
+
+#os.path.dirname(os.path.dirname(__file__))
+
+#HOSTNAME = 'lamaevents.cls.ru.nl'
 
 import getpass
 
@@ -53,27 +60,27 @@ import configparser
 config = configparser.ConfigParser()
 
 #Calls the authentication file;
-if HOSTNAME[:9] == "applejack":		#to work on the server
+#if HOSTNAME[:9] == "applejack":		#to work on the server
     # config.read('/scratch2/www/LamaEvents/oauth.ini')
-	config.read('/scratch/fkunneman/lamaevents/oauth.ini')
-	DEBUG = False
-	TEMPLATE_DEBUG = False
-elif getpass.getuser() == "ebasar":	#to work on applejack home
-	config.read("oauth.ini")
-	DEBUG = True
-	TEMPLATE_DEBUG = True
-else:								#to work on local
-	config.read("oauth.ini")
-	DEBUG = True
-	TEMPLATE_DEBUG = True
+#	config.read('/scratch/fkunneman/lamaevents/oauth.ini')
+#	DEBUG = False
+#	TEMPLATE_DEBUG = False
+#elif getpass.getuser() == "ebasar":	#to work on applejack home
+#	config.read("oauth.ini")
+#	DEBUG = True
+#	TEMPLATE_DEBUG = True
+#else:								#to work on local
+config.read('/scratch/fkunneman/lamaevents/oauth.ini')
+DEBUG = True
+TEMPLATE_DEBUG = True
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.get('LE_settings', 'secret_key')
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'applejack.science.ru.nl', 'applejack.science.ru.nl/lamaevents/']
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'lamaevents.cls.ru.nl']
+#ALLOWED_HOSTS = ['lamaevents.cls.ru.nl']
 
 
 # Application definition;
@@ -132,18 +139,20 @@ db_port = int(config.get('LE_script_db', 'client_port'))
 
 
 #MongoDB connection;
-if HOSTNAME[:9] == "applejack":		#to work on the server
-	connect(db_name, host=db_host, port=db_port)
+#if HOSTNAME[:9] == "applejack":		#to work on the server
+#	connect(db_name, host=db_host, port=db_port)
 
-elif getpass.getuser() == "ebasar":	#to work on applejack home
-	db_uname = config.get('LE_script_db', 'user_name')
-	db_passwd = config.get('LE_script_db', 'passwd')
-	connect(db_name, host=db_host, port=db_port, username=db_uname , password=db_passwd)
+#elif getpass.getuser() == "ebasar":	#to work on applejack home
+#	db_uname = config.get('LE_script_db', 'user_name')
+#	db_passwd = config.get('LE_script_db', 'passwd')
+#	connect(db_name, host=db_host, port=db_port, username=db_uname , password=db_passwd)
 
-else:								#to work on local
-	db_uname = config.get('LE_script_db', 'user_name')
-	db_passwd = config.get('LE_script_db', 'passwd')
-	connect(db_name, host=db_host, port=db_port, username=db_uname , password=db_passwd)
+#else:								#to work on local
+connect(db_name, host=db_host, port=db_port)
+
+#	db_uname = config.get('LE_script_db', 'user_name')
+#	db_passwd = config.get('LE_script_db', 'passwd')
+#	connect(db_name, host=db_host, port=db_port, username=db_uname , password=db_passwd)
 
 
 # Internationalization;
@@ -162,27 +171,20 @@ USE_TZ = True
 # Static files;
 
 
-if HOSTNAME[:9] == "applejack":		#for the server side
-	STATIC_URL = '/lamaevents/static/'
-	URLPREFIX = '/lamaevents'
-elif getpass.getuser() =='ebasar':	#to work on applejack home
-	STATIC_URL = '/static/'
-	URLPREFIX = ''
-else:								#to work on local
-	STATIC_URL = '/static/'
-	URLPREFIX = ''
+STATIC_URL = '/static/'
 
+URLPREFIX = ''
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
+print(STATICFILES_DIRS)
+
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, "static"),
+#)
+
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "templates"),
 )
-
-
-
-
-
-
