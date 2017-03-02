@@ -10,4 +10,4 @@ Lama Events makes mistakes! It occasionally projects a past event into the futur
 Lama Events was developed by Mustafa Erkan Başar (@me_basar)(programming, design) on the basis of research by Florian Kunneman (@Flowian7) and Ali Hürriyetoğlu (@hurrial) as part of the ADNEXT (@Adnext_Commit) work package of the COMMIT/ Infiniti-project (@COMMIT_nl) project, with contributions from Nelleke Oostdijk, Antal van den Bosch (@antalvdb), Maarten van Gompel (@proycon), and Erik Tjong Kim Sang (@tkserik). Erkan Başar's work was made possible by the Erasmus programme.
 
 
-Link :http://applejack.science.ru.nl/lamaevents/
+Link: http://lamaevents.cls.ru.nl/
