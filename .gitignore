@@ -9,6 +9,10 @@ __pycache__/
 
 # virtualenv folder
 lamaenv/
+envlama/
+
+*\#*
+*.save
 
 # C extensions
 *.so

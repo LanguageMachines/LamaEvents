@@ -8,33 +8,46 @@
 <link rel="shortcut icon" href="{% static 'base/images/favicon.png' %}" />
 <title>{% block title %}{% endblock %}</title>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+
 <link rel="stylesheet" type="text/css" href="{% static 'base/normalize.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'base/main.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'base/mobile.css' %}" />
 
-
-<script src="{% static 'dbcon/jquery/jquery-1.11.1.min.js' %}"></script>
-<script src="{% static 'dbcon/jquery/jquery-ui-1.11.1/jquery-ui.js' %}"></script>
-
-<link rel="stylesheet" href="{% static 'dbcon/jquery/jquery-ui-themes-1.11.1/themes/smoothness/jquery-ui.css' %}"/>
 
 <style type="text/css">
 	{% block css_extra %}{% endblock %}
 </style>
 
 <script>
+{% block script_extra %}{% endblock %}
 
-$(function() {
-	var pickerOpts = {
-		dateFormat: 'dd-mm-yy',
-		changeMonth: true,
-		changeYear: true,
-		showAnim: 'drop',
-	};  
-	$( "#datepicker" ).datepicker(pickerOpts);
-   $( "#datepicker2" ).datepicker(pickerOpts);
+
+$(document).ready(function() {
+    twitterCheck = setInterval(function() {
+        if($('iframe[id^="twitter-widget-"]').length) {
+            $('iframe[id^="twitter-widget-"]').each(function () {
+                $(this).contents().find(".timeline").attr("style","max-width:100% !important;");
+                $(this).attr("style","max-width:100% !important; width: 100% !important;");
+            });
+            clearInterval(twitterCheck);
+        }
+    }, 1000);
 });
 
+
+function hideshow(which){
+if (!document.getElementById)
+return
+if (which.style.display=="block")
+which.style.display="none"
+else
+which.style.display="block"
+}
+
 </script>
+
 
 
 </head>
@@ -42,22 +55,16 @@ $(function() {
 <body>
 
  <div id="main">
+ 
 
 	<div id="left">
 	
- 		<a href="{{ urlprefix }}/">
- 		<img class="onderruimte" src="{% static 'base/images/Lama-events-logo.png' %}" alt="lama logo"></a>
- 		<br>
+		<div class="lama-logo">
+ 			<a href="{{ urlprefix }}/">
+ 			<img class="onderruimte" src="{% static 'base/images/Lama-events-logo.png' %}" alt="lama logo"></a>
+		</div> 		
+ 		<br>	
 
- 		<p class="uitleg"><span class="vet13">Lama Events</span> is een kalender gevuld met gebeurtenissen in de nabije toekomst. De gebeurtenissen zijn volledig automatisch gedetecteerd in de grote stroom van Nederlandse tweets op Twitter.com</p>
-		<a href="{{ urlprefix }}/over-lama/"><div class="info">meer over Lama</div></a>	
-
-	  {% block en_about %}
-			<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
- 			<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
-			<a href="{{ urlprefix }}/about-lama/"><div class="info">more about Lama</div></a>
-     {% endblock %}	
-	
 	</div>
 	
 	
@@ -66,44 +73,73 @@ $(function() {
 			{% block pri_content %}{% endblock %}
 		
 	</div>
+	
+	<div id="zoekbar">
+			
+		<nav>
 
-
-	<div id="right">
+			<div id="right">
 		
-		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
-			{% csrf_token %}
-			<p>selecteer datums</p>
-  			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/><br>
-  			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)" required/><br>
-  			<input type="submit" name="date_picker" value="zoek">
-  		</form>
+				<form method="post" action="{% url 'calendar' %}">
+					{% csrf_token %}
+					<p>selecteer datums</p>
+  					<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/><br>
+  					<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)" required/><br>
+  					<input type="submit" name="date_picker" value="zoek">
+  				</form>
   		
-  		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
-  			{% csrf_token %}
-  			<p>selecteer tijd</p>
-  			<input type="number" name="search_hour" placeholder="uur" required/><br>
-  			<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br>
-  			<input type="submit" name="ttee" value="zoek">
-  		</form>
-  		<!-- There is not any function about this section yet 
-  		<form>
-  			<p>plaats</p>
-  			<input type="text" name="startdatum" placeholder="plaatsnaam" required/><br>
-  			<input type="text" name="einddatum" placeholder="+0 km" required/><br>
-  			<input type="submit" value="zoek">
-  		</form> 
-  		-->
-  		<form method="post" action="{{ urlprefix }}{% url 'calendar' %}">
-  			{% csrf_token %}
-  			<p>zoekwoorden</p>
-  			<input type="text" name="fst_key" placeholder="eerste zoekwoord" required/><br>
-  			<input type="text" name="snd_key" placeholder="tweede zoekwoord" /><br>
-  			<input type="submit" name="event_search" value="zoek">
-		</form>
+  				<form method="post" action="{% url 'calendar' %}">
+  					{% csrf_token %}
+  					<p>selecteer tijd</p>
+  					<input type="number" name="search_hour" placeholder="uur" required/><br>
+  					<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br>
+  					<input type="submit" name="ttee" value="zoek">
+  				</form>
+  				<!-- There is not any function about this section yet 
+  				<form>
+  					<p>plaats</p>
+  					<input type="text" name="startdatum" placeholder="plaatsnaam" required/><br>
+  					<input type="text" name="einddatum" placeholder="+0 km" required/><br>
+  					<input type="submit" value="zoek">
+  				</form> 
+  				-->
+  				<form method="post" action="{% url 'calendar' %}">
+  					{% csrf_token %}
+  					<p>zoekwoorden</p>
+  					<input type="text" name="fst_key" placeholder="eerste zoekwoord" required/><br>
+  					<input type="text" name="snd_key" placeholder="tweede zoekwoord" /><br>
+  					<input type="submit" name="event_search" value="zoek">
+				</form>
 
+			</div>
+
+		</nav>
+		
+		<a href="javascript:hideshow(document.getElementById('right'))" id="menu-icon">Zoeken</a>
+	
 	</div>
-		
-		
+
+
+	<div id="left">
+
+		{% block nl_about %}
+		<div class="over">
+ 			<p class="uitleg"><span class="vet13">Lama Events</span> is een kalender gevuld met gebeurtenissen in de nabije toekomst. De gebeurtenissen zijn volledig automatisch gedetecteerd in de grote stroom van Nederlandse tweets op Twitter.com</p>
+			<a href="{{ urlprefix }}/over-lama/"><div class="info">meer over Lama</div></a>	
+		</div>
+		{% endblock %}
+	
+	
+	  {% block en_about %}
+	  		<div class="about">
+				<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+ 				<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
+				<a href="{{ urlprefix }}/about-lama/"><div class="info">more about Lama</div></a>
+			</div>
+     {% endblock %}	
+	
+	</div>	
+	
 	<footer>
 		
 		<div id="logocontainer">

@@ -1,4 +1,4 @@
-{% extends 'mobile/base.mobile.html' %}
+{% extends 'desktop/base.html' %}
 {% load staticfiles %}
 
 
@@ -26,7 +26,7 @@
 						{% for event in x.eventObj %}
 								<li>
 										<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
-													{% for keys in event.keylist %}
+													{% for keys in event.entities|slice:"3" %}
 														{{ keys }}{% if forloop.last %}{% else %},{% endif %}
 													{% endfor %}
 										</a>		
