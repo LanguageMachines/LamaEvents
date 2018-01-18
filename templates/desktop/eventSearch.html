@@ -43,7 +43,7 @@ ul#keyword{
 			<br style="clear:both;"/>
   			<li>
   				<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
-						{% for keys in event.keylist %}
+						{% for keys in event.entities %}
 									{{ keys }}{% if forloop.last %}{% else %},{% endif %}
 						{% endfor %}
 				</a> 

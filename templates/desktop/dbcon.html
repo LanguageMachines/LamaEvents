@@ -29,7 +29,14 @@
 													{% for keys in event.entities|slice:"3" %}
 														{{ keys }}{% if forloop.last %}{% else %},{% endif %}
 													{% endfor %}
-										</a>		
+                 {% if event.cycle == "periodic" %}
+			<img src="{% static 'base/images/cycle.png' %}" alt="periodic" height="15", width="15">
+			
+		{% endif %}
+		{% if event.predicted %}
+			<img src="{% static 'base/images/forecast.png' %}" alt="periodic" height="15", width="15">
+		{% endif %}
+							</a>		
 								</li>
 						{% endfor %}
 					</ul>

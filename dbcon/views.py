@@ -60,7 +60,7 @@ dateformat = "%d-%m-%Y"
 #To implement Dutch dates (E.g. Dinsdag 12 mei 2015);
 locale.setlocale(locale.LC_TIME, "nl_NL.utf8")
 
-def call_dates(first_date, second_date):
+def call_dates(first_date, second_date, periodic_filter):
         """
         For creating the dates and events in calendar and binding them to each others. 
         This is not a view! 
@@ -109,7 +109,8 @@ def call_dates(first_date, second_date):
         
         for i in datetimelist:
                 eventX = Events.objects(date=i).order_by('-score')
-                eventObjlist.append(eventX)
+                eventXf = [event for event in eventX if event.cycle in periodic_filter]
+                eventObjlist.append(eventXf)
 
         #Combination of this lists helps to find the events of the queried period for calendar.
         allperEventsDictList1st = [{'dateitem': t[0], 'dateitemstr': t[1], 'eventObj': t[2], 'datetimeitem': t[3]} for t in zip(datelist, dateliststr, eventObjlist, datetimelist)]
@@ -141,8 +142,9 @@ class Calendar(View):
                 nextnextDate = (dateLater + timedelta(days=time_interval)).strftime(dateformat)
                 prevDate = (now_date + timedelta(days=-time_interval)).strftime(dateformat)
                 currDate = now_date.strftime(dateformat)
-        
-                allperEventsDictList = call_dates(now_date, dateLater) 
+                periodic_filter = ['periodic','aperiodic']
+
+                allperEventsDictList = call_dates(now_date, dateLater, periodic_filter) 
 
                 return render(request, template, {
                                 'urlprefix': settings.URLPREFIX, #Calls the urlprefix from settings.
@@ -217,7 +219,8 @@ class Calendar(View):
                         nextnext3Date = (endDate + timedelta(days=time_interval)).strftime(dateformat)
                         prev3Date = (startDate + timedelta(days=-time_interval)).strftime(dateformat)
 
-                        allperEventsDictList = call_dates(startDate, endDate)
+                        periodic_filter = ['periodic','aperiodic']
+                        allperEventsDictList = call_dates(startDate, endDate, periodic_filter)
 
                         return render(request, template, {
                                         'urlprefix': settings.URLPREFIX,
@@ -283,8 +286,40 @@ class Calendar(View):
                                         'snd_key': snd_key,
                         })
 
+                elif "periodicity_select" in request.POST:
 
+                        periodic_filter = request.POST.getlist('Periodiciteit')
 
+                        if request.is_mobile:
+                                timeIntstr = timeIntstr_m
+                                time_interval = time_interval_m
+                                template = 'mobile/nextint.mobile.html'
+                        else:
+                                timeIntstr = timeIntstr_d
+                                time_interval = time_interval_d
+                                template = 'desktop/nextint.html'
+
+                        now_date = datetime.now()
+                        dateLater = now_date + timedelta(days=time_interval)
+
+                        #These are for the navigation with next or previous buttons;
+                        nextDate = dateLater.strftime(dateformat)
+                        nextnextDate = (dateLater + timedelta(days=time_interval)).strftime(dateformat)
+                        prevDate = (now_date + timedelta(days=-time_interval)).strftime(dateformat)
+                        currDate = now_date.strftime(dateformat)
+
+                        allperEventsDictList = call_dates(now_date, dateLater, periodic_filter)
+
+                        return render(request, template, {
+                                'urlprefix': settings.URLPREFIX, #Calls the urlprefix from settings.
+                                'allperEventsDictList': allperEventsDictList,
+                                'nextDate': nextDate,
+                                'nextnextDate': nextnextDate,
+                                'prevDate': prevDate,
+                                'currDate': currDate,
+                                'timeIntstr' : timeIntstr,
+                                })
+                        
 class IntervalSeek(View):
         """
         If navigation links used, it will redirect the dates here and make a loop for dates.
@@ -314,8 +349,9 @@ class IntervalSeek(View):
                 #These are for the new navigation links.
                 nextnext2Date = (dateLater2 + timedelta(days=time_interval)).strftime(dateformat)
                 prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime(dateformat)
-        
-                allperEventsDictList = call_dates(currDate2, dateLater2)                
+
+                periodic_filter = ['periodic','aperiodic']
+                allperEventsDictList = call_dates(currDate2, dateLater2, periodic_filter)                
 
                 return render(request, template, {
                                 'urlprefix': settings.URLPREFIX,

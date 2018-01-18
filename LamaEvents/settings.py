@@ -79,7 +79,7 @@ TEMPLATE_DEBUG = False
 SECRET_KEY = config.get('LE_settings', 'secret_key')
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'lamaevents.cls.ru.nl']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'lamaevents.cls.ru.nl', 'applejack.science.ru.nl/lamaevents/']
 #ALLOWED_HOSTS = ['lamaevents.cls.ru.nl']
 
 
@@ -178,8 +178,6 @@ URLPREFIX = ''
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
-
-print(STATICFILES_DIRS)
 
 #STATICFILES_DIRS = (
 #    os.path.join(BASE_DIR, "static"),

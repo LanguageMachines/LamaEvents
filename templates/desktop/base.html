@@ -84,13 +84,13 @@ $(function() {
   			<input type="submit" name="date_picker" value="zoek">
   		</form>
   		
-  		<form method="post" action="{% url 'calendar' %}">
-  			{% csrf_token %}
-  			<p>selecteer tijd</p>
-  			<input type="number" name="search_hour" placeholder="uur" required/><br>
-  			<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br>
-  			<input type="submit" name="ttee" value="zoek">
-  		</form>
+  		<!-- <form method="post" action="{% url 'calendar' %}"> -->
+  		<!-- 	{% csrf_token %} -->
+  		<!-- 	<p>selecteer tijd</p> -->
+  		<!-- 	<input type="number" name="search_hour" placeholder="uur" required/><br> -->
+  		<!-- 	<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br> -->
+  		<!-- 	<input type="submit" name="ttee" value="zoek"> -->
+  		<!-- </form> -->
   		<!-- There is not any function about this section yet 
   		<form>
   			<p>plaats</p>
@@ -107,6 +107,23 @@ $(function() {
   			<input type="submit" name="event_search" value="zoek">
 		</form>
 
+		<!-- <form method="post" action="{% url 'calendar' %}"> -->
+		<!--         {% csrf_token %} -->
+		<!--         <p>Filter op periodiciteit</p> -->
+		<!-- 	         </br> -->
+		<!-- 	        <label class="checkbox"> -->
+		<!-- 		<input type="checkbox" name="Periodiciteit" value="periodic" checked="checked">				</label>   Periodieke events      </br> -->
+		<!-- 	        <label class="checkbox"> -->
+		<!-- 		<input type="checkbox" name="Periodiciteit" value="aperiodic" checked="checked">	Niet periodieke events			</label> -->
+		<!-- 		<input type="submit" name="periodicity_select" value="filter"> -->
+
+		<p>legenda</p>
+		    </br>
+		    <img src="{% static 'base/images/cycle.png' %}" alt="periodic" \
+height="15", width="15">    Periodiek</br>
+		    <img src="{% static 'base/images/forecast.png' %}" alt="periodi\
+c" height="15", width="15">    Voorspeld</br>
+
 	</div>
 		
 		
@@ -120,7 +137,7 @@ $(function() {
 
 				<a href="http://commit-nl.nl/"><img src="{% static 'base/images/logo-Commit.png' %}" alt="logo Commit"></a>
 
-				<a href="http://145.100.58.95/cgi-bin/twitter"><img src="{% static 'base/images/logo-Twiqs.png' %}" alt="logo Twiqs"></a>
+				<a href="https://twinl.surfsara.nl/"><img src="{% static 'base/images/logo-Twiqs.png' %}" alt="logo Twiqs"></a>
 					
 				<a href="http://project-infiniti.nl/"><img src="{% static 'base/images/logo-Infiniti.png' %}" alt="logo Infiniti"></a>
 					

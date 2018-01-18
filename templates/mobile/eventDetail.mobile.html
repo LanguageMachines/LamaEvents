@@ -19,7 +19,7 @@
 		<section>
 			<header>Sleutelwoorden voor dit event:</header>
 			<div class="vet13">
-					{% for keys in event.keylist %}
+					{% for keys in event.entities %}
 						{{ keys }}{% if forloop.last %}{% else %},{% endif %}
 					{% endfor %}
 			</div>
@@ -28,16 +28,20 @@
 		<section>
 			<header>Geschatte datum voor dit event:</header>
 			<div>
-				<a href="{{ urlprefix }}/{{ event.linkDate }}/events">{{ event.datestr1 }}<br><b>{{ event.datestr2 }}</b><br>{{ event.datestr3 }}</a>
+				<a href="{{ urlprefix }}/{{ event.linkDate }}/events">{{ event.datestr1 }}<br><b>{{ event.datestr2 }}</a>
 			</div>
 		</section>
-	
-		<!--section>
-			<header>Vermoedelijke locatie voor dit event:</header>
-			<div>
-					Deze informatie is momenteel niet beschikbaar.
-			</div>
-		</section-->
+
+                <section>
+                        <header>Vermoedelijke locatie voor dit event:</header>
+                        <div>
+                           {% if event.location %}
+                              {{event.location}}
+                           {% else %}
+                              Geen locatie bekend voor deze gebeurtenis
+                           {% endif %}
+                        </div>
+                </section>
 	</div>
 	
 	<header><h1>Tweets over dit event</h1></header>
@@ -55,17 +59,6 @@
 		</section>
  
 	{% endfor %}
-
-	<!--table>
-	{%for tweet in event.tweets %}
-		{% if forloop.counter0|divisibleby:1 %}<tr>{% endif %}
-			<td class="tweetbox">
-				<blockquote class="twitter-tweet tw-align-center" width="100%" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
-				<a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
-			</td>
-		{% if forloop.counter|divisibleby:1 %}<tr>{% endif %}
-	{% endfor %}
-	</table-->
     		     
 {% endblock %}
 

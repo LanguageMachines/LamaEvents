@@ -59,6 +59,10 @@ class Events(DynamicDocument):
     location = StringField()
     #Estimation = DateTimeField()
     entities = ListField(StringField())
+    cycle = StringField()
+    predicted = StringField()
+    eventtype = StringField()
+    periodicity = DictField()
     #keyterms = ListField(ListField()) # In the second ListField, there is a string and an integer E.g. : [['string1', 1], ['string2', 2]]
 
     def linkDate(self):

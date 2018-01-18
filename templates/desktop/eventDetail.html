@@ -43,9 +43,25 @@
                         </div>
                 </section>
         </div>
-        
-        <header><h1>Tweets over dit event</h1></header>
 
+	<center>
+	<header><h3>
+	{% if event.cycle == "periodic" %}
+	        {{ "Periodiciteit: "}} {{ event.periodicity.description }}
+	        <br><br>
+		{{ "Eerdere edities: "}}
+	        </h3></header>
+	        {% for edition in event.periodicity.editions %}
+	                <a href="{{ urlprefix }}/{{ edition.id }}/eventDetail">
+			<br>
+                        {{ edition.date }} - {{edition.entities}}
+			</a>
+                 {% endfor %}
+	{% endif %}
+        </center>
+	</header>
+
+        <header><h1>Tweets over dit event</h1></header>
 
         <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
         

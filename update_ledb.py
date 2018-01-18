@@ -4,7 +4,7 @@ All loggings are written to 'LamaEvents.log'
 You can see the last loggings with this command line code::
 
 	>> tail -F Lamaevents.log 
-
+5B
 """
 
 import sys
@@ -14,8 +14,8 @@ import logging
 import configparser
 import json
 from bson.objectid import ObjectId
-
-from dte.functions import time_functions
+import re
+import datetime
 
 eventfile = sys.argv[1]
 eventout = sys.argv[2]
@@ -40,9 +40,17 @@ db_name = config.get('LE_script_db', 'db_name')
 #user_name = config.get('LE_script_db', 'user_name')
 #passwd = config.get('LE_script_db', 'passwd')
 
+def return_datetime(datestr,timestr):
+        parse_date = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
+        date = parse_date.search(datestr).groups(1)
+        parse_time = re.compile(r"^(\d{2}):(\d{2})")
+        timeparse = parse_time.search(timestr).groups(1)
+        datetime_obj = datetime.datetime(int(date[0]),int(date[1]),int(date[2]),int(timeparse[0]),0,0)    
+        return datetime_obj
+
 def import_datetime(datetime):
         date,time = datetime.split()
-        dt = time_functions.return_datetime(date,time,minute=True,setting='vs')
+        dt = return_datetime(date,time)
         return dt
 
 #Sends mail to 'toaddrs' about warnings and errors.
@@ -87,20 +95,24 @@ all_ids = set([event['_id'] for event in lecl.find()])
 print('Adding events, current number of events in database:',len(all_ids)) 
 
 for eventdict in eventdicts:
-        if 'mongo_id' in eventdict.keys(): # existing event
-                print('mongo id in')
-                event = lecl.find_one({'_id': ObjectId(event['mongo_id'])})
+        print(eventdict['mongo_id'])
+        if eventdict['mongo_id'] != False: # already in database
+                print('In DB')
+#                lecl.insert({'_id': ObjectId(eventdict['mongo_id'])})
+                event = lecl.find_one({'_id': ObjectId(eventdict['mongo_id'])})
                 merge_ids.append(event['_id']) 
-                for key in ['entities','location']:
+                for key in ['entities','location','cycle','predicted','periodicity','eventtype']:
                         event[key] = eventdict[key]
+#               lecl.update({"_id" :ObjectId(eventdict['mongo_id']) },{"cycle":eventdict['cycle'], "predicted":eventdict['predicted'], "periodicity":eventdict['periodicity'], "eventtype":eventdict['eventtype']})
                 event['score'] = float(eventdict['score'])
                 event['tweets'] = [{'id':t['id'], 'user':t['user']} for t in eventdict['tweets']]
                 event['date'] = import_datetime(eventdict['datetime']).replace(hour=0,minute=0,second=0)
+                lecl.save(event)
                 lamadicts.append(eventdict)
         else:
                 new_event = {}
                 new_eventdict = {}
-                for key in ['entities','location']:
+                for key in ['entities','location','cycle','eventtype','predicted','periodicity']:
                         new_event[key] = eventdict[key]
                 new_event['score'] = float(eventdict['score'])
                 new_event['tweets'] = [{'id':t['id'], 'user':t['user']} for t in eventdict['tweets']]
