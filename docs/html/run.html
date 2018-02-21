@@ -1,0 +1,168 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>How to run &#8212; Lama Events  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Django dbcon Application Folder" href="dbcon.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dbcon.html" title="Django dbcon Application Folder"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lama Events  documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="how-to-run">
+<h1>How to run<a class="headerlink" href="#how-to-run" title="Permalink to this headline">¶</a></h1>
+<p>Python version 3.4
+Django version 1.6
+MongoEngine</p>
+<div class="section" id="django-project">
+<h2>Django Project<a class="headerlink" href="#django-project" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Running the Django app;</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Go to the project folder which contains manage.py:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">runserver</span> <span class="p">(</span><span class="n">deafult</span> <span class="n">port</span> <span class="mi">8000</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">You can provide another port, for example 4545:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">runserver</span> <span class="mi">4545</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+<p>Model-View-Controller</p>
+<blockquote>
+<div><ul class="simple">
+<li>Main folder of this project is &lt;project_folder&gt;/Lamaevents</li>
+<li>It uses views.py from dbcon folder, urls.py from LamaEvents folder</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="lamaevents-script">
+<h2>LamaEvents Script<a class="headerlink" href="#lamaevents-script" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="first docutils">
+<dt>Go to the project folder which contains DEvents, ADNEXT, coco_out, tmp, pynlpl etc.</dt>
+<dd>&gt;&gt; python LamaEvents.py</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="python-paths">
+<h2>Python Paths<a class="headerlink" href="#python-paths" title="Permalink to this headline">¶</a></h2>
+<p>Event Detection:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=/</span><span class="n">vol</span><span class="o">/</span><span class="n">customopt</span><span class="o">/</span><span class="n">uvt</span><span class="o">-</span><span class="n">ru</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">colibri</span><span class="o">/</span><span class="n">scripts</span><span class="p">:</span><span class="o">/</span><span class="n">vol</span><span class="o">/</span><span class="n">customopt</span><span class="o">/</span><span class="n">uvt</span><span class="o">-</span><span class="n">ru</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">2</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="p">:</span><span class="o">~/</span><span class="n">Projects</span><span class="o">/</span><span class="n">ADNEXT</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>Anaconda:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;~/Anaconda3/lib/python3.4/site-packages:$PYTHONPATH&quot;</span>
+<span class="o">&gt;&gt;</span><span class="n">export</span> <span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;~/Anaconda3/bin/:$PATH&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">How to run</a><ul>
+<li><a class="reference internal" href="#django-project">Django Project</a></li>
+<li><a class="reference internal" href="#lamaevents-script">LamaEvents Script</a></li>
+<li><a class="reference internal" href="#python-paths">Python Paths</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dbcon.html"
+                        title="previous chapter">Django dbcon Application Folder</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/run.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dbcon.html" title="Django dbcon Application Folder"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lama Events  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mustafa Erkan Basar.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

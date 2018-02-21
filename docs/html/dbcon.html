@@ -1,0 +1,505 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django dbcon Application Folder &#8212; Lama Events  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to run" href="run.html" />
+    <link rel="prev" title="Django LamaEvents folder" href="LamaEvents.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="run.html" title="How to run"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="LamaEvents.html" title="Django LamaEvents folder"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lama Events  documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="django-dbcon-application-folder">
+<h1>Django dbcon Application Folder<a class="headerlink" href="#django-dbcon-application-folder" title="Permalink to this headline">¶</a></h1>
+<p>This application does basically everthing on the website.</p>
+<div class="section" id="module-dbcon.views">
+<span id="views-py"></span><h2>views.py<a class="headerlink" href="#module-dbcon.views" title="Permalink to this headline">¶</a></h2>
+<p>This is the standart views file for Django.  
+.. rubric:: Some Explanations
+With using ‘timeIntstr_d’ and ‘timeIntstr_m’ you can describe here how many dates will shown at 
+start and during navigation on calendar. ‘-1’ is for making it look like time interval of 
+twiqs.nl (For one day you have to write the same date twice, ex : 10-09-2014 &amp; 10-09-2014).
+‘_d’ stands for ‘desktop’ and ‘_m’ stands for ‘mobile’:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Desktop;</span>
+<span class="n">timeIntstr_d</span> <span class="o">=</span> <span class="mi">6</span> 
+<span class="n">time_interval_d</span> <span class="o">=</span> <span class="n">timeIntstr_d</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="c1">#Mobile;</span>
+<span class="n">timeIntstr_m</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">time_interval_m</span> <span class="o">=</span> <span class="n">timeIntstr_m</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>‘is_mobile’ is for saying what will happen if the device is mobile. Works with basic if statement. Also see LamaEvents/middleware.py::</dt>
+<dd><dl class="first last docutils">
+<dt>if request.is_mobile:</dt>
+<dd>timeIntstr = timeIntstr_m
+time_interval = time_interval_m
+template = ‘mobile/nextint.mobile.html’</dd>
+<dt>else:</dt>
+<dd>timeIntstr = timeIntstr_d
+time_interval = time_interval_d
+template = ‘desktop/nextint.html’</dd>
+</dl>
+</dd>
+</dl>
+<p>The following code is used in many strftime &amp; strptime convertions. It is important for the links with dates 
+because links are passing this date format to make queries. Therefore if you change it, you will change the urls. 
+Then you may be have to change the reqular expresion in the url.py too:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dateformat</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-%m-%Y&quot;</span>
+</pre></div>
+</div>
+<p>On the Applejack server, the link starts with ‘/lamaevents’. Because of that we defined a variable called urlprefix in settings.py.
+And here we are sending this variable to templates for adding to the links:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;urlprefix&#39;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">URLPREFIX</span><span class="p">,</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contents:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="dbcon.views.About">
+<em class="property">class </em><code class="descclassname">dbcon.views.</code><code class="descname">About</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#About"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.About" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redirects links to about pages.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dbcon.views.Calendar">
+<em class="property">class </em><code class="descclassname">dbcon.views.</code><code class="descname">Calendar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#Calendar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.Calendar" title="Permalink to this definition">¶</a></dt>
+<dd><p>All the inputs on website are coming here to find results</p>
+<dl class="method">
+<dt id="dbcon.views.Calendar.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#Calendar.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.Calendar.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the current date and add number of dates which you described with ‘timeIntstr’ at the beginning. 
+This is working, when you open the main page for the first time.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbcon.views.Calendar.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#Calendar.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.Calendar.post" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>post() is used for user inputs. 
+There are if statements inside to find out which button submitted;
+1. Date Picker;</p>
+<blockquote>
+<div><ul>
+<li><p class="first">This is working, if someone used ‘Specificeer Datums’ search.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Assign the parameters to new string variables. These are also used for navigation with next or previous buttons::</dt>
+<dd><p class="first last">start_date = request.POST[‘start_date’]
+end_date = request.POST[‘end_date’]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Convert the strings to datetime for call_dates function::</dt>
+<dd><p class="first">startDate = datetime.strptime(start_date, dateformat)
+endDate = datetime.strptime(end_date, dateformat)</p>
+<p class="last">allperEventsDictList = call_dates(startDate, endDate)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param start_date:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">param end_date:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="2">
+<li><dl class="first docutils">
+<dt>Time-To-Event Estimation;</dt>
+<dd><ul class="first last">
+<li>This is working, if someone used “Specificeer Uren” search.</li>
+<li>It finds the events between these ranges. For example hour=100 range=20, it’ll show the events between 80(start_hour) and 120(end_hour) hour after from now.</li>
+<li><dl class="first docutils">
+<dt>If search hour is smaller than the range, it’ll set the start hour to now. So it can’t show before now::</dt>
+<dd><dl class="first last docutils">
+<dt>if int(search_hour) &gt; int(hour_range): </dt>
+<dd>start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))</dd>
+<dt>else:</dt>
+<dd>start_hour = datetime.now()</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Find events which fits ‘end_hour &gt; event.Estimation &gt; start_hour’::</dt>
+<dd>event_list = Events.objects(Q(Estimation__gte = start_hour) &amp; Q(Estimation__lte = end_hour)).order_by(‘Estimation’)</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param search_hour:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">param hour_range:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic" start="3">
+<li><p class="first">Event Search;</p>
+<blockquote>
+<div><ul class="simple">
+<li>This is working, if someone used “Zoek met Zoekwoorden” search.</li>
+<li>It’ll find the events according to keyterms they wrote.</li>
+<li><dl class="first docutils">
+<dt>The query finds events which have first or second keyterm and not in the past. ‘iexact’ means ‘case insensitive’::</dt>
+<dd>event_list = Events.objects()</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+<dl class="docutils">
+<dt>#                               event_list = Events.objects(Q(Estimation__gte = start_hour) &amp; Q(Estimation__lte = end_hour)).order_by(‘Estimation’)</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param fst_key:</th><td class="field-body">First Keyterm</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param snd_key:</th><td class="field-body">Second Keyterm</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dbcon.views.EventDetail">
+<em class="property">class </em><code class="descclassname">dbcon.views.</code><code class="descname">EventDetail</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#EventDetail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.EventDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>This view shows the details of the events such as tweets about it</p>
+<dl class="method">
+<dt id="dbcon.views.EventDetail.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#EventDetail.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.EventDetail.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the exact event via id.
+:param id: Comes from the links</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dbcon.views.EventsofDate">
+<em class="property">class </em><code class="descclassname">dbcon.views.</code><code class="descname">EventsofDate</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#EventsofDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.EventsofDate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This view shows the events for a specific date</p>
+<dl class="method">
+<dt id="dbcon.views.EventsofDate.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>dt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#EventsofDate.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.EventsofDate.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the events for the selected date. dt comes from the url which is clicked.
+Before making the query, change the string(dt) to datetime:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">events_date_list</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dateformat</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-score&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dt</strong> – Comes from the links</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dbcon.views.IntervalSeek">
+<em class="property">class </em><code class="descclassname">dbcon.views.</code><code class="descname">IntervalSeek</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#IntervalSeek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.IntervalSeek" title="Permalink to this definition">¶</a></dt>
+<dd><p>If navigation links used, it will redirect the dates here and make a loop for dates.
+So if navigation link used again right after the first time, it will come here again.
+This is using call_dates() with the new dates coming from the links.
+The date amount to show is defined with ‘timeIntstr’ again.</p>
+<dl class="method">
+<dt id="dbcon.views.IntervalSeek.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>fst</em>, <em>snd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#IntervalSeek.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.IntervalSeek.get" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fst</strong> – First Day</li>
+<li><strong>snd</strong> – Last Day</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>These parameters also used to create new navigation links.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dbcon.views.call_dates">
+<code class="descclassname">dbcon.views.</code><code class="descname">call_dates</code><span class="sig-paren">(</span><em>first_date</em>, <em>second_date</em>, <em>periodic_filter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/views.html#call_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.views.call_dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>For creating the dates and events in calendar and binding them to each others. 
+This is not a view! 
+:param first_date: The Start Date
+:param second_date: The End Date        
+First it calculates the all dates between the start date and the end date. Then put them in 4 different lists as different values and zip them in one list;</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>datelist = Used in the links to show events for one date. Resulted in dateitem.</li>
+<li>dateliststr = Used to show dates as strings in format “%d %b %Y %a” (e.g.: 09 Sep 2014 Tue). Resulted in dateitemstr.</li>
+<li>datetimelist = Used to query events. Items are in datetime format. Resulted in datetimeitem.</li>
+<li>eventObjlist = Holds the events found by querying with items in datetimelist. Resulted in eventObj.</li>
+</ol>
+</div></blockquote>
+<p class="rubric">Usage of call_dates()</p>
+<p>In the views which we will use calendar there must be two exact dates. 
+We need to call call_dates() method with using this dates as parameters and assign to a list:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">allperEventsDictList</span> <span class="o">=</span> <span class="n">call_dates</span><span class="p">(</span><span class="n">now_date</span><span class="p">,</span> <span class="n">dateLater</span><span class="p">)</span> 
+<span class="c1">#And we have to render this to template;</span>
+<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;allperEventsDictList&#39;</span><span class="p">:</span> <span class="n">allperEventsDictList</span><span class="p">,</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Then you can call them is template like this::</dt>
+<dd><p class="first">#Iterate on the allperEventsDictList. each element of allperEventsDictList is a dictionary whose keys identify dateitem, dateitemstr, eventObj, datetimeitem;
+{% for x in allperEventsDictList %}</p>
+<blockquote class="last">
+<div><p>#eventObj is a list of events of a date. Thus, event is a Events class instance;
+{% for event in x.eventObj %}</p>
+<blockquote>
+<div>{{ event.score }}</div></blockquote>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dbcon.models">
+<span id="models-py"></span><h2>models.py<a class="headerlink" href="#module-dbcon.models" title="Permalink to this headline">¶</a></h2>
+<p>This file has the database definitions. 
+Since we used MongoDB for database; there isn’t any need to do migration or synch after the changes unlikely sqlite.</p>
+<p>If you add a field in database, the only thing you have to do is adding it here with correct Field() object definition such as ‘StringField()’.</p>
+<p>If make you a field which is in another field, you have to make another class which inherits EmbeddedDocument Class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#In database;    </span>
+        <span class="s2">&quot;tweets&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;user_name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;tweet_id&quot;</span>
+        <span class="p">},</span><span class="o">...</span><span class="p">]</span>
+
+<span class="c1">#Add this to the relevant model;</span>
+<span class="n">tweets</span> <span class="o">=</span> <span class="n">ListField</span><span class="p">(</span><span class="n">EmbeddedDocumentField</span><span class="p">(</span><span class="n">Tweets</span><span class="p">))</span>
+
+<span class="c1">#Then define that embedded document;</span>
+<span class="k">class</span> <span class="nc">Tweets</span><span class="p">(</span><span class="n">EmbeddedDocument</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">StringField</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://mongoengine.org/">http://mongoengine.org/</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Contents:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="dbcon.models.Events">
+<em class="property">class </em><code class="descclassname">dbcon.models.</code><code class="descname">Events</code><span class="sig-paren">(</span><em>*args</em>, <em>**values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/models.html#Events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.models.Events" title="Permalink to this definition">¶</a></dt>
+<dd><p>It represents MongoDB structure and inherits the Document Class from MongoEngine.</p>
+<dl class="method">
+<dt id="dbcon.models.Events.datestr1">
+<code class="descname">datestr1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/models.html#Events.datestr1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.models.Events.datestr1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only defines a string format to show in templates.
+(datestr split in three to show them seperately in the templates.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbcon.models.Events.linkDate">
+<code class="descname">linkDate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/models.html#Events.linkDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.models.Events.linkDate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The links to events in a date are working in case the url encoded in ‘%d-%m-%Y’ format.
+This method converts each date of event to this string format.
+So you can go to template and just write following code to create a link for a date::
+&lt;a href=”{{ event.linkDate }}/events”&gt;
+This is especially used in presenting event details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dbcon.models.Events.timeLeft">
+<code class="descname">timeLeft</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/models.html#Events.timeLeft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.models.Events.timeLeft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the time left to the events.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dbcon.models.Tweets">
+<em class="property">class </em><code class="descclassname">dbcon.models.</code><code class="descname">Tweets</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dbcon/models.html#Tweets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dbcon.models.Tweets" title="Permalink to this definition">¶</a></dt>
+<dd><p>This model contains the details of tweets about relevant event. 
+It inherits the Document Class from MongoEngine.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dbcon.urls">
+<span id="urls-py"></span><h2>urls.py<a class="headerlink" href="#module-dbcon.urls" title="Permalink to this headline">¶</a></h2>
+<p>This file isn’t in use. All urls are working on LamaEvents/urls.py and connected to views directly.</p>
+<p>If you want to use this file again, replace the first code with the second code in LamaEvents/urls.py below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#Current code;</span>
+<span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^$&#39;</span><span class="p">,</span> <span class="n">Calendar</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;calendar&quot;</span><span class="p">)</span>
+
+<span class="c1">#Replace with;</span>
+<span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^$&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;dbcon.urls&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Then activate these codes in dbcon/url.py:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^$&#39;</span><span class="p">,</span> <span class="n">Calendar</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;calendar&quot;</span><span class="p">),</span>
+
+<span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^intervalseek/from:(?P&lt;fst&gt;\S+|\S*[^\w\s]\S*)to:(?P&lt;snd&gt;\S+|\S*[^\w\s]\S*)&#39;</span><span class="p">,</span> <span class="n">IntervalSeek</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+
+<span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(?P&lt;id&gt;\w+)/eventDetail$&#39;</span><span class="p">,</span> <span class="n">EventDetail</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+
+<span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(?P&lt;dt&gt;\S+|\S*[^\w\s]\S*)/events$&#39;</span><span class="p">,</span> <span class="n">EventsofDate</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If you do this, it will add ‘/dbcon/’ in front of the links. So you will have to add this to most of the links on templates</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Django dbcon Application Folder</a><ul>
+<li><a class="reference internal" href="#module-dbcon.views">views.py</a></li>
+<li><a class="reference internal" href="#module-dbcon.models">models.py</a></li>
+<li><a class="reference internal" href="#module-dbcon.urls">urls.py</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="LamaEvents.html"
+                        title="previous chapter">Django LamaEvents folder</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="run.html"
+                        title="next chapter">How to run</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/dbcon.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="run.html" title="How to run"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="LamaEvents.html" title="Django LamaEvents folder"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Lama Events  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014, Mustafa Erkan Basar.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>
