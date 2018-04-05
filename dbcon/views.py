@@ -114,6 +114,8 @@ def call_dates(first_date, second_date, periodic_filter):
 
         #Combination of this lists helps to find the events of the queried period for calendar.
         allperEventsDictList1st = [{'dateitem': t[0], 'dateitemstr': t[1], 'eventObj': t[2], 'datetimeitem': t[3]} for t in zip(datelist, dateliststr, eventObjlist, datetimelist)]
+
+        #print(allperEventsDictList1st)
         return allperEventsDictList1st
 
 

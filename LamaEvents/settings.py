@@ -70,7 +70,7 @@ config = configparser.ConfigParser()
 #	DEBUG = True
 #	TEMPLATE_DEBUG = True
 #else:								#to work on local
-config.read('/scratch/fkunneman/lamaevents/oauth.ini')
+config.read('/scratch2/www/LamaEvents/oauth.ini')
 DEBUG = False
 TEMPLATE_DEBUG = False
 

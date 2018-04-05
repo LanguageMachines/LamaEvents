@@ -31,7 +31,7 @@ logging.info('Lama Events Script Started')
 
 #Get all the private configurations;
 config = configparser.ConfigParser()
-config.read('/scratch/fkunneman/lamaevents/oauth.ini')
+config.read('/scratch2/www/LamaEvents/oauth.ini')
 
 #MongoLab OAuth;
 client_host = config.get('LE_script_db', 'client_host')
@@ -91,37 +91,54 @@ with open(eventfile, 'r', encoding = 'utf-8') as file_in:
 # convert events to lama events
 lamadicts = []
 merge_ids = []
-all_ids = set([event['_id'] for event in lecl.find()])
+try:
+	all_ids = set([event['_id'] for event in lecl.find()])
+except:
+	all_ids = []
 print('Adding events, current number of events in database:',len(all_ids)) 
 
 for eventdict in eventdicts:
-        print(eventdict['mongo_id'])
-        if eventdict['mongo_id'] != False: # already in database
-                print('In DB')
+#      	print(eventdict['mongo_id'])
+	if 'mongo_id' in eventdict.keys():
+       		if eventdict['mongo_id'] != False: # already in database
+               		print('In DB')
 #                lecl.insert({'_id': ObjectId(eventdict['mongo_id'])})
-                event = lecl.find_one({'_id': ObjectId(eventdict['mongo_id'])})
-                merge_ids.append(event['_id']) 
-                for key in ['entities','location','cycle','predicted','periodicity','eventtype']:
-                        event[key] = eventdict[key]
+               		event = lecl.find_one({'_id': ObjectId(eventdict['mongo_id'])})
+               		merge_ids.append(event['_id']) 
+               		for key in ['entities','location','cycle','predicted','periodicity','eventtype']:
+                       		event[key] = eventdict[key]
 #               lecl.update({"_id" :ObjectId(eventdict['mongo_id']) },{"cycle":eventdict['cycle'], "predicted":eventdict['predicted'], "periodicity":eventdict['periodicity'], "eventtype":eventdict['eventtype']})
-                event['score'] = float(eventdict['score'])
-                event['tweets'] = [{'id':t['id'], 'user':t['user']} for t in eventdict['tweets']]
-                event['date'] = import_datetime(eventdict['datetime']).replace(hour=0,minute=0,second=0)
-                lecl.save(event)
-                lamadicts.append(eventdict)
-        else:
-                new_event = {}
-                new_eventdict = {}
-                for key in ['entities','location','cycle','eventtype','predicted','periodicity']:
-                        new_event[key] = eventdict[key]
-                new_event['score'] = float(eventdict['score'])
-                new_event['tweets'] = [{'id':t['id'], 'user':t['user']} for t in eventdict['tweets']]
-                new_event['date'] = import_datetime(eventdict['datetime']).replace(hour=0,minute=0,second=0)
-                mongo_id = lecl.insert(new_event)
-                new_eventdict = eventdict
-                new_eventdict['mongo_id'] = str(mongo_id)
-                merge_ids.append(mongo_id)
-                lamadicts.append(new_eventdict)
+               		event['score'] = float(eventdict['score'])
+               		event['tweets'] = [{'id':t['id'], 'user':t['user']} for t in eventdict['tweets']]
+               		event['date'] = import_datetime(eventdict['datetime']).replace(hour=0,minute=0,second=0)
+               		lecl.save(event)
+               		lamadicts.append(eventdict)
+        	else:
+                	new_event = {}
+                	new_eventdict = {}
+                	for key in ['entities','location','cycle','eventtype','predicted','periodicity']:
+                        	new_event[key] = eventdict[key]
+                	new_event['score'] = float(eventdict['score'])
+                	new_event['tweets'] = [{'id':t['id'], 'user':t['user']} for t in eventdict['tweets']]
+                	new_event['date'] = import_datetime(eventdict['datetime']).replace(hour=0,minute=0,second=0)
+                	mongo_id = lecl.insert(new_event)
+                	new_eventdict = eventdict
+                	new_eventdict['mongo_id'] = str(mongo_id)
+                	merge_ids.append(mongo_id)
+                	lamadicts.append(new_eventdict)
+	else:
+               	new_event = {}
+               	new_eventdict = {}
+               	for key in eventdict.keys():
+                       	new_event[key] = eventdict[key]
+               	new_event['score'] = float(eventdict['score'])
+               	new_event['tweets'] = [{'id':t['id'], 'user':t['user']} for t in eventdict['tweets']]
+               	new_event['date'] = import_datetime(eventdict['datetime']).replace(hour=0,minute=0,second=0)
+               	mongo_id = lecl.insert(new_event)
+               	new_eventdict = eventdict
+               	new_eventdict['mongo_id'] = str(mongo_id)
+               	merge_ids.append(mongo_id)
+               	lamadicts.append(new_eventdict)
 
 # delete merged events
 bad_ids = list(all_ids - set(merge_ids))
