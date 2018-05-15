@@ -1,50 +1,37 @@
 {% extends 'desktop/dbcon.html' %}
 {% load staticfiles %}
 
-
 {% block title %}Events op {{ eventDate }}{% endblock %}
-
 
 {% block en_about %}{% endblock %}
 
-
 {% block pri_content %}
-
-<header> 
-
+	<header> 
 		<a href="{{ urlprefix }}/{{ prevDay }}/events" class="pijl-links"> 
-				<i class="pijl-icon icon-pijl-links"></i>eerder</a>
-				
+			<i class="pijl-icon icon-pijl-links"></i>eerder
+		</a>
 		<a href="{{ urlprefix }}/{{ nextDay }}/events" class="pijl-rechts">later
-				<i class="pijl-icon icon-pijl-rechts"></i></a>
-				
-				<h1>Events op {{ eventDate }}</h1>
+			<i class="pijl-icon icon-pijl-rechts"></i>
+		</a>
+			<h1>Events op {{ eventDate }}</h1>
+	</header>
 
-</header>
-
-
-{% if events_date_list %}
-
-	<p>Klik op de sleutelwoorden om informatie over het event te zien:</p>
-
-	<ul>
-		{%for event in events_date_list %}
-			<li><a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+	<p class="center">
+	{% if events_date_list %}
+	        <p class="large center">Klik op de sleutelwoorden om informatie over het event te zien:</p>
+			<ul>
+				{%for event in events_date_list %}
+					<li><a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
 						{% for keys in event.entities %}
 						        {{ keys }}{% if forloop.last %}{% else %},{% endif %}
 						{% endfor %}
-			</a></li>
-		{% endfor %}
-	</ul>
-
-{% else %}
-
-    <p>Er is geen event gevonden op deze dag.</p>
-
-
-
-{% endif %}
-
+					</a></li>
+				{% endfor %}
+			</ul>
+	{% else %}
+		<p class="center large">Er is geen event gevonden op deze dag.</p>
+	        <br>
+	{% endif %}
     		     
 {% endblock %}
 

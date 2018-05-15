@@ -23,47 +23,31 @@ ul#keyword{
 
 {% endblock %}
 
-
 {% block pri_content %}
 
+  {% if events_bykey_list %}
+  	  <header>
+		  <p class="center">Events voor '{{ fst_key }} {{ snd_key }}'</p>
+                  <hr>
+	  </header>
+	  <ul id="keyword"> <span class="dbcloumn"><!-- Alter ID accordingly --></span>
+	  	  <li style="font-weight: bold;" >Zoekwoorden</li>
+		  <li style="font-weight: bold;" >Aantal dagen tot het event</li>
+		  {%for event in events_bykey_list %}
+			  
+			  <li>
+			  <a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+				  {% for keys in event.entities %}
+					  {{ keys }}{% if forloop.last %}{% else %},{% endif %}
+				  {% endfor %}
+			  </a> 
+			  </li>
 
-{% if events_bykey_list %}
-
-	<header>
-		<h1>Events voor '{{ fst_key }} {{ snd_key }}'</h1>
-	</header>
-
-		<ul id="keyword"> <span class="dbcloumn"><!-- Alter ID accordingly --></span>
-		
-			<li style="font-weight: bold;" >Sleutelwoorden</li>
-			<li style="font-weight: bold;" >Aantal dagen tot het event</li>
-		
-		{%for event in events_bykey_list %}
-
-			<br style="clear:both;"/>
-  			<li>
-  				<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
-						{% for keys in event.entities %}
-									{{ keys }}{% if forloop.last %}{% else %},{% endif %}
-						{% endfor %}
-				</a> 
-			</li>
-
-  			<li>{{ event.timeLeft }}</li>
-  			
-  			
-		{% endfor %}
-		
-		
-		</ul>
-	
-
-{% else %}
-
-    <h3>Er is geen event met de sleutelwoorden '{{ fst_key }} {{ snd_key }}'</h3>
-
-
-{% endif %}
-
-
+			  <li>{{ event.timeLeft }}</li>
+		  {% endfor %}
+	  </ul>
+  {% else %}
+      <br><br>
+      <p class="center">Er is geen event met de zoekwoorden '{{ fst_key }} {{ snd_key }}'</p>
+  {% endif %}
 {% endblock %}

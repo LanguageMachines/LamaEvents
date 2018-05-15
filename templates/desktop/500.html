@@ -1,0 +1,42 @@
+{% extends 'desktop/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Over Lama Events{% endblock %}
+
+{% block en_about %}
+	<div class="about">
+		<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+		<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
+		<a href="{{ urlprefix }}/about-lama/">
+			<div class="info">more about Lama</div>
+		</a>
+	</div>
+{% endblock %}
+
+{% block pri_content %}
+
+<header> 
+	<a href="{{ urlprefix }}/">
+		<div class="pijl-links">
+			<i class="pijl-icon icon-pijl-links"></i>terug naar kalender
+		</div>
+	</a>
+	<h1 class="eenpijl">Oeps er is een fout opgetreden</h1>
+	
+</header>
+
+<div id="about">
+	<br>
+	<center><img class="img.error" src="{% static 'base/images/lama-error500-1.png' %}" alt="Server Fout" style="width:50%"></a></center>
+	<br>
+	<p class="center large">
+		Het door jouw aangeklikte event is helaas niet gevonden. <br> Probeer opnieuw te navigeren vanaf het home-menu.
+	</p>
+</div>
+
+{% endblock %}
+
+
+
+
+

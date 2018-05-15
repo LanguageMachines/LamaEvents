@@ -92,6 +92,14 @@ class Events(DynamicDocument):
         ds3 = self.date.strftime("%H.%M uur")
         return ds3
 
+    def datestr4(self):
+        ds4 = self.date.strftime("%Y-%m-%d")
+        return ds4
+
+    def entities_str(self):
+        enti_str = ', '.join(self.entities) # --> gives l1, l2, l3
+        return enti_str
+
 #       def Estimationstr(self):
 #               """Only defines a string format to show in templates."""
 #               es = self.Estimation.strftime("%d %B %Y - %H:%M")#to string format

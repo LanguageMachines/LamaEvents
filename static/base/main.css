@@ -49,6 +49,87 @@ hr {
     padding: 0;
 }
 
+p.center {
+    font-size: 140%;	
+    text-align: center;
+    color: #6495ED;
+    width: 80%;
+    font-style: normal;
+    margin: auto;
+}
+p.large {
+    font-size: 130%;
+    color: #6495ED;
+    margin: auto;
+}
+
+p.soft {
+    font-size: 100%;
+    font-style: italic;
+    margin: auto;
+}
+
+p.herinnering {
+    color: #DB7093;
+    font-size: 140%;	
+    text-align: center;
+    width: 80%;
+    font-style: normal;
+    margin: auto;
+}
+
+
+a.editie:visited {
+    color: #ff66ff;
+    background-color: transparent;
+    text-decoration: none;
+    font-style: bold;
+}
+
+a.editie:hover {
+    color: blue;
+    background-color: transparent;
+    text-decoration: underline;
+    font-style: normal;
+}
+
+a.editie:active {
+    color: black;
+    background-color: transparent;
+    text-decoration: underline;
+    font-style: normal;
+}
+
+#focused-editie {
+    color: black;
+    font-weight: bold;
+}
+
+a.bold-black {
+    color: black !important;
+    font-weight: bold !important;
+}
+
+img.error {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*
+p.center {
+    
+    color: #6495ED;
+    text-align: center;
+    
+    width: 100%;
+    font-size: 300%;
+}
+
+}
+*/
+
+}
 /*
  * Remove the gap between audio, canvas, iframes,
  * images, videos and the bottom of their containers:
@@ -190,16 +271,18 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 #events > section {float: left; font-size: 11px; width: 253px; margin: 7px;}
 #events > section > header {text-align: center; font-size: 13px;}
 
-#events > section > div { height: 338px; border: 14px solid #a5c5da; overflow: auto;}
+#events > section > div { height: 338px; border: 9px solid #a5c5da; overflow: auto;}
 #events > section > div > ul {margin: 0; list-style-type: none; padding: 0;}
 #events > section > div li {padding: 10px;}
 #events > section > div li:nth-child(odd) {background-color: #ffffff;}
-#events > section > div li:nth-child(even) {background-color: #e7e7e7;}
+#events > section > div li:nth-child(even) {background-color: #e7e7e7 ;}
+
+
 
 #eventinfo { height: 140px; }
 #eventinfo > section {float: left; font-size: 11px; width: 253px; margin: 7px;}
 #eventinfo > section > header {text-align: center; font-size: 13px;}
-#eventinfo > section > div { height: 60px; border: 14px solid #a5c5da; overflow: auto; text-align: center; padding: 10px; vertical-align: center; font-size: 12px;}
+#eventinfo > section > div { height: 60px; border: 9px solid #a5c5da; overflow: auto; text-align: center; padding: 10px; vertical-align: center; font-size: 12px;}
 
 #right { width: 130px; margin: 5px 15px 25px 6px; font-size: 11px; display: block; float: left; padding-top: 100px;}
 #right p { font-weight: bold; font-size: 12px; margin: 20px 0 0; }
