@@ -201,8 +201,10 @@ class Calendar(View):
 
                 if "date_picker" in request.POST:
 
-                        start_date = request.POST['start_date']
-                        end_date = request.POST['end_date']
+                        start_date = request.POST.get('start_date')
+                        end_date = request.POST.get('end_date')
+                        if end_date == '':
+                                end_date = start_date
 
                         if request.is_mobile:
                                 timeIntstr = timeIntstr_m
@@ -213,7 +215,6 @@ class Calendar(View):
                                 time_interval = time_interval_d
                                 template = 'desktop/datepicker.html'
 
-                                
                         startDate = datetime.strptime(start_date, dateformat)
                         endDate = datetime.strptime(end_date, dateformat)
 
@@ -430,5 +431,41 @@ class About(View):
                         'urlprefix': settings.URLPREFIX,
                 })
 
+class Error404(View):
+        """Redirects links to about pages."""
+        def get(self, request):
 
+                if request.is_mobile:
+                        template = 'mobile/'+ ov +'-lama.mobile.html'
+                else:
+                        template = 'desktop/404.html'
+
+                return render(request, template, {
+                        'urlprefix': settings.URLPREFIX,
+                })
+
+class Error500(View):
+        """Redirects links to about pages."""
+        def get(self, request):
+
+                if request.is_mobile:
+                        template = 'mobile/'+ ov +'-lama.mobile.html'
+                else:
+                        template = 'desktop/500.html'
+
+                return render(request, template, {
+                        'urlprefix': settings.URLPREFIX,
+                })
+
+
+def handler404(request):
+    return render(request, '404.html', status=404)
+
+def handler500(request):
+    return render(request, '500.html', status=500)
+
+
+############################################
+#https://micropyramid.com/blog/handling-custom-error-pages-in-django/
+#############################################
 

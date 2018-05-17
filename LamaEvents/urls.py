@@ -41,6 +41,11 @@ urlpatterns = patterns('',
 
 	url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()),
 
-	url(r'^(?P<ov>\w+)-lama/$', About.as_view(), name="about"),
+	url(r'^(?P<ov>\w+)-lama/$', About.as_view()),
+                     
+	url(r'^404$', Error404.as_view(), name="Error404"),
+	url(r'^500$', Error500.as_view(), name="Error500"),
 
 )
+handler404 = views.handler404
+handler500 = views.handler500

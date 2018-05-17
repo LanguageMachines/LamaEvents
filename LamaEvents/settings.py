@@ -38,6 +38,7 @@ On the Applejack we have to add 'lamaevents' before all the links we used. Here 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+HOSTNAME = os.uname()[1]
 
 #BASE_DIR = '/scratch2/www/LamaEvents/'
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -70,10 +71,16 @@ config = configparser.ConfigParser()
 #	DEBUG = True
 #	TEMPLATE_DEBUG = True
 #else:								#to work on local
-config.read('/scratch2/www/LamaEvents/oauth.ini')
-DEBUG = False
-TEMPLATE_DEBUG = False
 
+if BASE_DIR.startswith('/home'):
+    config.read("oauth.ini")
+    print("DEBUG set to True")
+    DEBUG = True
+    TEMPLATE_DEBUG = True
+elif HOSTNAME[:9] == "applejack": 
+    config.read('/scratch2/www/LamaEvents/oauth.ini')
+    DEBUG = False
+    TEMPLATE_DEBUG = False
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.get('LE_settings', 'secret_key')

@@ -3,18 +3,28 @@
 
 {% block title %}About Lama Events{% endblock %}
 
-{% block en_about %}{% endblock %}
+{% block en_about %}
+	<div class="about">
+		<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+		<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
+		<a href="{{ urlprefix }}/about-lama/">
+			<div class="info">more about Lama</div>
+		</a>
+	</div>
+{% endblock %}
 
 {% block pri_content %}
 
 <header> 
-
- 	<a href="{{ urlprefix }}/"><div class="pijl-links"><i class="pijl-icon icon-pijl-links"></i>home page</div></a><h1 class="eenpijl">about Lama Events</h1>
- 	
+	<a href="{{ urlprefix }}/">
+		<div class="pijl-links">
+			<i class="pijl-icon icon-pijl-links"></i>Back to calender
+		</div>
+	</a>
+	<h1 class="eenpijl">About Lama Events</h1>
 </header>
 
 <div id="about">
-	
 	<article>
 		<p><span class="vet13">Lama Events is a calendar application listing events in the near future.</span> The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream (courtesy of <a href="http://twiqs.nl">Twiqs.nl</a>). Tweets referring to the same future events are clustered based on the frequent co-occurrence of words (names, phrases) and temporal expressions that characterize the event. The date and time of the event is automatically determined based on direct and indirect time references in the texts of the tweets in a cluster. The demo shows a day-by-day ranked list of automatically detected events in the Dutch language area (Netherlands and Flanders).</p>
 
@@ -23,6 +33,7 @@
 		<p><span class="vet13">Lama Events makes mistakes!</span> It occasionally projects a past event into the future, and sometimes groups together tweets that do not refer to the same event. The estimated date and the estimated time in hours:minutes may differ. Lama event is part of ongoing research at the Language and Speech Technology group of the Centre for Language Studies at Radboud University Nijmegen.</p>
 
 		<p><span class="vet13">Lama Events was developed by Mustafa Erkan Başar</span> (<a href="https://twitter.com/me_basar">@me_basar</a>)(programming, design) on the basis of research by Florian Kunneman (<a href="https://twitter.com/fkunneman">@fkunneman</a>) and Ali Hürriyetoğlu (<a href="https://twitter.com/hurrial">@hurrial</a>) as part of the <a href="http://www.commit-nl.nl/projects/wp-packages/adaptive-information-extraction-over-time-adnext">ADNEXT</a> (<a href="https://twitter.com/Adnext_Commit">@Adnext_Commit</a>) work package of the <a href="http://www.commit-nl.nl/">COMMIT</a>/
+
 		<a href="http://project-infiniti.nl/">Infiniti-project</a>  (<a href="https://twitter.com/COMMIT_nl">@COMMIT_nl</a>) project, with contributions from Nelleke Oostdijk, Antal van den Bosch (<a href="https://twitter.com/antalvdb">@antalvdb</a>), Maarten van Gompel (<a href="https://twitter.com/proycon">@proycon</a>), and Erik Tjong Kim Sang (<a href="https://twitter.com/tkserik">@tkserik</a>). Erkan Başar's work was made possible by the Erasmus programme.</p>
 	</article>	
 
@@ -35,16 +46,7 @@
 			<a class="twitter-timeline" height="600px" lang="nl" href="https://twitter.com/Adnext_Commit" data-widget-id="509682171930357761">@Adnext_Commit</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 		</div>
-
-				
 	</div>
-
 </div>
 
-
 {% endblock %}
-
-
-
-
-

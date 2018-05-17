@@ -3,84 +3,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="shortcut icon" href="{% static 'base/images/favicon.png' %}" />
-<title>{% block title %}{% endblock %}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<link rel="shortcut icon" href="{% static 'base/images/favicon.png' %}" />	
 
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<title>{% block title %}{% endblock %}</title>
 
-<link rel="stylesheet" type="text/css" href="{% static 'base/normalize.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'base/main.css' %}" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 
-<style type="text/css">
-	{% block css_extra %}{% endblock %}
-</style>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 
-<script>
+	<link rel="stylesheet" type="text/css" href="{% static 'base/normalize.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'base/main.css' %}" />
 
-$(function() {
-	var pickerOpts = {
-		dateFormat: 'dd-mm-yy',
-		changeMonth: true,
-		changeYear: true,
-		showAnim: 'drop',
-		monthNamesShort: [ "Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sept", "Okt", "Nov", "Dec" ],
-		dayNamesMin: [ "Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za" ]
-	};  
-	$( "#datepicker" ).datepicker(pickerOpts);
-   $( "#datepicker2" ).datepicker(pickerOpts);
-});
+	<style type="text/css">
+		{% block css_extra %}{% endblock %}
+	</style>
 
-</script>
+	<style>
+		a:active {
+                background-color:#ADD8E6;
+        	}
+	</style>
 
+	<script>
+		$(function() {
+			var pickerOpts = {
+				dateFormat: 'dd-mm-yy',
+				changeMonth: true,
+				changeYear: true,
+				showAnim: 'drop',
+				monthNamesShort: [ "Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sept", "Okt", "Nov", "Dec" ],
+				dayNamesMin: [ "Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za" ]
+			};  
+			$( "#datepicker" ).datepicker(pickerOpts);
+		   $( "#datepicker2" ).datepicker(pickerOpts);
+		});
+	</script>
 
 </head>
 
 <body>
 
  <div id="main">
-
 	<div id="left">
-	
 		<div class="lama-logo">
  			<a href="{{ urlprefix }}/">
- 			<img class="onderruimte" src="{% static 'base/images/Lama-events-logo.png' %}" alt="lama logo"></a>
+	 			<img class="onderruimte" src="{% static 'base/images/Lama-events-logo.png' %}" alt="lama logo">
+			</a>
 		</div> 		
  		<br>
 
 		<div class="over">
- 			<p class="uitleg"><span class="vet13">Lama Events</span> is een kalender gevuld met gebeurtenissen in de nabije toekomst. De gebeurtenissen zijn volledig automatisch gedetecteerd in de grote stroom van Nederlandse tweets op Twitter.com</p>
-			<a href="/over-lama/"><div class="info">meer over Lama</div></a>	
+			<p class="uitleg"><span class="vet13">Lama Events</span> is een kalender gevuld met gebeurtenissen in de nabije toekomst. De gebeurtenissen zijn volledig automatisch gedetecteerd in de grote stroom van Nederlandse tweets op Twitter.com</p>
+			<a href="{{ urlprefix }}/over-lama/">
+				<div class="info">meer over Lama</div>
+			</a>	
 		</div>
-	
-	  {% block en_about %}
-	  		<div class="about">
-				<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
- 				<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
-				<a href="{{ urlprefix }}/about-lama/"><div class="info">more about Lama</div></a>
-			</div>
-     {% endblock %}		
-	
-	</div>
-	
-	
- 	<div id="container">
-		
-			{% block pri_content %}{% endblock %}
-		
+
+		{% block en_about %}
+		<div class="about">
+			<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+	 		<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
+			<a href="{{ urlprefix }}/about-lama/">
+				<div class="info">more about Lama</div>
+			</a>
+		</div>
+	        {% endblock %}
 	</div>
 
+ 	<div id="container">
+		{% block pri_content %}{% endblock %}
+	</div>
 
 	<div id="right">
-		
 		<form method="post" action="{% url 'calendar' %}">
 			{% csrf_token %}
 			<p>selecteer datums</p>
-  			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/><br>
-  			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)" required/><br>
+  			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/>
+			<br>
+  			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)"/>
+			<br>
   			<input type="submit" name="date_picker" value="zoek">
   		</form>
   		
@@ -102,8 +106,10 @@ $(function() {
   		<form method="post" action="{% url 'calendar' %}">
   			{% csrf_token %}
   			<p>zoekwoorden</p>
-  			<input type="text" name="fst_key" placeholder="eerste zoekwoord" required/><br>
-  			<input type="text" name="snd_key" placeholder="tweede zoekwoord" /><br>
+  			<input type="text" name="fst_key" placeholder="eerste zoekwoord" required/>
+			<br>
+  			<input type="text" name="snd_key" placeholder="tweede zoekwoord" />
+			<br>
   			<input type="submit" name="event_search" value="zoek">
 		</form>
 
@@ -118,42 +124,28 @@ $(function() {
 		<!-- 		<input type="submit" name="periodicity_select" value="filter"> -->
 
 		<p>legenda</p>
-		    </br>
-		    <img src="{% static 'base/images/cycle.png' %}" alt="periodic" \
-height="15", width="15">    Periodiek</br>
-		    <img src="{% static 'base/images/forecast.png' %}" alt="periodi\
-c" height="15", width="15">    Voorspeld</br>
-
+			</br>
+			<img src="{% static 'base/images/cycle.png' %}" alt="periodic" height="15", width="15">    Periodiek
+			</br>
+			<img src="{% static 'base/images/forecast.png' %}" alt="periodic" height="15", width="15">    Voorspeld
+			</br>
 	</div>
 		
-		
 	<footer>
-		
 		<div id="logocontainer">
-			
-    			<p>Lama events wordt mogelijk gemaakt door:</p>
-
-				<a href="http://applejack.science.ru.nl/languagemachines/"><img src="{% static 'base/images/logo-LanguageMachines.png' %}" alt="logo Language Machines"></a>
-
-				<a href="http://commit-nl.nl/"><img src="{% static 'base/images/logo-Commit.png' %}" alt="logo Commit"></a>
-
-				<a href="https://twinl.surfsara.nl/"><img src="{% static 'base/images/logo-Twiqs.png' %}" alt="logo Twiqs"></a>
-					
-				<a href="http://project-infiniti.nl/"><img src="{% static 'base/images/logo-Infiniti.png' %}" alt="logo Infiniti"></a>
-					
-				<a href="http://www.ru.nl/"><img src="{% static 'base/images/logo-RU.png' %}" alt="logo Radboud Universiteit"></a>
+			<hr> 
+			<p class="soft">Lama events wordt mogelijk gemaakt door:</p>
+			<a href="http://applejack.science.ru.nl/languagemachines/"><img src="{% static 'base/images/logo-LanguageMachines.png' %}" alt="logo Language Machines"></a>
+			<a href="http://commit-nl.nl/"><img src="{% static 'base/images/logo-Commit.png' %}" alt="logo Commit"></a>
+			<a href="https://twinl.surfsara.nl/"><img src="{% static 'base/images/logo-Twiqs.png' %}" alt="logo Twiqs"></a>
+			<a href="http://project-infiniti.nl/"><img src="{% static 'base/images/logo-Infiniti.png' %}" alt="logo Infiniti"></a>
+			<a href="http://www.ru.nl/"><img src="{% static 'base/images/logo-RU.png' %}" alt="logo Radboud Universiteit"></a>
 		</div>
 			
 		<div class="zwart">
-				<img src="http://applejack.science.ru.nl/lamabadge.php/lamaevents" style="float: right;" alt="badge">
+			<img src="http://applejack.science.ru.nl/lamabadge.php/lamaevents" style="float: right;" alt="badge">
 		</div>
-	
 	</footer>
-	
-	
-  </div>
-
-
+ </div>
 </body>
-
 </html>
