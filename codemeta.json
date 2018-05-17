@@ -1,0 +1,90 @@
+{
+    "@context": [
+        "https://doi.org/10.5063/schema/codemeta-2.0",
+        "http://schema.org",
+        {
+            "entryPoints": { "@reverse": "schema:actionApplication" },
+            "interfaceType": { "@id": "codemeta:interfaceType" }
+        }
+    ],
+    "@type": "SoftwareSourceCode",
+    "identifier": "lamaevents",
+    "name": "Lama Events",
+    "version": "1.1",
+    "description": "Lama Events is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream (courtesy of Twiqs.nl). Tweets referring to the same future events are clustered based on the frequent co-occurrence of words (names, phrases) and temporal expressions that characterize the event. The date and time of the event is automatically determined based on direct and indirect time references in the texts of the tweets in a cluster. The demo shows a day-by-day ranked list of automatically detected events in the Dutch language.",
+    "license": "unknown",
+	"url": "http://lamaevents.cls.ru.nl/",
+    "producer": {
+		"@id": "https://www.ru.nl/cls",
+		"@type": "Organization",
+		"name": "Centre for Language Studies",
+		"url": "https://www.ru.nl/cls",
+		"parentOrganization": {
+			"@id": "https://www.ru.nl",
+			"name": "Radboud University",
+			"@type": "Organization",
+			"url": "https://www.ru.nl",
+			"location": {
+				"@type": "Place",
+				"name": "Nijmegen"
+			}
+		}
+    },
+    "author": [
+		{
+			"@type": "Person",
+			"givenName": "Erkan",
+			"familyName": "Başar",
+			"email": "erkan@mebasar.com",
+			"affiliation": { "@id": "https://www.ru.nl/cls" }
+		},
+		{
+			"@type": "Person",
+			"givenName": "Ghiath",
+			"familyName": "Ghanem",
+			"email": "gghanem65@yahoo.com",
+			"affiliation": { "@id": "https://www.ru.nl/cls" }
+		}
+	],
+	"sourceOrganization": { "@id": "https://www.ru.nl/cls" },
+	"programmingLanguage": {
+		"@type": "ComputerLanguage",
+		"identifier": "python",
+		"name": "python"
+	},
+	"operatingSystem": "POSIX",
+	"codeRepository": "https://github.com/LanguageMachines/LamaEvents",
+    "softwareRequirements": [
+        {
+			"@type": "SoftwareApplication",
+			"identifier": "ucto",
+			"name": "ucto"
+		},
+        {
+			"@type": "SoftwareApplication",
+			"identifier": "colibricore",
+			"name": "colibricore"
+		}
+	],
+	"funder": [
+		{
+			"@type": "Organization",
+			"name": "COMMIT-NL"
+		}
+	],
+	"readme": "https://github.com/LanguageMachines/LamaEvents/blob/master/README.md",
+	"issueTracker": "https://github.com/LanguageMachines/LamaEvents/issues",
+	"releaseNotes": "https://github.com/LanguageMachines/LamaEvents/releases",
+	"developmentStatus": "active",
+	"keywords":  [ "nlp", "dutch" ],
+	"dateCreated": "2014-08-03",
+    "entryPoints": [
+        {
+            "@type": "EntryPoint",
+            "name": "LamaEvents",
+            "urlTemplate": "http://lamaevents.cls.ru.nl/",
+            "description": "Web application",
+            "interfaceType": "WUI"
+        }
+    ]
+}
