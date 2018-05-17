@@ -75,12 +75,12 @@ config = configparser.ConfigParser()
 if BASE_DIR.startswith('/home'):
     config.read("oauth.ini")
     print("DEBUG set to True")
-    DEBUG = True
-    TEMPLATE_DEBUG = True
-elif HOSTNAME[:9] == "applejack": 
-    config.read('/scratch2/www/LamaEvents/oauth.ini')
     DEBUG = False
     TEMPLATE_DEBUG = False
+elif HOSTNAME[:9] == "applejack": 
+    config.read('/scratch2/www/LamaEvents/oauth.ini')
+    DEBUG = True
+    TEMPLATE_DEBUG = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.get('LE_settings', 'secret_key')
