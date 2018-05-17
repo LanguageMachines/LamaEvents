@@ -69,14 +69,14 @@
 	"funder": [
 		{
 			"@type": "Organization",
-			"name": "COMMIT-NL"
+			"name": "COMMIT-NL / Infinity"
 		}
 	],
 	"readme": "https://github.com/LanguageMachines/LamaEvents/blob/master/README.md",
 	"issueTracker": "https://github.com/LanguageMachines/LamaEvents/issues",
 	"releaseNotes": "https://github.com/LanguageMachines/LamaEvents/releases",
 	"developmentStatus": "active",
-	"keywords":  [ "nlp", "dutch" ],
+	"keywords":  [ "nlp", "dutch", "twitter" ],
 	"dateCreated": "2014-08-03",
     "entryPoints": [
         {
