@@ -75,8 +75,8 @@ config = configparser.ConfigParser()
 if BASE_DIR.startswith('/home'):
     config.read("oauth.ini")
     print("DEBUG set to True")
-    DEBUG = False
-    TEMPLATE_DEBUG = False
+    DEBUG = True
+    TEMPLATE_DEBUG = True
 elif HOSTNAME[:9] == "applejack": 
     config.read('/scratch2/www/LamaEvents/oauth.ini')
     DEBUG = False
