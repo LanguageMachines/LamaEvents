@@ -47,5 +47,5 @@ urlpatterns = patterns('',
 	url(r'^500$', Error500.as_view(), name="Error500"),
 
 )
-handler404 = views.handler404
-handler500 = views.handler500
+handler404 = 'dbcon.views.handler404'
+handler500 = 'dbcon.views.handler500'
