@@ -4,14 +4,23 @@
 
 {% block title %}Event Informatie{% endblock %}
 
-{% block en_about %}{% endblock %}
+
+{% block en_about %}
+	<div class="about">
+		<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+		<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
+		<a href="{{ urlprefix }}/about-lama/">
+			<div class="info">more about Lama</div>
+		</a>
+	</div>
+{% endblock %}
 
 {% block pri_content %}
 
 <header>
 	<a href="{{ urlprefix }}/" onClick="javascript:history.back();return false;">
 		<div class="pijl-links">
-			<i class="pijl-icon icon-pijl-links"></i>terug naar kalender
+			<i class="pijl-icon icon-pijl-links"></i>terug
 		</div>
 	</a>
 	<h1 class="eenpijl">Event informatie</h1>
@@ -87,17 +96,13 @@
 			        {% for edition in event.periodicity.editions %}
 					<br>
 					{% if event.datestr4 == edition.date and event.entities_str == edition.entities%}
-
 						<a class="editie bold-black" href="{{ urlprefix }}/{{ edition.id }}/eventDetail" >
 						>>   {{ edition.date }} - {{edition.entities}}   <<
 						</a>
-
 					{% else %}
-						
 						<a class="editie" href="{{ urlprefix }}/{{ edition.id }}/eventDetail">
 						{{ edition.date }} - {{edition.entities}}
 						</a>
-						
  					{% endif %}
 					
 				{% endfor %}

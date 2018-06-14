@@ -1,7 +1,6 @@
 {% extends 'desktop/dbcon.html' %}
 {% load staticfiles %}
 
-
 {% block title %}Events voor '{{ fst_key }} {{ snd_key }}'{% endblock %}
 
 {% block css_extra %}
@@ -26,10 +25,12 @@ ul#keyword{
 {% block pri_content %}
 
   {% if events_bykey_list %}
+
   	  <header>
-		  <p class="center">Events voor '{{ fst_key }} {{ snd_key }}'</p>
-                  <hr>
+                <p class="center">Events voor '{{ fst_key }} {{ snd_key }}'</p>
+                <hr>
 	  </header>
+
 	  <ul id="keyword"> <span class="dbcloumn"><!-- Alter ID accordingly --></span>
 	  	  <li style="font-weight: bold;" >Zoekwoorden</li>
 		  <li style="font-weight: bold;" >Aantal dagen tot het event</li>
@@ -49,5 +50,8 @@ ul#keyword{
   {% else %}
       <br><br>
       <p class="center">Er is geen event met de zoekwoorden '{{ fst_key }} {{ snd_key }}'</p>
+      <br><br><br>
+      <center><img class="img.error" src="{% static 'base/images/non-info.jpeg' %}" alt="Server Fout" style="width:50%"></a></center>
+      <br>
   {% endif %}
 {% endblock %}

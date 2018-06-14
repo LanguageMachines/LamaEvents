@@ -78,16 +78,17 @@
 	</div>
 
 	<div id="right">
-		<form method="post" action="{% url 'calendar' %}">
+		<!-- <form method="post" action="{% url 'calendar' %}">
 			{% csrf_token %}
 			<p>selecteer datums</p>
   			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/>
 			<br>
   			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)"/>
-			<br>
+		
   			<input type="submit" name="date_picker" value="zoek">
-  		</form>
-  		
+
+  		</form> -->
+
   		<!-- <form method="post" action="{% url 'calendar' %}"> -->
   		<!-- 	{% csrf_token %} -->
   		<!-- 	<p>selecteer tijd</p> -->
@@ -103,12 +104,19 @@
   			<input type="submit" value="zoek">
   		</form> 
   		-->
+
   		<form method="post" action="{% url 'calendar' %}">
   			{% csrf_token %}
+			<p>selecteer datums</p>
+  			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)"/>
+			<br>
+  			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)"/>
+
   			<p>zoekwoorden</p>
-  			<input type="text" name="fst_key" placeholder="eerste zoekwoord" required/>
+  			<input type="text" name="fst_key" placeholder="eerste zoekwoord" />
 			<br>
   			<input type="text" name="snd_key" placeholder="tweede zoekwoord" />
+			<br>
 			<br>
   			<input type="submit" name="event_search" value="zoek">
 		</form>

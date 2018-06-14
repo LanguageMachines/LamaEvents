@@ -3,7 +3,15 @@
 
 {% block title %}Events op {{ eventDate }}{% endblock %}
 
-{% block en_about %}{% endblock %}
+{% block en_about %}
+	<div class="about">
+		<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+		<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
+		<a href="{{ urlprefix }}/about-lama/">
+			<div class="info">more about Lama</div>
+		</a>
+	</div>
+{% endblock %}
 
 {% block pri_content %}
 	<header> 

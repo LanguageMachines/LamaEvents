@@ -7,34 +7,43 @@
 
 {% block intervalseeker %}{% endblock %}
 
-<div id="events">
+<div id="events">  
 	{% if allperEventsDictList %}
-		{% for x in allperEventsDictList %}
-			<section>
-			<header><a href="{{ urlprefix }}/{{ x.dateitem }}/events">{{ x.dateitemstr }}</a></header>
-			<div>
-				<ul>
-					{% for event in x.eventObj %}
-					<li>
-						<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
-							{% for keys in event.entities|slice:"3" %}
-								{{ keys }}{% if forloop.last %}{% else %},{% endif %}
-							{% endfor %}
-							{% if event.cycle == "periodic" %}
-								<img src="{% static 'base/images/cycle.png' %}" alt="periodic" height="15", width="15">
-							{% endif %}
-							{% if event.predicted %}
+                {% if foundEventsForDates %}
+		        {% for x in allperEventsDictList %}
+			    <section>
+                                    <header><a href="{{ urlprefix }}/{{ x.dateitem }}/events">{{ x.dateitemstr }}</a></header>
+                        			<div>
+			                                <ul>
+                 					{% for event in x.eventObj %}
+		                 			<li>
+				         		<a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+							        {% for keys in event.entities|slice:"3" %}
+								        {{ keys }}{% if forloop.last %}{% else %},{% endif %}
+                 						{% endfor %}
+		         					{% if event.cycle == "periodic" %}
+		   						<img src="{% static 'base/images/cycle.png' %}" alt="periodic" height="15", width="15">
+			        				{% endif %}
+				        			{% if event.predicted %}
 								<img src="{% static 'base/images/forecast.png' %}" alt="periodic" height="15", width="15">
-							{% endif %}
-						</a>		
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
-			</section>
-		{% endfor %}
+					        		{% endif %}
+						       </a>		
+					               </li>
+					              {% endfor %}
+                                                      </ul>
+			                       </div>
+                                    </section>
+
+		        {% endfor %}
+                {% else %}
+                        <p class="center">Geen tweets gevonden.</p>
+	                <br>
+                        <p class="center large">Er zijn geen events tussen de ingevulde velden</p>
+                {% endif %}
+              
 	{% else %}
 		<p class="center large">Er is geen datum tussen de ingevulde velden</p>
+                <br>
 		<p class="herinnering">Herinnering: 'Einddatum' moet plaatsvinden na 'Startdatum'</p>
         {% endif %}
 </div>

@@ -53,14 +53,17 @@ time_interval_d = timeIntstr_d - 1
 timeIntstr_m = 2
 time_interval_m = timeIntstr_m - 1
 
-
 dateformat = "%d-%m-%Y"
+
+setDateToSearchs = False
+dateSearchOk = False
+
 
 
 #To implement Dutch dates (E.g. Dinsdag 12 mei 2015);
 locale.setlocale(locale.LC_TIME, "nl_NL.utf8")
 
-def call_dates(first_date, second_date, periodic_filter):
+def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=None):
         """
         For creating the dates and events in calendar and binding them to each others. 
         This is not a view! 
@@ -95,7 +98,8 @@ def call_dates(first_date, second_date, periodic_filter):
 
         datelist = []
         dateliststr = []
-        datetimelist=[]
+        datetimelist = []
+        foundEventsForDates = False
         for single_date in daterange(first_date, second_date):
                 datelist.append(single_date.strftime(dateformat)) 
                 dateliststr.append(single_date.strftime("%A %d %b %Y").title())
@@ -108,17 +112,20 @@ def call_dates(first_date, second_date, periodic_filter):
         eventObjlist = []
         
         for i in datetimelist:
-                eventX = Events.objects(date=i).order_by('-score')
+                if fst_key:
+                        eventX = Events.objects(Q(date=i) & (Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key))).order_by('-score')
+                else:
+                        eventX = Events.objects(date=i).order_by('-score')
                 eventXf = [event for event in eventX if event.cycle in periodic_filter]
                 eventObjlist.append(eventXf)
+                if eventXf : # Check if there is event in the period
+                    foundEventsForDates = True 
 
         #Combination of this lists helps to find the events of the queried period for calendar.
-        allperEventsDictList1st = [{'dateitem': t[0], 'dateitemstr': t[1], 'eventObj': t[2], 'datetimeitem': t[3]} for t in zip(datelist, dateliststr, eventObjlist, datetimelist)]
-
-        #print(allperEventsDictList1st)
-        return allperEventsDictList1st
-
-
+        allperEventsDictList = [{'dateitem': t[0], 'dateitemstr': t[1], 'eventObj': t[2], 'datetimeitem': t[3]} for t in zip(datelist, dateliststr, eventObjlist, datetimelist)]
+        # TODO: Remove empty dates from allperEventDictList
+        return allperEventsDictList, foundEventsForDates
+        
 class Calendar(View):
         """All the inputs on website are coming here to find results"""
 
@@ -146,7 +153,7 @@ class Calendar(View):
                 currDate = now_date.strftime(dateformat)
                 periodic_filter = ['periodic','aperiodic']
 
-                allperEventsDictList = call_dates(now_date, dateLater, periodic_filter) 
+                allperEventsDictList, foundEventsForDates = call_dates(now_date, dateLater, periodic_filter) 
 
                 return render(request, template, {
                                 'urlprefix': settings.URLPREFIX, #Calls the urlprefix from settings.
@@ -156,10 +163,9 @@ class Calendar(View):
                                 'prevDate': prevDate,
                                 'currDate': currDate,
                                 'timeIntstr' : timeIntstr,
-                })
-
-
-
+                                'foundEventsForDates' : True,
+                         })
+                  
         def post(self, request):
                 """
                 post() is used for user inputs. 
@@ -199,44 +205,42 @@ class Calendar(View):
                 :param snd_key: Second Keyterm
                 """
 
-                if "date_picker" in request.POST:
+#                if "date_picker" in request.POST:
 
-                        start_date = request.POST.get('start_date')
-                        end_date = request.POST.get('end_date')
-                        if end_date == '':
-                                end_date = start_date
+#                        start_date = request.POST.get('start_date')
+#                        end_date = request.POST.get('end_date')
+#                        if end_date == '':
+#                                end_date = start_date
 
-                        if request.is_mobile:
-                                timeIntstr = timeIntstr_m
-                                time_interval = time_interval_m
-                                template = 'mobile/datepicker.mobile.html'
-                        else:
-                                timeIntstr = timeIntstr_d
-                                time_interval = time_interval_d
-                                template = 'desktop/datepicker.html'
+#                        if request.is_mobile:
+ #                               timeIntstr = timeIntstr_m
+  #                              time_interval = time_interval_m
+   #                             template = 'mobile/datepicker.mobile.html'
+    #                    else:
+     #                           timeIntstr = timeIntstr_d
+      #                          time_interval = time_interval_d
+       #                         template = 'desktop/datepicker.html'
 
-                        startDate = datetime.strptime(start_date, dateformat)
-                        endDate = datetime.strptime(end_date, dateformat)
+        #                startDate = datetime.strptime(start_date, dateformat)
+         #               endDate = datetime.strptime(end_date, dateformat)
 
                         #These are for the navigation links;
-                        nextnext3Date = (endDate + timedelta(days=time_interval)).strftime(dateformat)
-                        prev3Date = (startDate + timedelta(days=-time_interval)).strftime(dateformat)
+          #              nextnext3Date = (endDate + timedelta(days=time_interval)).strftime(dateformat)
+           #             prev3Date = (startDate + timedelta(days=-time_interval)).strftime(dateformat)
 
-                        periodic_filter = ['periodic','aperiodic']
-                        allperEventsDictList = call_dates(startDate, endDate, periodic_filter)
+            #            periodic_filter = ['periodic','aperiodic']
+             #           allperEventsDictList = call_dates(startDate, endDate, periodic_filter)
 
-                        return render(request, template, {
-                                        'urlprefix': settings.URLPREFIX,
-                                        'allperEventsDictList': allperEventsDictList,
-                                        'start_date': start_date,
-                                        'end_date': end_date,
-                                        'nextnext3Date': nextnext3Date,
-                                        'prev3Date': prev3Date,
-                        })
+              #          return render(request, template, {
+               #                         'urlprefix': settings.URLPREFIX,
+                #                        'allperEventsDictList': allperEventsDictList,
+                 #                       'start_date': start_date,
+                  #                      'end_date': end_date,
+                   #                     'nextnext3Date': nextnext3Date,
+                    #                    'prev3Date': prev3Date,
+                     #   })
 
-
-
-                elif "ttee" in request.POST:
+                if "ttee" in request.POST:
 
                         search_hour = request.POST['search_hour']
                         hour_range = request.POST['hour_range']
@@ -251,7 +255,7 @@ class Calendar(View):
                         else:
                                 start_hour = datetime.now() 
 
-                        end_hour = datetime.now() + timedelta(hours=(int(search_hour)+int(hour_range)))
+                        end_hour = datetime.now() + timedelta(hours=(int(search_hour)+int(hour_range)))#Sometimes a subset of fields on a Document is required, and for efficiency only these should be retrieved from the database. This issue is especially important for MongoDB, as fields may often be extremely large (e.g. a ListField of EmbeddedDocuments, which represent the comments on a blog post. To select only a subset of fields, use only(), specifying the fields you want to retrieve as its arguments. Note that if fields that are not downloaded are accessed, their default value (or None if no default value is provided) will be given:
 
                         #These are for showing the date interval for the search;
                         startHour = start_hour.strftime("%d %B %Y %H:00")
@@ -266,28 +270,84 @@ class Calendar(View):
                                         'endHour': endHour,
                         })
 
-
-
                 elif "event_search" in request.POST:
 
+                        start_date = request.POST.get('start_date')
+                        end_date = request.POST.get('end_date')
+                        
+                        if end_date == '':
+                                end_date = start_date
+                        if start_date == '' and end_date != '':
+                                start_date = end_date
+                        
                         fst_key = request.POST['fst_key']
                         snd_key = request.POST['snd_key']
+                        if fst_key == '' and snd_key != '':
+                                fst_key = snd_key
+                        
+                        if start_date !='':
 
-                        if request.is_mobile:
-                                template = 'mobile/eventSearch.mobile.html'
-                        else:
-                                template = 'desktop/eventSearch.html'
+                                # run the date_picker code to search only for date
+                                if request.is_mobile:
+                                         timeIntstr = timeIntstr_m
+                                         time_interval = time_interval_m
+                                         template = 'mobile/datepicker.mobile.html'
+                                else:
+                                         timeIntstr = timeIntstr_d
+                                         time_interval = time_interval_d
+                                         template = 'desktop/datepicker.html'
 
-                        #events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
-                        #events_bykey_list = Events.objects((Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key)))
-                        events_bykey_list = Events.objects((Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key)))
+                                startDate = datetime.strptime(start_date, dateformat)
+                                endDate = datetime.strptime(end_date, dateformat)
 
-                        return render(request, template, {
+                                #These are for the navigation links;
+                                nextnext3Date = (endDate + timedelta(days=time_interval)).strftime(dateformat)
+                                prev3Date = (startDate + timedelta(days=-time_interval)).strftime(dateformat)
+
+                                periodic_filter = ['periodic','aperiodic']
+                                
+                                allperEventsDictList, foundEventsForDates = call_dates(startDate, endDate, periodic_filter, fst_key, snd_key)
+                                print(allperEventsDictList)                                        
+                                return render(request, template, {
+                                        'urlprefix': settings.URLPREFIX,
+                                        'allperEventsDictList': allperEventsDictList,
+                                        'start_date': start_date,
+                                        'end_date': end_date,
+                                        'nextnext3Date': nextnext3Date,
+                                        'prev3Date': prev3Date,
+                                        'foundEventsForDates' : foundEventsForDates
+                                })
+
+
+                        elif fst_key != '': ##The user didn't selected date, in this case we will run the same code of the zoekwoorden     
+                                
+                                if request.is_mobile:
+                                        template = 'mobile/eventSearch.mobile.html'
+                                else:
+                                        template = 'desktop/eventSearch.html'
+
+                                #events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
+                                #events_bykey_list = Events.objects((Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key)))
+                                
+                                events_bykey_list = Events.objects((Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key)))
+                                
+                                return render(request, template, {
                                         'urlprefix': settings.URLPREFIX,
                                         'events_bykey_list': events_bykey_list,
                                         'fst_key': fst_key,
                                         'snd_key': snd_key,
-                        })
+                                })
+                               
+                        else:  ##The user didn't select date or enter any keywords##
+                                
+                                if request.is_mobile:
+                                        template = 'mobile/non-information.html'
+                                else:
+                                        template = 'desktop/non-information.html'
+                                
+                                return render(request, template, {
+                                                'urlprefix': settings.URLPREFIX,
+                                })
 
                 elif "periodicity_select" in request.POST:
 
@@ -322,7 +382,8 @@ class Calendar(View):
                                 'currDate': currDate,
                                 'timeIntstr' : timeIntstr,
                                 })
-                        
+
+
 class IntervalSeek(View):
         """
         If navigation links used, it will redirect the dates here and make a loop for dates.
@@ -354,7 +415,7 @@ class IntervalSeek(View):
                 prev2Date = (currDate2 + timedelta(days=-time_interval)).strftime(dateformat)
 
                 periodic_filter = ['periodic','aperiodic']
-                allperEventsDictList = call_dates(currDate2, dateLater2, periodic_filter)                
+                allperEventsDictList, foundEventsForDates = call_dates(currDate2, dateLater2, periodic_filter)                
 
                 return render(request, template, {
                                 'urlprefix': settings.URLPREFIX,
@@ -363,8 +424,8 @@ class IntervalSeek(View):
                                 'snd': snd,
                                 'nextnext2Date': nextnext2Date,
                                 'prev2Date': prev2Date,
+                                'foundEventsForDates' : True, 
                 })
-
 
 
 class EventsofDate(View):
@@ -378,7 +439,7 @@ class EventsofDate(View):
                 :param dt: Comes from the links
                 """
                 events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score')
-                
+                print('I am here? class EventsofDate(View) ')
                 #Calculates the next and previous days for the navigation links;
                 nextDay = (datetime.strptime(dt, dateformat) + timedelta(days=1)).strftime(dateformat)
                 prevDay = (datetime.strptime(dt, dateformat) + timedelta(days=-1)).strftime(dateformat)
@@ -406,7 +467,7 @@ class EventDetail(View):
                 :param id: Comes from the links
                 """
                 event = Events.objects.get(pk=id)
-
+                print('I am here? class EventDetail(View) ')
                 if request.is_mobile:
                         template = 'mobile/eventDetail.mobile.html'
                 else:
@@ -431,8 +492,21 @@ class About(View):
                         'urlprefix': settings.URLPREFIX,
                 })
 
+class NonInfo(View):
+        """Redirects links to non-information page."""
+        def get(self, request):
+
+                if request.is_mobile:
+                        template = 'mobile/'+ ov +'-lama.mobile.html'
+                else:
+                        template = 'desktop/non-information.html'
+
+                return render(request, template, {
+                        'urlprefix': settings.URLPREFIX,
+                })
+
 class Error404(View):
-        """Redirects links to about pages."""
+        """This view shows 404 page."""
         def get(self, request):
 
                 if request.is_mobile:
@@ -445,7 +519,7 @@ class Error404(View):
                 })
 
 class Error500(View):
-        """Redirects links to about pages."""
+        """This view shows 500 page."""
         def get(self, request):
 
                 if request.is_mobile:
@@ -465,7 +539,4 @@ def handler500(request):
     return render(request, 'desktop/500.html', status=500)
 
 
-############################################
-#https://micropyramid.com/blog/handling-custom-error-pages-in-django/
-#############################################
 

@@ -1,0 +1,44 @@
+{% extends 'desktop/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Over Lama Events{% endblock %}
+
+{% block en_about %}
+	<div class="about">
+		<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+		<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
+		<a href="{{ urlprefix }}/about-lama/">
+			<div class="info">more about Lama</div>
+		</a>
+	</div>
+{% endblock %}
+
+{% block pri_content %}
+
+<header> 
+	<a href="{{ urlprefix }}/">
+		<div class="pijl-links">
+			<i class="pijl-icon icon-pijl-links"></i>terug naar kalender
+		</div>
+	</a>
+</header>
+
+<div id="about">
+        <br><br>
+        <p class="center large">U hebt geen datum geselecteerd en geen zoekwoorden ingevoerd om op zijn te zoeken!</p>
+	<br><br>
+	<center>
+              <img class="img.error" src="{% static 'base/images/non-info.jpeg' %}" alt="Server Fout" style="width:50%">
+        </center>
+	<br><br>
+	<p class="center large">Probeer de datum opnieuw te selecteren of opnieuw zoekwoorden te vullen.</p>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
