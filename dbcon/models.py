@@ -12,7 +12,7 @@ If make you a field which is in another field, you have to make another class wh
                     "user": "user_name",
                     "id": "tweet_id"
                 },...]
-        
+
         #Add this to the relevant model;
         tweets = ListField(EmbeddedDocumentField(Tweets))
 
@@ -21,7 +21,7 @@ If make you a field which is in another field, you have to make another class wh
                 user = StringField()
                 id = StringField()
 
-.. seealso:: http://mongoengine.org/
+.. see also:: http://mongoengine.org/
 
 
 :Contents:
@@ -32,6 +32,9 @@ from django.db import models
 from datetime import datetime, timedelta
 
 from mongoengine import * #Document and EmbeddedDocument classes come from here.
+"""
+When I tried to remark the line before, the connection with the data disconnected, and i needed to rerun the server (localy) again. 6-7-2018
+"""
 
 class Tweets(EmbeddedDocument):
     """
@@ -81,7 +84,7 @@ class Events(DynamicDocument):
         Only defines a string format to show in templates.
         (datestr split in three to show them seperately in the templates.)
         """
-        ds1 = self.date.strftime("%A").title()
+        ds1 = self.date.strftime("%A").title() 
         return ds1
 
     def datestr2(self):
@@ -116,7 +119,6 @@ class Events(DynamicDocument):
         else:
                 hl = "Het event is al geweest."
         return hl
-
 
 
 

@@ -40,12 +40,14 @@ from datetime import datetime, timedelta
 
 import locale
 
-import mongoengine
+from bson import ObjectId
 
-from dbcon.models import * #Event and Tweet models
+
+#import mongoengine 
+
+# from dbcon.models import * #Event and Tweet models
 
 from django.conf import settings
-
 
 timeIntstr_d = 6 
 time_interval_d = timeIntstr_d - 1 
@@ -62,6 +64,28 @@ dateSearchOk = False
 
 #To implement Dutch dates (E.g. Dinsdag 12 mei 2015);
 locale.setlocale(locale.LC_TIME, "nl_NL.utf8")
+
+def enrich_events(event_list):
+
+        # check if event_list is a pymongo.cursor.Cursor object and run the next line
+        event_list = [e for e in event_list]
+	
+        for event in event_list:
+                event['id'] = str(event['_id'])
+                event['linkDate'] = event['date'].strftime("%d-%m-%Y")
+                event['datestr1'] = event['date'].strftime("%A").title()
+                event['datestr2'] = event['date'].strftime("%d %B %Y")
+                event['datestr3'] = event['date'].strftime("%H.%M uur")
+                event['datestr4'] = event['date'].strftime("%Y-%m-%d")
+                event['entities_str'] = ', '.join(event['entities'])
+                if event['date'] > datetime.now():
+                        event['timeLeft'] =  event['date'] - datetime.now()
+                #!IDEA!: add 'time left' string to hl.
+                else:
+                        event['timeLeft'] = "Het event is al geweest."
+
+        return event_list
+        
 
 def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=None):
         """
@@ -101,7 +125,7 @@ def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=N
         datetimelist = []
         foundEventsForDates = False
         for single_date in daterange(first_date, second_date):
-                datelist.append(single_date.strftime(dateformat)) 
+                datelist.append(single_date.strftime(dateformat)) ## Is it necessary to  
                 dateliststr.append(single_date.strftime("%A %d %b %Y").title())
                 datetimelist.append(datetime.strptime((single_date.strftime(dateformat)), dateformat)) 
                 #Change this last code... Write a code to make the hour in datetimes 0.
@@ -111,21 +135,25 @@ def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=N
         #Find the events of those dates and put them in a list;
         eventObjlist = []
         
-        for i in datetimelist:
+        for event_date in datetimelist:
                 if fst_key:
-                        eventX = Events.objects(Q(date=i) & (Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key))).order_by('-score')
+                        eventX = settings.LAMAEVENT_COLL.find({'date' : event_date, '$or': [{'entities': fst_key}, {'entities': snd_key}]}).sort('score', -1)
                 else:
-                        eventX = Events.objects(date=i).order_by('-score')
-                eventXf = [event for event in eventX if event.cycle in periodic_filter]
+                        eventX = settings.LAMAEVENT_COLL.find({'date': event_date}).sort([('date', 1), ('score', -1)])
+
+                #print([event for event in eventX][0])
+
+                eventXf = [event for event in eventX if event['cycle'] in periodic_filter]
+                eventXf = enrich_events(eventXf) 
                 eventObjlist.append(eventXf)
                 if eventXf : # Check if there is event in the period
-                    foundEventsForDates = True 
+                        foundEventsForDates = True 
 
         #Combination of this lists helps to find the events of the queried period for calendar.
         allperEventsDictList = [{'dateitem': t[0], 'dateitemstr': t[1], 'eventObj': t[2], 'datetimeitem': t[3]} for t in zip(datelist, dateliststr, eventObjlist, datetimelist)]
         # TODO: Remove empty dates from allperEventDictList
         return allperEventsDictList, foundEventsForDates
-        
+
 class Calendar(View):
         """All the inputs on website are coming here to find results"""
 
@@ -251,7 +279,7 @@ class Calendar(View):
                                 template = 'desktop/ttee.html'
 
                         if int(search_hour) > int(hour_range): 
-                                start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))
+                                start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))#???(timedelta)
                         else:
                                 start_hour = datetime.now() 
 
@@ -261,8 +289,10 @@ class Calendar(View):
                         startHour = start_hour.strftime("%d %B %Y %H:00")
                         endHour = end_hour.strftime("%d %B %Y %H:00")
 
-                        event_list = Events.objects(Q(date__gte = start_hour) & Q(date__lte = end_hour)).order_by('date')
-
+#                        event_list = Events.objects(Q(date__gte = start_hour) & Q(date__lte = end_hour)).order_by('date')
+# pymongo query 
+                        event_list = settings.LAMAEVENT_COLL.find({'date': {'$gte' : start_hour, '$lte' : end_hour}})
+                        event_list = enrich_events([e for e in event_list])
                         return render(request, template, {
                                         'urlprefix': settings.URLPREFIX,
                                         'event_list': event_list,
@@ -272,7 +302,7 @@ class Calendar(View):
 
                 elif "event_search" in request.POST:
 
-                        start_date = request.POST.get('start_date')
+                        start_date = request.POST.get('start_date') 
                         end_date = request.POST.get('end_date')
                         
                         if end_date == '':
@@ -307,7 +337,7 @@ class Calendar(View):
                                 periodic_filter = ['periodic','aperiodic']
                                 
                                 allperEventsDictList, foundEventsForDates = call_dates(startDate, endDate, periodic_filter, fst_key, snd_key)
-                                print(allperEventsDictList)                                        
+                                                                       
                                 return render(request, template, {
                                         'urlprefix': settings.URLPREFIX,
                                         'allperEventsDictList': allperEventsDictList,
@@ -326,10 +356,9 @@ class Calendar(View):
                                 else:
                                         template = 'desktop/eventSearch.html'
 
-                                #events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
-                                #events_bykey_list = Events.objects((Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key)))
-                                
-                                events_bykey_list = Events.objects((Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key)))
+                                events_bykey_list = settings.LAMAEVENT_COLL.find({'$or': [{'entities' : fst_key}, {'entities' : snd_key}]})
+
+                                events_bykey_list = enrich_events(events_bykey_list)
                                 
                                 return render(request, template, {
                                         'urlprefix': settings.URLPREFIX,
@@ -438,8 +467,11 @@ class EventsofDate(View):
                         events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score')
                 :param dt: Comes from the links
                 """
-                events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score')
-                print('I am here? class EventsofDate(View) ')
+#pymongo query
+#                events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score') 
+                events_date_list = settings.LAMAEVENT_COLL.find({'date': datetime.strptime(dt, dateformat)})
+                events_date_list = enrich_events(events_date_list)
+
                 #Calculates the next and previous days for the navigation links;
                 nextDay = (datetime.strptime(dt, dateformat) + timedelta(days=1)).strftime(dateformat)
                 prevDay = (datetime.strptime(dt, dateformat) + timedelta(days=-1)).strftime(dateformat)
@@ -466,8 +498,17 @@ class EventDetail(View):
                 Finds the exact event via id.
                 :param id: Comes from the links
                 """
-                event = Events.objects.get(pk=id)
-                print('I am here? class EventDetail(View) ')
+                
+#                event = Events.objects.get(pk=id)
+# pymongo query
+                event = settings.LAMAEVENT_COLL.find({'_id': ObjectId(id)})
+
+                event = enrich_events([e for e in event])[0]
+
+                event['periodicity']['editions'] = list(reversed(event['periodicity']['editions']))
+
+                print(event)
+
                 if request.is_mobile:
                         template = 'mobile/eventDetail.mobile.html'
                 else:
@@ -539,4 +580,12 @@ def handler500(request):
     return render(request, 'desktop/500.html', status=500)
 
 
-
+# line 116 #################################################################################################################################################################################
+#                        eventX = Events.objects(Q(date=i) & (Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key))).order_by('-score')
+# line 118 #################################################################################################################################################################################
+#                        eventX = Events.objects(date=i).order_by('-score')
+# line 354 #################################################################################################################################################################################
+                                #events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
+                                #events_bykey_list = Events.objects((Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key)))
+                                
+#                                events_bykey_list = Events.objects((Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key)))

@@ -35,6 +35,15 @@ On the Applejack we have to add 'lamaevents' before all the links we used. Here 
 .. note:: You can see how we used URLPREFIX in views.py and in the templates.
 
 """
+########################## PyMongo insted of MongoEngine 21/06/2018 ####################################
+"""
+Since MongoEngine stopped supporting Django natively as well after the version 0.9. Consequently. Thus it might be a good idea to make Django - MongoDB connections without MongoEngine, but with PyMongo.
+    Instead of MongoEngine, PyMongo could be used to query MongoDB.
+    Python functions with PyMongo queries could be written.
+    In the models.py, there are small functions to enrich the data with more information. These small functions should be implemented right after    	 the queries to enrich the data in the same way. See the LamaEvents documentation for more information on the functions.
+    The data should be returned in the same structure that MongoEngine returns right now. If the structure is kept the same, it will not break the  	flow.
+"""
+########################## ====================================== #####################################
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -53,6 +62,9 @@ print(BASE_DIR)
 import getpass
 
 from mongoengine import *
+
+from pymongo import MongoClient
+from bson import ObjectId
 
 import configparser
 
@@ -145,6 +157,8 @@ db_host = config.get('LE_script_db', 'client_host')
 db_port = int(config.get('LE_script_db', 'client_port'))
 
 
+LAMAEVENT_COLL = MongoClient(db_host, db_port)[db_name]['lecl']
+
 #MongoDB connection;
 #if HOSTNAME[:9] == "applejack":		#to work on the server
 #	connect(db_name, host=db_host, port=db_port)
@@ -174,13 +188,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+URLPREFIX = ''
 
 # Static files;
 
 
 STATIC_URL = '/static/'
-
-URLPREFIX = ''
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
