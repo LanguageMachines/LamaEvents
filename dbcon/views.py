@@ -46,11 +46,6 @@ import locale
 
 from bson import ObjectId
 
-
-#import mongoengine 
-
-# from dbcon.models import * #Event and Tweet models
-
 from django.conf import settings
 
 timeIntstr_d = 6 
