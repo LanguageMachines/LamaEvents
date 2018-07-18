@@ -12,6 +12,7 @@ lamaenv/
 envlama/
 envlama2/
 .env/
+env2/
 
 *\#*
 *.save

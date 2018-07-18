@@ -17,9 +17,9 @@ Some links pass informations to views. Example::
 .. warning:: The regular expressions in the url definitions must be suitable for the infi passed.
 
 """
-
+#from django.views.generic import TemplateView
 from django.urls import path, re_path
-from django.views.generic import TemplateView
+from django.conf.urls import handler404, handler500
 
 from dbcon import views
 from dbcon.views import *
@@ -46,6 +46,7 @@ urlpatterns = [
 	re_path(r'^500$', Error500.as_view(), name="Error500"),
 
 ]
-handler404 = 'dbcon.views.handler404'
-handler500 = 'dbcon.views.handler500'
+
+handler404 = views.custom_handler_404
+handler500 = views.custom_handler_500
 

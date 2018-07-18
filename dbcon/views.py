@@ -564,11 +564,11 @@ class Error500(View):
                 })
 
 
-def handler404(request):
-    return render(request, 'desktop/404.html', status=404)
+def custom_handler_404(request):
+    return render(request, 'desktop/404.html')
 
-def handler500(request):
-    return render(request, 'desktop/500.html', status=500)
+def custom_handler_500(request):
+    return render(request, 'desktop/500.html')
 
 
 # line 116 
