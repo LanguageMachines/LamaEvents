@@ -30,6 +30,10 @@ And here we are sending this variable to templates for adding to the links::
                 return render(request, template, {
                         'urlprefix': settings.URLPREFIX,
 :Contents:
+====================== Error 402 ========================
+'django.contrib.auth.context_processors.auth'
+ must be in TEMPLATES in order to use the admin application.
+=========================================================
 """
 
 from django.shortcuts import render
@@ -59,8 +63,6 @@ dateformat = "%d-%m-%Y"
 
 setDateToSearchs = False
 dateSearchOk = False
-
-
 
 #To implement Dutch dates (E.g. Dinsdag 12 mei 2015);
 locale.setlocale(locale.LC_TIME, "nl_NL.utf8")
@@ -162,14 +164,14 @@ class Calendar(View):
                 Calculates the current date and add number of dates which you described with 'timeIntstr' at the beginning. 
                 This is working, when you open the main page for the first time.
                 """
-                if request.is_mobile:
-                        timeIntstr = timeIntstr_m
-                        time_interval = time_interval_m
-                        template = 'mobile/nextint.mobile.html'
-                else:
-                        timeIntstr = timeIntstr_d
-                        time_interval = time_interval_d
-                        template = 'desktop/nextint.html'
+                #if request.is_mobile:
+                #        timeIntstr = timeIntstr_m
+                #        time_interval = time_interval_m
+                #        template = 'mobile/nextint.mobile.html'
+                #else:
+                timeIntstr = timeIntstr_d
+                time_interval = time_interval_d
+                template = 'desktop/nextint.html'
 
                 now_date = datetime.now()
                 dateLater = now_date + timedelta(days=time_interval)
@@ -273,10 +275,10 @@ class Calendar(View):
                         search_hour = request.POST['search_hour']
                         hour_range = request.POST['hour_range']
 
-                        if request.is_mobile:
-                                template = 'mobile/ttee.mobile.html'
-                        else:
-                                template = 'desktop/ttee.html'
+                        #if request.is_mobile:
+                        #        template = 'mobile/ttee.mobile.html'
+                        #else:
+                        template = 'desktop/ttee.html'
 
                         if int(search_hour) > int(hour_range): 
                                 start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))#???(timedelta)
@@ -289,8 +291,6 @@ class Calendar(View):
                         startHour = start_hour.strftime("%d %B %Y %H:00")
                         endHour = end_hour.strftime("%d %B %Y %H:00")
 
-#                        event_list = Events.objects(Q(date__gte = start_hour) & Q(date__lte = end_hour)).order_by('date')
-# pymongo query 
                         event_list = settings.LAMAEVENT_COLL.find({'date': {'$gte' : start_hour, '$lte' : end_hour}})
                         event_list = enrich_events([e for e in event_list])
                         return render(request, template, {
@@ -318,14 +318,14 @@ class Calendar(View):
                         if start_date !='':
 
                                 # run the date_picker code to search only for date
-                                if request.is_mobile:
-                                         timeIntstr = timeIntstr_m
-                                         time_interval = time_interval_m
-                                         template = 'mobile/datepicker.mobile.html'
-                                else:
-                                         timeIntstr = timeIntstr_d
-                                         time_interval = time_interval_d
-                                         template = 'desktop/datepicker.html'
+                                #if request.is_mobile:
+                                #         timeIntstr = timeIntstr_m
+                                #         time_interval = time_interval_m
+                                #         template = 'mobile/datepicker.mobile.html'
+                                #else:
+                                timeIntstr = timeIntstr_d
+                                time_interval = time_interval_d
+                                template = 'desktop/datepicker.html'
 
                                 startDate = datetime.strptime(start_date, dateformat)
                                 endDate = datetime.strptime(end_date, dateformat)
@@ -351,10 +351,10 @@ class Calendar(View):
 
                         elif fst_key != '': ##The user didn't selected date, in this case we will run the same code of the zoekwoorden     
                                 
-                                if request.is_mobile:
-                                        template = 'mobile/eventSearch.mobile.html'
-                                else:
-                                        template = 'desktop/eventSearch.html'
+                                #if request.is_mobile:
+                                #        template = 'mobile/eventSearch.mobile.html'
+                                #else:
+                                template = 'desktop/eventSearch.html'
 
                                 events_bykey_list = settings.LAMAEVENT_COLL.find({'$or': [{'entities' : fst_key}, {'entities' : snd_key}]})
 
@@ -369,10 +369,10 @@ class Calendar(View):
                                
                         else:  ##The user didn't select date or enter any keywords##
                                 
-                                if request.is_mobile:
-                                        template = 'mobile/non-information.html'
-                                else:
-                                        template = 'desktop/non-information.html'
+                                #if request.is_mobile:
+                                #        template = 'mobile/non-information.html'
+                                #else:
+                                template = 'desktop/non-information.html'
                                 
                                 return render(request, template, {
                                                 'urlprefix': settings.URLPREFIX,
@@ -382,14 +382,14 @@ class Calendar(View):
 
                         periodic_filter = request.POST.getlist('Periodiciteit')
 
-                        if request.is_mobile:
-                                timeIntstr = timeIntstr_m
-                                time_interval = time_interval_m
-                                template = 'mobile/nextint.mobile.html'
-                        else:
-                                timeIntstr = timeIntstr_d
-                                time_interval = time_interval_d
-                                template = 'desktop/nextint.html'
+                        #if request.is_mobile:
+                        #        timeIntstr = timeIntstr_m
+                        #        time_interval = time_interval_m
+                        #        template = 'mobile/nextint.mobile.html'
+                        #else:
+                        timeIntstr = timeIntstr_d
+                        time_interval = time_interval_d
+                        template = 'desktop/nextint.html'
 
                         now_date = datetime.now()
                         dateLater = now_date + timedelta(days=time_interval)
@@ -426,14 +426,14 @@ class IntervalSeek(View):
                 :param snd: Last Day
                 These parameters also used to create new navigation links.
                 """
-                if request.is_mobile:
-                        timeIntstr = timeIntstr_m
-                        time_interval = time_interval_m
-                        template = 'mobile/intervalseek.mobile.html'
-                else:
-                        timeIntstr = timeIntstr_d
-                        time_interval = time_interval_d
-                        template = 'desktop/intervalseek.html'
+                #if request.is_mobile:
+                #        timeIntstr = timeIntstr_m
+                #        time_interval = time_interval_m
+                #        template = 'mobile/intervalseek.mobile.html'
+                #else:
+                timeIntstr = timeIntstr_d
+                time_interval = time_interval_d
+                template = 'desktop/intervalseek.html'
 
                 #These are for using the dates which come from links, in call_dates
                 currDate2 = datetime.strptime(fst, dateformat)
@@ -467,8 +467,6 @@ class EventsofDate(View):
                         events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score')
                 :param dt: Comes from the links
                 """
-#pymongo query
-#                events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score') 
                 events_date_list = settings.LAMAEVENT_COLL.find({'date': datetime.strptime(dt, dateformat)})
                 events_date_list = enrich_events(events_date_list)
 
@@ -476,10 +474,10 @@ class EventsofDate(View):
                 nextDay = (datetime.strptime(dt, dateformat) + timedelta(days=1)).strftime(dateformat)
                 prevDay = (datetime.strptime(dt, dateformat) + timedelta(days=-1)).strftime(dateformat)
         
-                if request.is_mobile:
-                        template = 'mobile/events.mobile.html'
-                else:
-                        template = 'desktop/events.html'
+                #if request.is_mobile:
+                #        template = 'mobile/events.mobile.html'
+                #else:
+                template = 'desktop/events.html'
 
                 return render(request, template, {
                                 'urlprefix': settings.URLPREFIX,
@@ -499,8 +497,6 @@ class EventDetail(View):
                 :param id: Comes from the links
                 """
                 
-#                event = Events.objects.get(pk=id)
-# pymongo query
                 event = settings.LAMAEVENT_COLL.find({'_id': ObjectId(id)})
 
                 event = enrich_events([e for e in event])[0]
@@ -509,10 +505,10 @@ class EventDetail(View):
 
                 print(event)
 
-                if request.is_mobile:
-                        template = 'mobile/eventDetail.mobile.html'
-                else:
-                        template = 'desktop/eventDetail.html'
+                #if request.is_mobile:
+                #        template = 'mobile/eventDetail.mobile.html'
+                #else:
+                template = 'desktop/eventDetail.html'
 
                 return render(request, template, {
                                 'urlprefix': settings.URLPREFIX,
@@ -524,10 +520,10 @@ class About(View):
         """Redirects links to about pages."""
         def get(self, request, ov):
 
-                if request.is_mobile:
-                        template = 'mobile/'+ ov +'-lama.mobile.html'
-                else:
-                        template = 'desktop/'+ ov +'-lama.html'
+                #if request.is_mobile:
+                #        template = 'mobile/'+ ov +'-lama.mobile.html'
+                #else:
+                template = 'desktop/'+ ov +'-lama.html'
 
                 return render(request, template, {
                         'urlprefix': settings.URLPREFIX,
@@ -537,10 +533,10 @@ class NonInfo(View):
         """Redirects links to non-information page."""
         def get(self, request):
 
-                if request.is_mobile:
-                        template = 'mobile/'+ ov +'-lama.mobile.html'
-                else:
-                        template = 'desktop/non-information.html'
+                #if request.is_mobile:
+                #        template = 'mobile/'+ ov +'-lama.mobile.html'
+                #else:
+                template = 'desktop/non-information.html'
 
                 return render(request, template, {
                         'urlprefix': settings.URLPREFIX,
@@ -550,10 +546,10 @@ class Error404(View):
         """This view shows 404 page."""
         def get(self, request):
 
-                if request.is_mobile:
-                        template = 'mobile/'+ ov +'-lama.mobile.html'
-                else:
-                        template = 'desktop/404.html'
+                #if request.is_mobile:
+                #        template = 'mobile/'+ ov +'-lama.mobile.html'
+                #else:
+                template = 'desktop/404.html'
 
                 return render(request, template, {
                         'urlprefix': settings.URLPREFIX,
@@ -563,10 +559,10 @@ class Error500(View):
         """This view shows 500 page."""
         def get(self, request):
 
-                if request.is_mobile:
-                        template = 'mobile/'+ ov +'-lama.mobile.html'
-                else:
-                        template = 'desktop/500.html'
+                #if request.is_mobile:
+                #        template = 'mobile/'+ ov +'-lama.mobile.html'
+                #else:
+                template = 'desktop/500.html'
 
                 return render(request, template, {
                         'urlprefix': settings.URLPREFIX,
@@ -580,12 +576,25 @@ def handler500(request):
     return render(request, 'desktop/500.html', status=500)
 
 
-# line 116 #################################################################################################################################################################################
+# line 116 
 #                        eventX = Events.objects(Q(date=i) & (Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key))).order_by('-score')
-# line 118 #################################################################################################################################################################################
+#################################################################################################################################################################################
+# line 118 
 #                        eventX = Events.objects(date=i).order_by('-score')
-# line 354 #################################################################################################################################################################################
+#################################################################################################################################################################################
+# line 296
+#                        event_list = Events.objects(Q(date__gte = start_hour) & Q(date__lte = end_hour)).order_by('date')
+######################################################################################################################################################################
+# line 354 
                                 #events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
                                 #events_bykey_list = Events.objects((Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key)))
                                 
 #                                events_bykey_list = Events.objects((Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key)))
+#################################################################################################################################################################################
+# line 475
+#                events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score')
+#########################################################################################################################################################################
+# line 506
+#                event = Events.objects.get(pk=id)
+########################################################################################################################################################################
+

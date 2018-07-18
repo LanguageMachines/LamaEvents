@@ -7,7 +7,7 @@ Some links pass informations to views. Example::
 	<a href="/{{ event.linkDate }}/events"/>
 
 	# This passes the 'dt' to EventsofDate view;
-	url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()
+	path(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()
 
 	# Then you can use this 'dt' information in the view;
 	class EventsofDate(View): 
@@ -18,37 +18,34 @@ Some links pass informations to views. Example::
 
 """
 
-#from django.contrib import admin
-#admin.autodiscover()
-
-from django.conf.urls import patterns, include, url
+from django.urls import path, re_path
 from django.views.generic import TemplateView
 
 from dbcon import views
 from dbcon.views import *
 
-urlpatterns = patterns('',
+urlpatterns = [
 
-	#url(r'^admin/', include(admin.site.urls)),
+	#path(r'^admin/', include(admin.site.urls)),
 
-	#url(r'^$', TemplateView.as_view(template_name="home.html")),
+	#path(r'^$', TemplateView.as_view(template_name="home.html")),
 
-	url(r'^$', Calendar.as_view(), name="calendar"), #include('dbcon.urls')), #Connected to dbcon directly
+	re_path(r'^$', Calendar.as_view(), name="calendar"), #include('dbcon.urls')), #Connected to dbcon directly
 
-	url(r'^intervalseek/from:(?P<fst>\S+|\S*[^\w\s]\S*)to:(?P<snd>\S+|\S*[^\w\s]\S*)', IntervalSeek.as_view()),
+	re_path(r'^intervalseek/from:(?P<fst>\S+|\S*[^\w\s]\S*)to:(?P<snd>\S+|\S*[^\w\s]\S*)', IntervalSeek.as_view()),
 
-	url(r'^(?P<id>\w+)/eventDetail$', EventDetail.as_view()),
+	re_path(r'^(?P<id>\w+)/eventDetail$', EventDetail.as_view()),
 
-	url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()),
+	re_path(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()),
 
-	url(r'^(?P<ov>\w+)-lama/$', About.as_view()),
+	re_path(r'^(?P<ov>\w+)-lama/$', About.as_view()),
 
-        url(r'^inf$', NonInfo.as_view()),
+        re_path(r'^inf$', NonInfo.as_view()),
                      
-	url(r'^404$', Error404.as_view(), name="Error404"),
-	url(r'^500$', Error500.as_view(), name="Error500"),
+	re_path(r'^404$', Error404.as_view(), name="Error404"),
+	re_path(r'^500$', Error500.as_view(), name="Error500"),
 
-)
+]
 handler404 = 'dbcon.views.handler404'
 handler500 = 'dbcon.views.handler500'
 

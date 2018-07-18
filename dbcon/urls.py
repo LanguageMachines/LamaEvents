@@ -24,19 +24,9 @@ Then activate these codes in dbcon/url.py::
 
 """
 
-from django.conf.urls import patterns, include, url
+from django.urls import path
 #from django.views.generic import TemplateView
 
 from dbcon import views
 
-urlpatterns = patterns('',
-
-	#url(r'^$', Calendar.as_view(), name="calendar"),
-
-	#url(r'^intervalseek/from:(?P<fst>\S+|\S*[^\w\s]\S*)to:(?P<snd>\S+|\S*[^\w\s]\S*)', IntervalSeek.as_view()),
-
-	#url(r'^(?P<id>\w+)/eventDetail$', EventDetail.as_view()),
-
-	#url(r'^(?P<dt>\S+|\S*[^\w\s]\S*)/events$', EventsofDate.as_view()),
-
-)
+urlpatterns = []

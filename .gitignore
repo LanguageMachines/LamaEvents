@@ -10,6 +10,7 @@ __pycache__/
 # virtualenv folder
 lamaenv/
 envlama/
+envlama2/
 .env/
 
 *\#*
