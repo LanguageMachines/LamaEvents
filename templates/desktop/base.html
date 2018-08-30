@@ -42,6 +42,27 @@
 		});
 	</script>
 
+	<script>
+		function getValue(self, evenementen, lst_qty) {
+			var checks = document.getElementsByClassName('check');
+			var evenementen = [];
+			var lst_qty = 0;
+			for (i = 0; i < 10; i++) {
+				if ( checks[i].checked === true ) {
+					if (lst_qty === 0) {								
+						evenementen = '"' + checks[i].value + '"';
+					}
+					else {
+						evenementen = evenementen + ', ' + '"' + checks[i].value + '"';
+					}
+					lst_qty += 1;
+				}
+			}
+                        return lst_qty;
+			//alert(evenementen);
+			
+		}
+	</script>
 </head>
 
 <body>
@@ -117,8 +138,25 @@
 			<br>
   			<input type="text" name="snd_key" placeholder="tweede zoekwoord" />
 			<br>
-			<br>
-  			<input type="submit" name="event_search" value="zoek">
+			<p>evenementtypen</p>
+                        <div id="zoek">
+				<input type="checkbox" class="check" id="advertentie" name="advertentie" value="Advertentie">Advertentie <br>
+                                <input type="checkbox" class="check" id="evenement" name="evenement"   value="Evenement"> Evenement <br> 
+				<input type="checkbox" class="check" id="politiek" name="politiek"   value="Politiek"> Politiek <br>
+				<input type="checkbox" class="check" id="sociale_actie" name="sociale_actie"   value="Sociale actie"> Sociale actie <br>
+				<input type="checkbox" class="check" id="software" name="software"   value="Software"> Software <br>
+				<input type="checkbox" class="check" id="speciale_dag" name="speciale_dag"   value="Speciale dag"> Speciale dag <br>
+				<input type="checkbox" class="check" id="sport" name="sport"   value="Sport"> Sport <br>
+				<input type="checkbox" class="check" id="uitzending" name="uitzending"   value="Uitzending"> Uitzending <br>
+			</div>
+                        <p class="white-space">.</p>
+                        <p>tijdskenmerken</p>
+                        <div id="zoek">
+				<input type="checkbox" class="check" id="periodiek" name="periodiek" value="Periodiek"> Periodiek <br>
+				<input type="checkbox" class="check" id="voorspeld" name="voorspeld"   value="Voorspeld"> Voorspeld
+			</div>
+
+  			<input type="submit" name="event_search" value="zoek" onclick="getValue()">
 		</form>
 
 		<!-- <form method="post" action="{% url 'calendar' %}"> -->
@@ -130,13 +168,30 @@
 		<!-- 	        <label class="checkbox"> -->
 		<!-- 		<input type="checkbox" name="Periodiciteit" value="aperiodic" checked="checked">	Niet periodieke events			</label> -->
 		<!-- 		<input type="submit" name="periodicity_select" value="filter"> -->
-
+                -------------------------------
 		<p>legenda</p>
+			</br>
+			<img src="{% static 'base/images/advertentie.png' %}" alt="periodic" height="15", width="15">    Advertentie
+			</br>
+			<img src="{% static 'base/images/publieke gebeurtenis.png' %}" alt="periodic" height="15", width="15">    Evenement
 			</br>
 			<img src="{% static 'base/images/cycle.png' %}" alt="periodic" height="15", width="15">    Periodiek
 			</br>
-			<img src="{% static 'base/images/forecast.png' %}" alt="periodic" height="15", width="15">    Voorspeld
+			<img src="{% static 'base/images/politiek.png' %}" alt="periodic" height="15", width="15">    Politiek
+                        </br>
+			<img src="{% static 'base/images/sociale actie.png' %}" alt="periodic" height="15", width="15">    Sociale actie
 			</br>
+			<img src="{% static 'base/images/software release.png' %}" alt="periodic" height="15", width="15">    Software
+			</br>
+			<img src="{% static 'base/images/specialdag.png' %}" alt="periodic" height="15", width="15">    Speciale dag
+			</br>
+			<img src="{% static 'base/images/sports1.png' %}" alt="periodic" height="15", width="15">    Sport
+			</br>
+			<img src="{% static 'base/images/uitzending.png' %}" alt="periodic" height="15", width="15">    Uitzending 
+			</br>
+			<img src="{% static 'base/images/forecast.png' %}" alt="periodic" height="15", width="15">    Voorspeld 
+			</br>
+                        <img src="{% static 'base/images/other.png' %}" alt="periodic" height="15", width="15"> Anders
 	</div>
 		
 	<footer>

@@ -116,6 +116,11 @@ img.error {
     margin-right: auto;
 }
 
+p.white-space {
+    color:white;
+    font-weight: 100;
+    line-height: 0.2;
+}
 /*
 p.center {
     
@@ -278,18 +283,24 @@ footer {color: #000; font-weight: bold; font-size: 13px; background-color: #fff;
 #events > section > div li:nth-child(even) {background-color: #e7e7e7 ;}
 
 
-
 #eventinfo { height: 140px; }
 #eventinfo > section {float: left; font-size: 11px; width: 253px; margin: 7px;}
 #eventinfo > section > header {text-align: center; font-size: 13px;}
 #eventinfo > section > div { height: 60px; border: 9px solid #a5c5da; overflow: auto; text-align: center; padding: 10px; vertical-align: center; font-size: 12px;}
 
+#checkbox > checkbox > div {
+border-width:2px;
+border:thin solid black"
+border-style:groove;
+}
+
 #right { width: 130px; margin: 5px 15px 25px 6px; font-size: 11px; display: block; float: left; padding-top: 100px;}
 #right p { font-weight: bold; font-size: 12px; margin: 20px 0 0; }
-input[type=submit] { width: 144px; height:21px; border: none; background: #000; color: #fff; margin-top: 7px;}
+input[type=submit] { width: 140px; height:21px; border: none; background: #000; color: #fff; margin-top: 7px;}
 input[type=submit]:hover { background: #a5c5da; color: #000;}
 input[type="text"] { border: 1px solid #000; color: #aaa; height: 17px; margin-top: 7px; padding-left: 10px; width: 130px;}
 input[type="number"] { border: 1px solid #000; color: #aaa; height: 17px; margin-top: 7px; padding-left: 10px; width: 130px;}
+#zoek { width: 135px; margin: 5px 15px 2px 1px; font-size: 11px; display: block; float: left; padding: 5px, 3px; border: groove; border-color: #a5c5da; border-radius: 8px;}
 
 #logocontainer{ width: 810px; margin: 10px 202px 15px; }
 #logocontainer a {margin-right: 34px;}
@@ -306,6 +317,9 @@ input[type="number"] { border: 1px solid #000; color: #aaa; height: 17px; margin
 .twitterbar {display: inline-block; float: right; text-align: left; width: 280px; margin: 11px 20px 0 0;}
 .twitterbar > p {margin: 0 43px 20px 10px; font-weight: bold; font-size: 13px;}
 .twitter-timeline2 { height: 600px; border: 3px solid #a5c5da; border-radius: 9px; }
+
+#multicheckbox >
+
 
 /* ==========================================================================
    Helper classes
