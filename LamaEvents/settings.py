@@ -68,8 +68,8 @@ if BASE_DIR.startswith('/home'):
     print("DEBUG set to True")
     DEBUG = True
     TEMPLATE_DEBUG = True
-elif HOSTNAME[:9] == "applejack": 
-    config.read('/scratch2/www/LamaEvents/oauth.ini')
+elif HOSTNAME[:9] == "applejack":
+    config.read('/var/www/lamaevents/live/repo/oauth.ini')
     DEBUG = False
     TEMPLATE_DEBUG = False
 elif HOSTNAME == "mlp01":

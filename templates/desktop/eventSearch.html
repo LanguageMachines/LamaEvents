@@ -4,52 +4,55 @@
 {% block title %}Events voor '{{ fst_key }} {{ snd_key }}'{% endblock %}
 
 {% block css_extra %}
+    ul#keyword{
+      width: 95%;
+      margin-left: 1%;
+      overflow:hidden;
+      margin: auto;
+    }
 
-ul#keyword{
-  width: 90%;
-  margin-left: 5%;
-  overflow:hidden;
-}
+    #keyword li{
+      line-height:1.5em;
+      padding: 5px 0;	
+      float:left;
+      display:inline;
+      width: 100%;
+      margin: auto;
+    }
 
-#keyword li{
-  line-height:1.5em;
-  padding: 5px 0;	
-  float:left;
-  display:inline;
-}
-
-#keyword li  { width:50%;} <span class="code-comment">/* 2 col */</span>
-
+    #keyword1 li  <span class="code-comment">/* 3 col */</span>
 {% endblock %}
 
 {% block pri_content %}
 
   {% if events_bykey_list %}
 
-  	  <header>
-                <p class="center">Events voor '{{ fst_key }} {{ snd_key }}'</p>
-                <hr>
+          <header>
+                  <p class="center">Events voor de Zoekwoorden [{{ fst_key }}, {{ snd_key }}]</p>
+                  <hr>
 	  </header>
-
+ 
 	  <ul id="keyword"> <span class="dbcloumn"><!-- Alter ID accordingly --></span>
-	  	  <li style="font-weight: bold;" >Zoekwoorden</li>
-		  <li style="font-weight: bold;" >Aantal dagen tot het event</li>
-		  {%for event in events_bykey_list %}
-			  
-			  <li>
-			  <a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
-				  {% for keys in event.entities %}
-					  {{ keys }}{% if forloop.last %}{% else %},{% endif %}
-				  {% endfor %}
-			  </a> 
-			  </li>
+                  <li style="font-weight: bold; width: 55%;" >Sleutelwoorden</li>
+                  <li style="font-weight: bold; width: 30%;" >Datum van het event</li>
+                  <li style="font-weight: bold; width: 15%;" >Eventtype</li>
 
-			  <li>{{ event.timeLeft }}</li>
+                  {%for event in events_bykey_list %}
+                                          <li style="width: 60%;">
+                                                  <a href="{{ urlprefix }}/{{ event.id }}/eventDetail">
+                                                  {% for keys in event.entities %}
+                                                          {{ keys }}{% if forloop.last %}{% else %},{% endif %}
+                                                      {% endfor %}
+                                                  </a>
+                                          </li>
+
+                                          <li style="width: 25%;">{{ event.datestr4 }}</li>
+                                          <li style="width: 15%;">{{ event.type_nDut }}</li>
 		  {% endfor %}
 	  </ul>
   {% else %}
       <br><br>
-      <p class="center">Er is geen event met de zoekwoorden '{{ fst_key }} {{ snd_key }}'</p>
+      <p class="center">Er is geen event met de zoekwoorden [{{ fst_key }}, {{ snd_key }}]</p>
       <br><br><br>
       <center><img class="img.error" src="{% static 'base/images/non-info.jpeg' %}" alt="Server Fout" style="width:50%"></a></center>
       <br>

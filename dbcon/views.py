@@ -66,7 +66,11 @@ def enrich_events(event_list):
 
         # check if event_list is a pymongo.cursor.Cursor object and run the next line
         event_list = [e for e in event_list]
-	
+        
+        event_type_dict_nDut = {'public event': 'Evenement', 'sport': 'Sport', 'social action': 'Sociale actie', 'politics': 'Politiek', 'software': 'Software', 'special day': 'Speciale dag', 'advertisement': 'Advertentie', 'broadcast': 'Uitzending', 'other' : 'Anders'}
+
+        event_type_dict_nEng = {'Evenement':'public event', 'Sport': 'sport', 'Sociale actie': 'social action', 'Politiek': 'politics', 'Software': 'software', 'Speciale dag': 'special day', 'Advertentie':'advertisement', 'Uitzending': 'broadcast', 'Anders': 'other'}
+
         for event in event_list:
                 event['id'] = str(event['_id'])
                 event['linkDate'] = event['date'].strftime("%d-%m-%Y")
@@ -75,42 +79,17 @@ def enrich_events(event_list):
                 event['datestr3'] = event['date'].strftime("%H.%M uur")
                 event['datestr4'] = event['date'].strftime("%Y-%m-%d")
                 event['entities_str'] = ', '.join(event['entities'])
-                if event['date'] > datetime.now():
-                        event['timeLeft'] =  event['date'] - datetime.now()
-                #!IDEA!: add 'time left' string to hl.
+
+                if event['eventtype']:
+                        event['type_nDut'] = event_type_dict_nDut[event['eventtype']]
                 else:
-                        event['timeLeft'] = "Het event is al geweest."
+                        event['type_nDut'] = 'Anders'
+                event['entities_str'] = ', '.join(event['entities'])
 
+#                print(event)
         return event_list
-        
 
-def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=None):
-        """
-        For creating the dates and events in calendar and binding them to each others. 
-        This is not a view! 
-        :param first_date: The Start Date
-        :param second_date: The End Date        
-        First it calculates the all dates between the start date and the end date. Then put them in 4 different lists as different values and zip them in one list;
-        
-                1. datelist = Used in the links to show events for one date. Resulted in dateitem.
-                2. dateliststr = Used to show dates as strings in format "%d %b %Y %a" (e.g.: 09 Sep 2014 Tue). Resulted in dateitemstr.
-                3. datetimelist = Used to query events. Items are in datetime format. Resulted in datetimeitem.
-                4. eventObjlist = Holds the events found by querying with items in datetimelist. Resulted in eventObj.
-        .. rubric::     Usage of call_dates()
-        In the views which we will use calendar there must be two exact dates. 
-        We need to call call_dates() method with using this dates as parameters and assign to a list::
- 
-                allperEventsDictList = call_dates(now_date, dateLater) 
-                #And we have to render this to template;
-                return render(request, template, {
-                        'allperEventsDictList': allperEventsDictList,
-        Then you can call them is template like this::
-                #Iterate on the allperEventsDictList. each element of allperEventsDictList is a dictionary whose keys identify dateitem, dateitemstr, eventObj, datetimeitem;
-                {% for x in allperEventsDictList %}
-                        #eventObj is a list of events of a date. Thus, event is a Events class instance;
-                        {% for event in x.eventObj %}
-                                        {{ event.score }}
-        """
+def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=None, evenementen=[], lst_qty=0):
 
         def daterange(first_date, second_date):
                 """Calculation of the difference between the dates"""
@@ -131,19 +110,25 @@ def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=N
 
         #Find the events of those dates and put them in a list;
         eventObjlist = []
-        
+
         for event_date in datetimelist:
-                if fst_key:
+                if fst_key and lst_qty > 0: 
                         eventX = settings.LAMAEVENT_COLL.find({'date' : event_date, '$or': [{'entities': fst_key}, {'entities': snd_key}]}).sort('score', -1)
-                else:
+                elif lst_qty > 0: 
+                        eventX = settings.LAMAEVENT_COLL.find({'date' : event_date, '$or': [{'eventtype':x} for x in evenementen]}).sort('score', -1)
+                elif fst_key: 
+                        eventX = settings.LAMAEVENT_COLL.find({'date' : event_date, '$or': [{'entities': fst_key}, {'entities': snd_key}]}).sort('score', -1)
+                else: 
                         eventX = settings.LAMAEVENT_COLL.find({'date': event_date}).sort([('date', 1), ('score', -1)])
 
-                #print([event for event in eventX][0])
-
                 eventXf = [event for event in eventX if event['cycle'] in periodic_filter]
+                if lst_qty > 0:
+                        eventXf = [event for event in eventXf if event['eventtype'] in evenementen]
+#                               = [event for event in eventXf if event['predicted'] in evenementen]
                 eventXf = enrich_events(eventXf) 
                 eventObjlist.append(eventXf)
-                if eventXf : # Check if there is event in the period
+
+                if eventXf : 
                         foundEventsForDates = True 
 
         #Combination of this lists helps to find the events of the queried period for calendar.
@@ -176,7 +161,7 @@ class Calendar(View):
                 nextnextDate = (dateLater + timedelta(days=time_interval)).strftime(dateformat)
                 prevDate = (now_date + timedelta(days=-time_interval)).strftime(dateformat)
                 currDate = now_date.strftime(dateformat)
-                periodic_filter = ['periodic','aperiodic']
+                periodic_filter = ['periodic','aperiodic']#cycle
 
                 allperEventsDictList, foundEventsForDates = call_dates(now_date, dateLater, periodic_filter) 
 
@@ -276,7 +261,7 @@ class Calendar(View):
                         template = 'desktop/ttee.html'
 
                         if int(search_hour) > int(hour_range): 
-                                start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))#???(timedelta)
+                                start_hour = datetime.now() + timedelta(hours=(int(search_hour)-int(hour_range)))
                         else:
                                 start_hour = datetime.now() 
 
@@ -309,7 +294,20 @@ class Calendar(View):
                         snd_key = request.POST['snd_key']
                         if fst_key == '' and snd_key != '':
                                 fst_key = snd_key
-                        
+
+                        event_type_dict_nEng = {'Evenement': 'public event', 'Sport': 'sport', 'Sociale actie': 'social action', 'Politiek': 'politics', 'Software': 'software', 'Speciale dag': 'special day', 'Advertentie':'advertisement', 'Uitzending': 'broadcast', 'Anders': 'other'}
+
+                        all_event_types_nDut = ['advertentie', 'politiek', 'evenement', 'sociale_actie', 'software', 'speciale_dag', 'sport', 'uitzending', 'anders']
+                        all_event_types_nEng = ['public event', 'politics', 'advertisement', 'social_action', 'software', 'special_day', 'sport', 'broadcast', 'other']
+
+                        checked_event_types = (set(all_event_types_nDut) & set(request.POST.keys()))                        
+
+                        if len(list(checked_event_types)) > 0: 
+                                evenementen = [event_type_dict_nEng[request.POST[event_type]] for event_type in checked_event_types]
+                        else:
+                                evenementen = all_event_types_nEng
+                        lst_qty = len(evenementen)
+
                         if start_date !='':
 
                                 # run the date_picker code to search only for date
@@ -329,10 +327,10 @@ class Calendar(View):
                                 nextnext3Date = (endDate + timedelta(days=time_interval)).strftime(dateformat)
                                 prev3Date = (startDate + timedelta(days=-time_interval)).strftime(dateformat)
 
-                                periodic_filter = ['periodic','aperiodic']
+                                periodic_filter = ['periodic','aperiodic']#cycle field
                                 
-                                allperEventsDictList, foundEventsForDates = call_dates(startDate, endDate, periodic_filter, fst_key, snd_key)
-                                                                       
+                                allperEventsDictList, foundEventsForDates = call_dates(startDate, endDate, periodic_filter, fst_key, snd_key, evenementen, lst_qty)
+                                
                                 return render(request, template, {
                                         'urlprefix': settings.URLPREFIX,
                                         'allperEventsDictList': allperEventsDictList,
@@ -343,25 +341,28 @@ class Calendar(View):
                                         'foundEventsForDates' : foundEventsForDates
                                 })
 
-
                         elif fst_key != '': ##The user didn't selected date, in this case we will run the same code of the zoekwoorden     
                                 
                                 #if request.is_mobile:
                                 #        template = 'mobile/eventSearch.mobile.html'
                                 #else:
                                 template = 'desktop/eventSearch.html'
-
-                                events_bykey_list = settings.LAMAEVENT_COLL.find({'$or': [{'entities' : fst_key}, {'entities' : snd_key}]})
-
-                                events_bykey_list = enrich_events(events_bykey_list)
                                 
+                                events_bykey_list = settings.LAMAEVENT_COLL.find({'$or': [{'entities': fst_key}, {'entities': snd_key}]})
+                               
+                                if lst_qty > 0:
+                                        events_bykey_list_types = [event for event in events_bykey_list if event['eventtype'] in evenementen]
+                                events_bykey_list_types = enrich_events(events_bykey_list_types)
+
                                 return render(request, template, {
                                         'urlprefix': settings.URLPREFIX,
-                                        'events_bykey_list': events_bykey_list,
+                                        'events_bykey_list': events_bykey_list_types,
                                         'fst_key': fst_key,
                                         'snd_key': snd_key,
+                                        'evenementen' : evenementen
                                 })
-                               
+                         
+                                      
                         else:  ##The user didn't select date or enter any keywords##
                                 
                                 #if request.is_mobile:
@@ -491,7 +492,7 @@ class EventDetail(View):
                 Finds the exact event via id.
                 :param id: Comes from the links
                 """
-                
+
                 event = settings.LAMAEVENT_COLL.find({'_id': ObjectId(id)})
 
                 event = enrich_events([e for e in event])[0]
@@ -591,4 +592,36 @@ def custom_handler_500(request):
 # line 506
 #                event = Events.objects.get(pk=id)
 ########################################################################################################################################################################
+# Unique list
+# Python program to check if two 
+# to get unique values from list
+# using traversal 
+
+# function to get unique values
+#def unique(list2):
+
+	# intilize a null list
+#	unique_list = []
+	
+	# traverse for all elements
+#	for x in list2:
+		# check if exists in unique_list or not
+#		if x not in unique_list:
+#			unique_list.append(x)
+	# print list
+#	for x in unique_list:
+#		print x,
+	
+
+
+# driver code
+#list1 = [10, 20, 10, 30, 40, 40]
+#print("the unique values from 1st list is")
+#unique(list1)
+
+
+#list2 =[1, 2, 1, 1, 3, 4, 3, 3, 5, 4, 40, 6, 3, 6]
+#print("\nthe unique values from 2nd list is")
+#unique(list2)
+##########################################################################################################################################################################
 
