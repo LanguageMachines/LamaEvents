@@ -72,6 +72,8 @@ elif HOSTNAME[:9] == "applejack":
     config.read('/scratch2/www/LamaEvents/oauth.ini')
     DEBUG = False
     TEMPLATE_DEBUG = False
+elif HOSTNAME == "mlp01":
+    config.read('/var/www/lamaevents/live/repo/oauth.ini')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config.get('LE_settings', 'secret_key')

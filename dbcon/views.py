@@ -496,9 +496,8 @@ class EventDetail(View):
 
                 event = enrich_events([e for e in event])[0]
 
-                event['periodicity']['editions'] = list(reversed(event['periodicity']['editions']))
-
-                print(event)
+                if event['periodicity']:
+                        event['periodicity']['editions'] = list(reversed(event['periodicity']['editions']))
 
                 #if request.is_mobile:
                 #        template = 'mobile/eventDetail.mobile.html'
