@@ -69,8 +69,6 @@ def enrich_events(event_list):
         
         event_type_dict_nDut = {'public event': 'Evenement', 'sport': 'Sport', 'social action': 'Sociale actie', 'politics': 'Politiek', 'software': 'Software', 'special day': 'Speciale dag', 'advertisement': 'Advertentie', 'broadcast': 'Uitzending', 'other' : 'Anders'}
 
-        event_type_dict_nEng = {'Evenement':'public event', 'Sport': 'sport', 'Sociale actie': 'social action', 'Politiek': 'politics', 'Software': 'software', 'Speciale dag': 'special day', 'Advertentie':'advertisement', 'Uitzending': 'broadcast', 'Anders': 'other'}
-
         for event in event_list:
                 event['id'] = str(event['_id'])
                 event['linkDate'] = event['date'].strftime("%d-%m-%Y")
@@ -89,7 +87,7 @@ def enrich_events(event_list):
 #                print(event)
         return event_list
 
-def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=None, evenementen=[], lst_qty=0):
+def call_dates(first_date, second_date, fst_key=None, snd_key=None, evenementen=[], lst_qty=0, periodic_filter=[]):
 
         def daterange(first_date, second_date):
                 """Calculation of the difference between the dates"""
@@ -110,7 +108,7 @@ def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=N
 
         #Find the events of those dates and put them in a list;
         eventObjlist = []
-
+        
         for event_date in datetimelist:
                 if fst_key and lst_qty > 0: 
                         eventX = settings.LAMAEVENT_COLL.find({'date' : event_date, '$or': [{'entities': fst_key}, {'entities': snd_key}]}).sort('score', -1)
@@ -121,10 +119,13 @@ def call_dates(first_date, second_date, periodic_filter, fst_key=None, snd_key=N
                 else: 
                         eventX = settings.LAMAEVENT_COLL.find({'date': event_date}).sort([('date', 1), ('score', -1)])
 
-                eventXf = [event for event in eventX if event['cycle'] in periodic_filter]
+                eventXf = [event for event in eventX]
+
+                if len(periodic_filter) > 0:
+                        eventXf = [event for event in eventXf if event['cycle'] in periodic_filter]
+             
                 if lst_qty > 0:
                         eventXf = [event for event in eventXf if event['eventtype'] in evenementen]
-#                               = [event for event in eventXf if event['predicted'] in evenementen]
                 eventXf = enrich_events(eventXf) 
                 eventObjlist.append(eventXf)
 
@@ -161,9 +162,9 @@ class Calendar(View):
                 nextnextDate = (dateLater + timedelta(days=time_interval)).strftime(dateformat)
                 prevDate = (now_date + timedelta(days=-time_interval)).strftime(dateformat)
                 currDate = now_date.strftime(dateformat)
-                periodic_filter = ['periodic','aperiodic']#cycle
 
-                allperEventsDictList, foundEventsForDates = call_dates(now_date, dateLater, periodic_filter) 
+
+                allperEventsDictList, foundEventsForDates = call_dates(now_date, dateLater) 
 
                 return render(request, template, {
                                 'urlprefix': settings.URLPREFIX, #Calls the urlprefix from settings.
@@ -284,6 +285,10 @@ class Calendar(View):
 
                         start_date = request.POST.get('start_date') 
                         end_date = request.POST.get('end_date')
+                        evenementen = request.POST.getlist('evenementtypen')
+                        periodic_filter = request.POST.getlist('tijdskenmerken')
+
+                        print(evenementen, periodic_filter)
                         
                         if end_date == '':
                                 end_date = start_date
@@ -295,21 +300,10 @@ class Calendar(View):
                         if fst_key == '' and snd_key != '':
                                 fst_key = snd_key
 
-                        event_type_dict_nEng = {'Evenement': 'public event', 'Sport': 'sport', 'Sociale actie': 'social action', 'Politiek': 'politics', 'Software': 'software', 'Speciale dag': 'special day', 'Advertentie':'advertisement', 'Uitzending': 'broadcast', 'Anders': 'other'}
-
-                        all_event_types_nDut = ['advertentie', 'politiek', 'evenement', 'sociale_actie', 'software', 'speciale_dag', 'sport', 'uitzending', 'anders']
-                        all_event_types_nEng = ['public event', 'politics', 'advertisement', 'social_action', 'software', 'special_day', 'sport', 'broadcast', 'other']
-
-                        checked_event_types = (set(all_event_types_nDut) & set(request.POST.keys()))                        
-
-                        if len(list(checked_event_types)) > 0: 
-                                evenementen = [event_type_dict_nEng[request.POST[event_type]] for event_type in checked_event_types]
-                        else:
-                                evenementen = all_event_types_nEng
                         lst_qty = len(evenementen)
-
+                        
                         if start_date !='':
-
+                                
                                 # run the date_picker code to search only for date
                                 #if request.is_mobile:
                                 #         timeIntstr = timeIntstr_m
@@ -326,10 +320,8 @@ class Calendar(View):
                                 #These are for the navigation links;
                                 nextnext3Date = (endDate + timedelta(days=time_interval)).strftime(dateformat)
                                 prev3Date = (startDate + timedelta(days=-time_interval)).strftime(dateformat)
-
-                                periodic_filter = ['periodic','aperiodic']#cycle field
-                                
-                                allperEventsDictList, foundEventsForDates = call_dates(startDate, endDate, periodic_filter, fst_key, snd_key, evenementen, lst_qty)
+                               
+                                allperEventsDictList, foundEventsForDates = call_dates(startDate, endDate, fst_key, snd_key, evenementen, lst_qty, periodic_filter)
                                 
                                 return render(request, template, {
                                         'urlprefix': settings.URLPREFIX,
@@ -338,7 +330,11 @@ class Calendar(View):
                                         'end_date': end_date,
                                         'nextnext3Date': nextnext3Date,
                                         'prev3Date': prev3Date,
-                                        'foundEventsForDates' : foundEventsForDates
+                                        'foundEventsForDates' : foundEventsForDates,
+                                        'evenementen' : evenementen,
+                                        'fst_key' : fst_key,
+                                        'snd_key' : snd_key,
+                                        'periodic_filter' : periodic_filter
                                 })
 
                         elif fst_key != '': ##The user didn't selected date, in this case we will run the same code of the zoekwoorden     
@@ -352,6 +348,8 @@ class Calendar(View):
                                
                                 if lst_qty > 0:
                                         events_bykey_list_types = [event for event in events_bykey_list if event['eventtype'] in evenementen]
+                                else:
+                                        events_bykey_list_types = events_bykey_list
                                 events_bykey_list_types = enrich_events(events_bykey_list_types)
 
                                 return render(request, template, {
@@ -359,55 +357,42 @@ class Calendar(View):
                                         'events_bykey_list': events_bykey_list_types,
                                         'fst_key': fst_key,
                                         'snd_key': snd_key,
-                                        'evenementen' : evenementen
+                                        'evenementen' : evenementen,
+                                        'periodic_filter' : periodic_filter
                                 })
                          
-                                      
                         else:  ##The user didn't select date or enter any keywords##
                                 
-                                #if request.is_mobile:
-                                #        template = 'mobile/non-information.html'
-                                #else:
-                                template = 'desktop/non-information.html'
-                                
+                                timeIntstr = timeIntstr_d
+                                time_interval = time_interval_d
+                                template = 'desktop/nextint.html'
+
+                                now_date = datetime.now()
+                                dateLater = now_date + timedelta(days=time_interval)
+                
+                                #These are for the navigation with next or previous buttons;
+                                nextDate = dateLater.strftime(dateformat)
+                                nextnextDate = (dateLater + timedelta(days=time_interval)).strftime(dateformat)
+                                prevDate = (now_date + timedelta(days=-time_interval)).strftime(dateformat)
+                                currDate = now_date.strftime(dateformat)
+
+                                allperEventsDictList, foundEventsForDates = call_dates(now_date, dateLater, 
+                                                                                       evenementen=evenementen, 
+                                                                                       lst_qty=lst_qty,
+                                                                                       periodic_filter=periodic_filter) 
+
                                 return render(request, template, {
-                                                'urlprefix': settings.URLPREFIX,
+                                        'urlprefix': settings.URLPREFIX, #Calls the urlprefix from settings.
+                                        'allperEventsDictList': allperEventsDictList,
+                                        'nextDate': nextDate,
+                                        'nextnextDate': nextnextDate,
+                                        'prevDate': prevDate,
+                                        'currDate': currDate,
+                                        'timeIntstr' : timeIntstr,
+                                        'foundEventsForDates' : True,
+                                        'evenementen' : evenementen,
+                                        'periodic_filter' : periodic_filter
                                 })
-
-                elif "periodicity_select" in request.POST:
-
-                        periodic_filter = request.POST.getlist('Periodiciteit')
-
-                        #if request.is_mobile:
-                        #        timeIntstr = timeIntstr_m
-                        #        time_interval = time_interval_m
-                        #        template = 'mobile/nextint.mobile.html'
-                        #else:
-                        timeIntstr = timeIntstr_d
-                        time_interval = time_interval_d
-                        template = 'desktop/nextint.html'
-
-                        now_date = datetime.now()
-                        dateLater = now_date + timedelta(days=time_interval)
-
-                        #These are for the navigation with next or previous buttons;
-                        nextDate = dateLater.strftime(dateformat)
-                        nextnextDate = (dateLater + timedelta(days=time_interval)).strftime(dateformat)
-                        prevDate = (now_date + timedelta(days=-time_interval)).strftime(dateformat)
-                        currDate = now_date.strftime(dateformat)
-
-                        allperEventsDictList = call_dates(now_date, dateLater, periodic_filter)
-
-                        return render(request, template, {
-                                'urlprefix': settings.URLPREFIX, #Calls the urlprefix from settings.
-                                'allperEventsDictList': allperEventsDictList,
-                                'nextDate': nextDate,
-                                'nextnextDate': nextnextDate,
-                                'prevDate': prevDate,
-                                'currDate': currDate,
-                                'timeIntstr' : timeIntstr,
-                                })
-
 
 class IntervalSeek(View):
         """

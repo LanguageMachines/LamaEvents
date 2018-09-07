@@ -37,8 +37,9 @@
 				monthNamesShort: [ "Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sept", "Okt", "Nov", "Dec" ],
 				dayNamesMin: [ "Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za" ]
 			};  
-			$( "#datepicker" ).datepicker(pickerOpts);
-		   $( "#datepicker2" ).datepicker(pickerOpts);
+			$( "#datepicker1" ).datepicker(pickerOpts);
+		        $( "#datepicker2" ).datepicker(pickerOpts);
+               
 		});
 	</script>
 
@@ -102,7 +103,7 @@
 		<!-- <form method="post" action="{% url 'calendar' %}">
 			{% csrf_token %}
 			<p>selecteer datums</p>
-  			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)" required/>
+  			<input type="text" name="start_date" id="datepicker1" placeholder="startdatum (dd-mm-yyyy)" required/>
 			<br>
   			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)"/>
 		
@@ -129,69 +130,142 @@
   		<form method="post" action="{% url 'calendar' %}">
   			{% csrf_token %}
 			<p>selecteer datums</p>
-  			<input type="text" name="start_date" id="datepicker" placeholder="startdatum (dd-mm-yyyy)"/>
+                        {% if start_date %}
+          			<input type="text" name="start_date" id="datepicker1" placeholder="{{start_date}}" value="{{start_date}}"/>
+                        {% else %}
+               			<input type="text" name="start_date" id="datepicker1" placeholder="startdatum (dd-mm-yyyy)"/>
+                        {% endif %}
 			<br>
-  			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)"/>
-
+                        {% if end_date %}
+         			<input type="text" name="end_date" id="datepicker2" placeholder="{{end_date}}" value="{{end_date}}"/>
+                        {% else %}
+				<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)"/>
+                        {% endif %}
   			<p>zoekwoorden</p>
-  			<input type="text" name="fst_key" placeholder="eerste zoekwoord" />
+                        {% if fst_key %}
+	      			<input type="text" name="fst_key" id="fst_k" placeholder="{{fst_key}}" value="{{fst_key}}" />
+                        {% else %}
+				<input type="text" name="fst_key" id="fst_k" placeholder="eerste zoekwoord" />
+                        {% endif %}
 			<br>
-  			<input type="text" name="snd_key" placeholder="tweede zoekwoord" />
+			{% if snd_key %}
+	      			<input type="text" name="snd_key" id="snd_k" placeholder="{{snd_key}}" value="{{snd_key}}" />
+                        {% else %}
+				<input type="text" name="snd_key" id="snd_k" placeholder="tweede zoekwoord" />
+                        {% endif %}                        
+ 			
 			<br>
 			<p>evenementtypen</p>
                         <div id="zoek">
-				<input type="checkbox" class="check" id="advertentie" name="advertentie" value="Advertentie">Advertentie <br>
-                                <input type="checkbox" class="check" id="evenement" name="evenement"   value="Evenement"> Evenement <br> 
-				<input type="checkbox" class="check" id="politiek" name="politiek"   value="Politiek"> Politiek <br>
-				<input type="checkbox" class="check" id="sociale_actie" name="sociale_actie"   value="Sociale actie"> Sociale actie <br>
-				<input type="checkbox" class="check" id="software" name="software"   value="Software"> Software <br>
-				<input type="checkbox" class="check" id="speciale_dag" name="speciale_dag"   value="Speciale dag"> Speciale dag <br>
-				<input type="checkbox" class="check" id="sport" name="sport"   value="Sport"> Sport <br>
-				<input type="checkbox" class="check" id="uitzending" name="uitzending"   value="Uitzending"> Uitzending <br>
+                                {% if evenementen %} 
+                                        {% if 'advertisement' in evenementen %}
+						<input type="checkbox" class="check" id="advertentie" name="evenementtypen" value="advertisement" checked>Advertentie <br>
+					{% else %}
+						<input type="checkbox" class="check" id="advertentie" name="evenementtypen" value="advertisement">Advertentie <br>
+					{% endif %}
+
+					{% if 'public event' in evenementen %}
+						<input type="checkbox" class="check" id="evenement" name="evenementtypen"   value="public event" checked> Evenement <br>
+					{% else %}
+						<input type="checkbox" class="check" id="evenement" name="evenementtypen"   value="public event"> Evenement <br>
+					{% endif %}
+
+        	                        {% if 'politics' in evenementen %}
+						<input type="checkbox" class="check" id="politiek" name="evenementtypen"   value="politics" checked> Politiek <br>
+					{% else %}
+						<input type="checkbox" class="check" id="politiek" name="evenementtypen"   value="politics"> Politiek <br>
+					{% endif %}
+
+					{% if 'social action' in evenementen %}
+						<input type="checkbox" class="check" id="sociale_actie" name="evenementtypen"   value="social action" checked> Sociale actie <br>
+					{% else %}
+						<input type="checkbox" class="check" id="sociale_actie" name="evenementtypen"   value="social action"> Sociale actie <br>
+					{% endif %}
+
+					{% if 'software' in evenementen %}
+						<input type="checkbox" class="check" id="software" name="evenementtypen"   value="software" checked> Software <br>
+					{% else %}
+						<input type="checkbox" class="check" id="software" name="evenementtypen"   value="software"> Software <br>
+					{% endif %}
+
+					{% if 'special day' in evenementen %}
+						<input type="checkbox" class="check" id="speciale_dag" name="evenementtypen"   value="special day" checked> Speciale dag <br>
+					{% else %}
+						<input type="checkbox" class="check" id="speciale_dag" name="evenementtypen"   value="special day"> Speciale dag <br>
+					{% endif %}
+
+					{% if 'sport' in evenementen %}
+						<input type="checkbox" class="check" id="sport" name="evenementtypen"   value="Sport" checked> Sport <br>
+					{% else %}
+						<input type="checkbox" class="check" id="sport" name="evenementtypen"   value="Sport"> Sport <br>
+					{% endif %}
+
+					{% if 'broadcast' in evenementen %}
+						<input type="checkbox" class="check" id="uitzending" name="evenementtypen"   value="broadcast" checked> Uitzending <br>
+					{% else %}
+						<input type="checkbox" class="check" id="uitzending" name="evenementtypen"   value="broadcast"> Uitzending <br>
+					{% endif %}
+				{% else %}
+					<input type="checkbox" class="check" id="advertentie" name="evenementtypen" value="advertisement">Advertentie <br>
+        	                        <input type="checkbox" class="check" id="evenement" name="evenementtypen"   value="public event"> Evenement <br> 
+					<input type="checkbox" class="check" id="politiek" name="evenementtypen"   value="politics"> Politiek <br>
+					<input type="checkbox" class="check" id="sociale_actie" name="evenementtypen"   value="social action"> Sociale actie <br>
+					<input type="checkbox" class="check" id="software" name="evenementtypen"   value="software"> Software <br>
+					<input type="checkbox" class="check" id="speciale_dag" name="evenementtypen"   value="special day"> Speciale dag <br>
+					<input type="checkbox" class="check" id="sport" name="evenementtypen"   value="sport"> Sport <br>
+					<input type="checkbox" class="check" id="uitzending" name="evenementtypen"   value="broadcast"> Uitzending <br>		
+				{% endif %}
 			</div>
                         <p class="white-space">.</p>
                         <p>tijdskenmerken</p>
                         <div id="zoek">
-				<input type="checkbox" class="check" id="periodiek" name="periodiek" value="Periodiek"> Periodiek <br>
-				<input type="checkbox" class="check" id="voorspeld" name="voorspeld"   value="Voorspeld"> Voorspeld
+                                {% if periodic_filter %}
+                                       {%if 'periodic' in periodic_filter %}
+				               <input type="checkbox" class="check" id="periodiek" name="tijdskenmerken" value="periodic" checked> Periodiek <br>
+                                       {%else%}
+                                               <input type="checkbox" class="check" id="periodiek" name="tijdskenmerken" value="periodic"> Periodiek <br>
+                                       {%endif%}
+
+                                       {%if 'aperiodic' in periodic_filter %}
+                                               <input type="checkbox" class="check" id="voorspeld" name="tijdskenmerken"   value="aperiodic" checked> Aperiodiek
+                                       {%else%}
+                                               <input type="checkbox" class="check" id="voorspeld" name="tijdskenmerken"   value="aperiodic"> Aperiodiek
+                                       {%endif%}
+                                {%else%}
+                                       <input type="checkbox" class="check" id="periodiek" name="tijdskenmerken" value="periodic"> Periodiek <br>
+                                       <input type="checkbox" class="check" id="voorspeld" name="tijdskenmerken"   value="aperiodic"> Aperiodiek
+                                {%endif%}
 			</div>
 
   			<input type="submit" name="event_search" value="zoek" onclick="getValue()">
 		</form>
 
-		<!-- <form method="post" action="{% url 'calendar' %}"> -->
-		<!--         {% csrf_token %} -->
-		<!--         <p>Filter op periodiciteit</p> -->
-		<!-- 	         </br> -->
-		<!-- 	        <label class="checkbox"> -->
-		<!-- 		<input type="checkbox" name="Periodiciteit" value="periodic" checked="checked">				</label>   Periodieke events      </br> -->
-		<!-- 	        <label class="checkbox"> -->
-		<!-- 		<input type="checkbox" name="Periodiciteit" value="aperiodic" checked="checked">	Niet periodieke events			</label> -->
-		<!-- 		<input type="submit" name="periodicity_select" value="filter"> -->
-                -------------------------------
+
+                <hr>
+
 		<p>legenda</p>
 			</br>
-			<img src="{% static 'base/images/advertentie.png' %}" alt="periodic" height="15", width="15">    Advertentie
+			<img src="{% static 'base/images/advertentie.png' %}" alt="advertentie" height="15", width="15"> Advertentie
 			</br>
-			<img src="{% static 'base/images/publieke gebeurtenis.png' %}" alt="periodic" height="15", width="15">    Evenement
+			<img src="{% static 'base/images/publieke gebeurtenis.png' %}" alt="evenement" height="15", width="15"> Evenement
 			</br>
-			<img src="{% static 'base/images/cycle.png' %}" alt="periodic" height="15", width="15">    Periodiek
+			<img src="{% static 'base/images/cycle.png' %}" alt="periodiek" height="15", width="15"> Periodiek
 			</br>
-			<img src="{% static 'base/images/politiek.png' %}" alt="periodic" height="15", width="15">    Politiek
+			<img src="{% static 'base/images/politiek.png' %}" alt="politiek" height="15", width="15"> Politiek
                         </br>
-			<img src="{% static 'base/images/sociale actie.png' %}" alt="periodic" height="15", width="15">    Sociale actie
+			<img src="{% static 'base/images/sociale actie.png' %}" alt="sociale actie" height="15", width="15"> Sociale actie
 			</br>
-			<img src="{% static 'base/images/software release.png' %}" alt="periodic" height="15", width="15">    Software
+			<img src="{% static 'base/images/software release.png' %}" alt="software" height="15", width="15"> Software
 			</br>
-			<img src="{% static 'base/images/specialdag.png' %}" alt="periodic" height="15", width="15">    Speciale dag
+			<img src="{% static 'base/images/specialdag.png' %}" alt="speciale dag" height="15", width="15"> Speciale dag
 			</br>
-			<img src="{% static 'base/images/sports1.png' %}" alt="periodic" height="15", width="15">    Sport
+			<img src="{% static 'base/images/sports1.png' %}" alt="sport" height="15", width="15"> Sport
 			</br>
-			<img src="{% static 'base/images/uitzending.png' %}" alt="periodic" height="15", width="15">    Uitzending 
+			<img src="{% static 'base/images/uitzending.png' %}" alt="uitzending" height="15", width="15"> Uitzending 
 			</br>
-			<img src="{% static 'base/images/forecast.png' %}" alt="periodic" height="15", width="15">    Voorspeld 
+			<img src="{% static 'base/images/forecast.png' %}" alt="voorspeld" height="15", width="15"> Voorspeld 
 			</br>
-                        <img src="{% static 'base/images/other.png' %}" alt="periodic" height="15", width="15"> Anders
+                        <img src="{% static 'base/images/other.png' %}" alt="anders" height="15", width="15"> Anders
 	</div>
 		
 	<footer>
