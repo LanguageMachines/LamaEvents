@@ -25,4 +25,3 @@ urls.py
     :members:
 
 
-

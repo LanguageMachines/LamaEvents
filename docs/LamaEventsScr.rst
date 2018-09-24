@@ -1,5 +1,5 @@
 Lama Events Python Script
-====================
+=========================
 
 Here the whole code explained line by line.
 
@@ -25,7 +25,7 @@ You can see the last loggings with this command line code::
 You can reach the whole script from `GitHub <https://github.com/ErkanBasar/LamaEvents/blob/master/LamaEvents.py/>`_
 
 Beginning
------------------------
+---------
 
 
 .. rubric:: Imports;
@@ -348,7 +348,4 @@ If the DeleteTweetDetails value is not True, it only makes the same convertion f
 
 
 
-.. automodule:: LamaEventsScr
-    :members:
-    :undoc-members:
-    :show-inheritance:
+

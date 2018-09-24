@@ -44,6 +44,7 @@
 	</script>
 
 	<script>
+                """ This function works when the user cklick on the search bottom, then we need to know if he chekced any of checklist boxs """
 		function getValue(self, evenementen, lst_qty) {
 			var checks = document.getElementsByClassName('check');
 			var evenementen = [];
@@ -60,8 +61,6 @@
 				}
 			}
                         return lst_qty;
-			//alert(evenementen);
-			
 		}
 	</script>
 </head>
@@ -78,6 +77,7 @@
  		<br>
 
 		<div class="over">
+                        <img class="space" src="{% static 'base/images/Ned_Flag.png' %}" alt="flag netherlands" width="39" height="26">
 			<p class="uitleg"><span class="vet13">Lama Events</span> is een kalender gevuld met gebeurtenissen in de nabije toekomst. De gebeurtenissen zijn volledig automatisch gedetecteerd in de grote stroom van Nederlandse tweets op Twitter.com</p>
 			<a href="{{ urlprefix }}/over-lama/">
 				<div class="info">meer over Lama</div>
@@ -86,7 +86,7 @@
 
 		{% block en_about %}
 		<div class="about">
-			<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag englisch">
+			<img class="space" src="{% static 'base/images/eng.png' %}" alt="flag english">
 	 		<p class="uitleg"><span class="vet">Lama Events</span> is a calendar application listing events in the near future. The events are detected and selected by a fully automatic procedure in the Dutch Twitter stream.</p>
 			<a href="{{ urlprefix }}/about-lama/">
 				<div class="info">more about Lama</div>
@@ -100,46 +100,19 @@
 	</div>
 
 	<div id="right">
-		<!-- <form method="post" action="{% url 'calendar' %}">
-			{% csrf_token %}
-			<p>selecteer datums</p>
-  			<input type="text" name="start_date" id="datepicker1" placeholder="startdatum (dd-mm-yyyy)" required/>
-			<br>
-  			<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)"/>
-		
-  			<input type="submit" name="date_picker" value="zoek">
-
-  		</form> -->
-
-  		<!-- <form method="post" action="{% url 'calendar' %}"> -->
-  		<!-- 	{% csrf_token %} -->
-  		<!-- 	<p>selecteer tijd</p> -->
-  		<!-- 	<input type="number" name="search_hour" placeholder="uur" required/><br> -->
-  		<!-- 	<input type="number" name="hour_range" placeholder="uren eerder of later" required/><br> -->
-  		<!-- 	<input type="submit" name="ttee" value="zoek"> -->
-  		<!-- </form> -->
-  		<!-- There is not any function about this section yet 
-  		<form>
-  			<p>plaats</p>
-  			<input type="text" name="startdatum" placeholder="plaatsnaam" required/><br>
-  			<input type="text" name="einddatum" placeholder="+0 km" required/><br>
-  			<input type="submit" value="zoek">
-  		</form> 
-  		-->
-
   		<form method="post" action="{% url 'calendar' %}">
   			{% csrf_token %}
 			<p>selecteer datums</p>
                         {% if start_date %}
           			<input type="text" name="start_date" id="datepicker1" placeholder="{{start_date}}" value="{{start_date}}"/>
                         {% else %}
-               			<input type="text" name="start_date" id="datepicker1" placeholder="startdatum (dd-mm-yyyy)"/>
+               			<input type="text" name="start_date" id="datepicker1" placeholder="startdatum"/>
                         {% endif %}
 			<br>
                         {% if end_date %}
          			<input type="text" name="end_date" id="datepicker2" placeholder="{{end_date}}" value="{{end_date}}"/>
                         {% else %}
-				<input type="text" name="end_date" id="datepicker2" placeholder="einddatum (dd-mm-yyyy)"/>
+				<input type="text" name="end_date" id="datepicker2" placeholder="einddatum"/>
                         {% endif %}
   			<p>zoekwoorden</p>
                         {% if fst_key %}
@@ -157,7 +130,7 @@
 			<br>
 			<p>evenementtypen</p>
                         <div id="zoek">
-                                {% if evenementen %} 
+                                {% if evenementen %} <!-- evenementen is a list checkbox of the events types-->
                                         {% if 'advertisement' in evenementen %}
 						<input type="checkbox" class="check" id="advertentie" name="evenementtypen" value="advertisement" checked>Advertentie <br>
 					{% else %}
@@ -216,10 +189,10 @@
 					<input type="checkbox" class="check" id="uitzending" name="evenementtypen"   value="broadcast"> Uitzending <br>		
 				{% endif %}
 			</div>
-                        <p class="white-space">.</p>
+                        <p class="white-space">.</p><!--Just to have a fit space between the two checkbox lists-->
                         <p>tijdskenmerken</p>
                         <div id="zoek">
-                                {% if periodic_filter %}
+                                {% if periodic_filter %} <!--periodic_filter is a list of checkboxs time characteristics-->
                                        {%if 'periodic' in periodic_filter %}
 				               <input type="checkbox" class="check" id="periodiek" name="tijdskenmerken" value="periodic" checked> Periodiek <br>
                                        {%else%}
@@ -236,13 +209,9 @@
                                        <input type="checkbox" class="check" id="voorspeld" name="tijdskenmerken"   value="aperiodic"> Aperiodiek
                                 {%endif%}
 			</div>
-
   			<input type="submit" name="event_search" value="zoek" onclick="getValue()">
 		</form>
-
-
                 <hr>
-
 		<p>legenda</p>
 			</br>
 			<img src="{% static 'base/images/advertentie.png' %}" alt="advertentie" height="15", width="15"> Advertentie

@@ -4,13 +4,6 @@
 {% block title %}Events voor '{{ fst_key }} {{ snd_key }}'{% endblock %}
 
 {% block css_extra %}
-    ul#keyword{
-      width: 95%;
-      margin-left: 1%;
-      overflow:hidden;
-      margin: auto;
-    }
-
     #keyword li{
       line-height:1.5em;
       padding: 5px 0;	
@@ -20,7 +13,7 @@
       margin: auto;
     }
 
-    #keyword1 li  <span class="code-comment">/* 3 col */</span>
+    #keyword1 li  <span class="code-comment">/* 3 col */</span> <!--Dividing the page for 3 columns-->
 {% endblock %}
 
 {% block pri_content %}
@@ -50,11 +43,15 @@
                                           <li style="width: 15%;">{{ event.type_nDut }}</li>
 		  {% endfor %}
 	  </ul>
+
   {% else %}
+
       <br><br>
       <p class="center">Er is geen event met de zoekwoorden [{{ fst_key }}, {{ snd_key }}]</p>
       <br><br><br>
       <center><img class="img.error" src="{% static 'base/images/non-info.jpeg' %}" alt="Server Fout" style="width:50%"></a></center>
       <br>
+
   {% endif %}
+
 {% endblock %}

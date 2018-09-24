@@ -58,7 +58,7 @@ copyright = '2014, Mustafa Erkan Basar'
 # built documents.
 #
 # The short X.Y version.
-version = ''
+version = '2.0'
 # The full version, including alpha/beta/rc tags.
 release = ''
 
@@ -271,7 +271,7 @@ texinfo_documents = [
 epub_title = 'LaMaEvents'
 epub_author = 'Mustafa Erkan Basar'
 epub_publisher = 'Mustafa Erkan Basar'
-epub_copyright = '2014, Mustafa Erkan Basar'
+epub_copyright = '2018, Mustafa Erkan Basar'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = 'LaMaEvents'

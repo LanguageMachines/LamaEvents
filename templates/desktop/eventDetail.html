@@ -75,15 +75,8 @@
 	               {% if event.predicted %} Voor deze gebeurtenis zijn geen tweets beschikbaar. Een mogelijke verklaring is dat de tweets inmiddels zijn verwijderd door de gebruikers, of dat de gebruikes hun account hebben stopgezet.
 	               {% else %} Deze gebeurtenis is niet gebaseerd op de inhuod van tweets, maar wordt verwacht op basis van eerdere edities die periodiek plaatsvinden. Er zijn nog geen tweets geplaatst die naar deze gebeurtenis verwijzen en hier gepresenteerd kunnen worden.</p>
         	       {% endif %}
-			
-<!--<div:focus {
-	background-color:blue:
-}
-</div-->
-		{% endif %}
 
-<!--{{ event.datestr4 }}
-{{event.entities_str}}  -->
+		{% endif %}
 
 	        <center>
 		<header><h3>
@@ -108,17 +101,6 @@
 				{% endfor %}
 			{% endif %}
         	</center>
-
-        <!--table>
-        {%for tweet in event.tweets %}
-                {% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
-                        <td class="tweetbox">
-                                <blockquote class="twitter-tweet tw-align-center" width="380px" margin="0px" data-conversation="none" data-cards="hidden" lang="nl">
-                                <a href="https://twitter.com/{{ tweet.user }}/status/{{ tweet.id }}"></a></blockquote>
-                        </td>
-                {% if forloop.counter|divisibleby:2 %}<tr>{% endif %}
-        {% endfor %}
-        </table-->
 
 {% endblock %}
 

@@ -1,9 +1,12 @@
 """
 This is the standart views file for Django.  
+
+Improvements made by Ghiath Ghanem
+
 .. rubric:: Some Explanations
 With using 'timeIntstr_d' and 'timeIntstr_m' you can describe here how many dates will shown at 
 start and during navigation on calendar. '-1' is for making it look like time interval of 
-twiqs.nl (For one day you have to write the same date twice, ex : 10-09-2014 & 10-09-2014).
+twiqs.nl.
 '_d' stands for 'desktop' and '_m' stands for 'mobile'::
         #Desktop;
         timeIntstr_d = 6 
@@ -12,7 +15,8 @@ twiqs.nl (For one day you have to write the same date twice, ex : 10-09-2014 & 1
         timeIntstr_m = 2
         time_interval_m = timeIntstr_m - 1
         
-'is_mobile' is for saying what will happen if the device is mobile. Works with basic if statement. Also see LamaEvents/middleware.py::
+'is_mobile' it doesn't work on this moment. It remarks to aviod any scrtach after replace mongoengine within Pymongo, and updating Django.
+in all cases this is for saying what will happen if the device is mobile. Works with basic if statement. Also see LamaEvents/middleware.py::
                 if request.is_mobile:
                         timeIntstr = timeIntstr_m
                         time_interval = time_interval_m
@@ -48,7 +52,7 @@ from bson import ObjectId
 
 from django.conf import settings
 
-timeIntstr_d = 6 
+timeIntstr_d = 6 #number of the tables calender in the main page
 time_interval_d = timeIntstr_d - 1 
 
 timeIntstr_m = 2
@@ -84,7 +88,6 @@ def enrich_events(event_list):
                         event['type_nDut'] = 'Anders'
                 event['entities_str'] = ', '.join(event['entities'])
 
-#                print(event)
         return event_list
 
 def call_dates(first_date, second_date, fst_key=None, snd_key=None, evenementen=[], lst_qty=0, periodic_filter=[]):
@@ -110,21 +113,24 @@ def call_dates(first_date, second_date, fst_key=None, snd_key=None, evenementen=
         eventObjlist = []
         
         for event_date in datetimelist:
-                if fst_key and lst_qty > 0: 
+                """ We included the date in all queries.. Probably the user want to look for any key terms or some sort of event type from the presented agenda,
+                    so we filled the date fields automaticaly in such case the user dosn't selected and dates to be fit with 6 dates of the Agenda.
+                """
+                if fst_key and lst_qty > 0: #The user select keyterms and events type
                         eventX = settings.LAMAEVENT_COLL.find({'date' : event_date, '$or': [{'entities': fst_key}, {'entities': snd_key}]}).sort('score', -1)
-                elif lst_qty > 0: 
+                elif lst_qty > 0: #The user select only events type
                         eventX = settings.LAMAEVENT_COLL.find({'date' : event_date, '$or': [{'eventtype':x} for x in evenementen]}).sort('score', -1)
-                elif fst_key: 
+                elif fst_key: #The user select keyterms
                         eventX = settings.LAMAEVENT_COLL.find({'date' : event_date, '$or': [{'entities': fst_key}, {'entities': snd_key}]}).sort('score', -1)
-                else: 
+                else: #The user select only dates
                         eventX = settings.LAMAEVENT_COLL.find({'date': event_date}).sort([('date', 1), ('score', -1)])
 
                 eventXf = [event for event in eventX]
 
-                if len(periodic_filter) > 0:
+                if len(periodic_filter) > 0: # Check if the user select any of the time characteristics checkbox list
                         eventXf = [event for event in eventXf if event['cycle'] in periodic_filter]
              
-                if lst_qty > 0:
+                if lst_qty > 0: #Check if the user select any of the Events types checkbox list.
                         eventXf = [event for event in eventXf if event['eventtype'] in evenementen]
                 eventXf = enrich_events(eventXf) 
                 eventObjlist.append(eventXf)
@@ -180,20 +186,8 @@ class Calendar(View):
         def post(self, request):
                 """
                 post() is used for user inputs. 
-                There are if statements inside to find out which button submitted;
-                1. Date Picker;
-                        * This is working, if someone used 'Specificeer Datums' search.
-                        * Assign the parameters to new string variables. These are also used for navigation with next or previous buttons::
-                                start_date = request.POST['start_date']
-                                end_date = request.POST['end_date']     
-                        * Convert the strings to datetime for call_dates function::
-                                startDate = datetime.strptime(start_date, dateformat)
-                                endDate = datetime.strptime(end_date, dateformat)
-                        
-                                allperEventsDictList = call_dates(startDate, endDate)
-                :param start_date:
-                :param end_date:
-                2. Time-To-Event Estimation;
+                There are if statements inside to find out which function should be work;
+                1. Time-To-Event Estimation;
                         * This is working, if someone used "Specificeer Uren" search.
                         * It finds the events between these ranges. For example hour=100 range=20, it'll show the events between 80(start_hour) and 120(end_hour) hour after from now.
                         * If search hour is smaller than the range, it'll set the start hour to now. So it can't show before now::
@@ -203,54 +197,17 @@ class Calendar(View):
                                         start_hour = datetime.now() 
                         * Find events which fits 'end_hour > event.Estimation > start_hour'::
                                 event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
-                :param search_hour:
-                :param hour_range: 
-                3. Event Search;
-        
+                       :param search_hour:
+                       :param hour_range: 
+                2. Event Search;
                         * This is working, if someone used "Zoek met Zoekwoorden" search.
                         * It'll find the events according to keyterms they wrote. 
                         * The query finds events which have first or second keyterm and not in the past. 'iexact' means 'case insensitive'::
                                 event_list = Events.objects()
-#                               event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
-                :param fst_key: First Keyterm
-                :param snd_key: Second Keyterm
+                               event_list = Events.objects(Q(Estimation__gte = start_hour) & Q(Estimation__lte = end_hour)).order_by('Estimation')
+                        :param fst_key: First Keyterm
+                        :param snd_key: Second Keyterm
                 """
-
-#                if "date_picker" in request.POST:
-
-#                        start_date = request.POST.get('start_date')
-#                        end_date = request.POST.get('end_date')
-#                        if end_date == '':
-#                                end_date = start_date
-
-#                        if request.is_mobile:
- #                               timeIntstr = timeIntstr_m
-  #                              time_interval = time_interval_m
-   #                             template = 'mobile/datepicker.mobile.html'
-    #                    else:
-     #                           timeIntstr = timeIntstr_d
-      #                          time_interval = time_interval_d
-       #                         template = 'desktop/datepicker.html'
-
-        #                startDate = datetime.strptime(start_date, dateformat)
-         #               endDate = datetime.strptime(end_date, dateformat)
-
-                        #These are for the navigation links;
-          #              nextnext3Date = (endDate + timedelta(days=time_interval)).strftime(dateformat)
-           #             prev3Date = (startDate + timedelta(days=-time_interval)).strftime(dateformat)
-
-            #            periodic_filter = ['periodic','aperiodic']
-             #           allperEventsDictList = call_dates(startDate, endDate, periodic_filter)
-
-              #          return render(request, template, {
-               #                         'urlprefix': settings.URLPREFIX,
-                #                        'allperEventsDictList': allperEventsDictList,
-                 #                       'start_date': start_date,
-                  #                      'end_date': end_date,
-                   #                     'nextnext3Date': nextnext3Date,
-                    #                    'prev3Date': prev3Date,
-                     #   })
-
                 if "ttee" in request.POST:
 
                         search_hour = request.POST['search_hour']
@@ -266,7 +223,11 @@ class Calendar(View):
                         else:
                                 start_hour = datetime.now() 
 
-                        end_hour = datetime.now() + timedelta(hours=(int(search_hour)+int(hour_range)))#Sometimes a subset of fields on a Document is required, and for efficiency only these should be retrieved from the database. This issue is especially important for MongoDB, as fields may often be extremely large (e.g. a ListField of EmbeddedDocuments, which represent the comments on a blog post. To select only a subset of fields, use only(), specifying the fields you want to retrieve as its arguments. Note that if fields that are not downloaded are accessed, their default value (or None if no default value is provided) will be given:
+                        end_hour = datetime.now() + timedelta(hours=(int(search_hour)+int(hour_range)))
+                        """Sometimes a subset of fields on a Document is required, and for efficiency only these should be retrieved from the database.
+                           This issue is especially important for MongoDB, as fields may often be extremely large (e.g. a ListField of EmbeddedDocuments,
+                           which represent the comments on a blog post. To select only a subset of fields, use only(), specifying the fields you want to retrieve as its arguments.
+                           Note that if fields that are not downloaded are accessed, their default value (or None if no default value is provided) will be given:"""
 
                         #These are for showing the date interval for the search;
                         startHour = start_hour.strftime("%d %B %Y %H:00")
@@ -285,8 +246,8 @@ class Calendar(View):
 
                         start_date = request.POST.get('start_date') 
                         end_date = request.POST.get('end_date')
-                        evenementen = request.POST.getlist('evenementtypen')
-                        periodic_filter = request.POST.getlist('tijdskenmerken')
+                        evenementen = request.POST.getlist('evenementtypen') # Events types checkboxs list
+                        periodic_filter = request.POST.getlist('tijdskenmerken') # time Characteristics Checkboxs list
 
                         print(evenementen, periodic_filter)
                         
@@ -337,7 +298,7 @@ class Calendar(View):
                                         'periodic_filter' : periodic_filter
                                 })
 
-                        elif fst_key != '': ##The user didn't selected date, in this case we will run the same code of the zoekwoorden     
+                        elif fst_key != '': ##The user didn't selected date.     
                                 
                                 #if request.is_mobile:
                                 #        template = 'mobile/eventSearch.mobile.html'
@@ -361,7 +322,7 @@ class Calendar(View):
                                         'periodic_filter' : periodic_filter
                                 })
                          
-                        else:  ##The user didn't select date or enter any keywords##
+                        else:  ##The user didn't select date or enter any keyterms##
                                 
                                 timeIntstr = timeIntstr_d
                                 time_interval = time_interval_d
@@ -470,7 +431,7 @@ class EventsofDate(View):
 
 
 class EventDetail(View):
-        """This view shows the details of the events such as tweets about it"""
+        """This view shows the tweets of the events"""
 
         def get(self, request, id):
                 """
@@ -556,57 +517,4 @@ def custom_handler_500(request):
     return render(request, 'desktop/500.html')
 
 
-# line 116 
-#                        eventX = Events.objects(Q(date=i) & (Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key))).order_by('-score')
-#################################################################################################################################################################################
-# line 118 
-#                        eventX = Events.objects(date=i).order_by('-score')
-#################################################################################################################################################################################
-# line 296
-#                        event_list = Events.objects(Q(date__gte = start_hour) & Q(date__lte = end_hour)).order_by('date')
-######################################################################################################################################################################
-# line 354 
-                                #events_bykey_list = Events.objects(Q(Estimation__gte = datetime.now()) & (Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key))).order_by('Estimation')
-                                #events_bykey_list = Events.objects((Q(keylist__iexact=fst_key) | Q(keylist__iexact=snd_key)))
-                                
-#                                events_bykey_list = Events.objects((Q(entities__iexact=fst_key) | Q(entities__iexact=snd_key)))
-#################################################################################################################################################################################
-# line 475
-#                events_date_list = Events.objects(date=datetime.strptime(dt, dateformat)).order_by('-score')
-#########################################################################################################################################################################
-# line 506
-#                event = Events.objects.get(pk=id)
-########################################################################################################################################################################
-# Unique list
-# Python program to check if two 
-# to get unique values from list
-# using traversal 
-
-# function to get unique values
-#def unique(list2):
-
-	# intilize a null list
-#	unique_list = []
-	
-	# traverse for all elements
-#	for x in list2:
-		# check if exists in unique_list or not
-#		if x not in unique_list:
-#			unique_list.append(x)
-	# print list
-#	for x in unique_list:
-#		print x,
-	
-
-
-# driver code
-#list1 = [10, 20, 10, 30, 40, 40]
-#print("the unique values from 1st list is")
-#unique(list1)
-
-
-#list2 =[1, 2, 1, 1, 3, 4, 3, 3, 5, 4, 40, 6, 3, 6]
-#print("\nthe unique values from 2nd list is")
-#unique(list2)
-##########################################################################################################################################################################
 
