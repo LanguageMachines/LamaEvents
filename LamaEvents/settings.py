@@ -30,8 +30,8 @@ if BASE_DIR.startswith('/home'):
     TEMPLATE_DEBUG = True
 elif HOSTNAME[:9] == "applejack":
     config.read('/var/www/lamaevents/live/repo/oauth.ini')
-    DEBUG = False
-    TEMPLATE_DEBUG = False
+    DEBUG = True
+    TEMPLATE_DEBUG = True
 elif HOSTNAME == "mlp01":
     config.read('/var/www/lamaevents/live/repo/oauth.ini')
 
